@@ -5,14 +5,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class LoadingScreen implements Screen {
-
-    private final EwendLauncher context;
+/**
+ * Represent the screen when the game is loading
+ */
+public class LoadingScreen extends AbstractScreen{
 
     public LoadingScreen(final EwendLauncher context) {
-        this.context = context;
+        super(context);
     }
+
 
     @Override
     public void show() {
@@ -30,7 +33,7 @@ public class LoadingScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        super.resize(width, height);
     }
 
     @Override

@@ -9,9 +9,13 @@ public enum ScreenType {
     GAME(GameScreen.class),
     LOADING(LoadingScreen.class);
 
-    private final Class<? extends Screen> screenClass;
+    /**
+     * Saves a screen that extends from AbstractScreen
+     * @see AbstractScreen
+     */
+    private final Class<? extends AbstractScreen> screenClass;
 
-    ScreenType(Class<? extends Screen> screenClass) {
+    ScreenType(Class<? extends AbstractScreen> screenClass) {
         this.screenClass = screenClass;
     }
 
