@@ -8,6 +8,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -58,21 +59,28 @@ public class EwendLauncher extends Game {
 
 	private WorldContactListener wcLstnr;
 
+	private AssetManager assetManager;
+
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+		//BOX2D
 		Box2D.init();
 		accumulator = 0;
 		world = new World(new Vector2(0,-9.81f),true);
 		wcLstnr = new WorldContactListener();
 		world.setContactListener(wcLstnr);
-
 		box2DDebugRenderer = new Box2DDebugRenderer();
+		////
+
+		//Initialize AssetManager
+		assetManager = new AssetManager();
+		//SCREENS
 		viewport = new FitViewport(9,16);
-
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
-
 		this.setScreen(ScreenType.GAME);
+		//
 	}
 
 	/**

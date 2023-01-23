@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="15">
+ <tileset firstgid="1" source="tilesheet.tsx"/>
+ <tileset firstgid="33" source="entities.tsx"/>
+ <tileset firstgid="38" source="fondo1.tsx"/>
+ <tileset firstgid="110" source="fondo2.tsx"/>
+ <tileset firstgid="182" source="props.tsx"/>
+ <layer id="9" name="background" width="30" height="20" locked="1">
+  <data encoding="base64" compression="zlib">
+   eJzt0UdvwkAQhmH/GmOHFnroEHoJnQSSUEInIf//ynuJFK2wscweOOxIz2E0386utLqmaR4YMPEAL3zwI4AgdJVTOZW7u5zd3LiB6WC3m5nY/xF7K27vFYkz48p5p//xiJDEfBgRRBFDHAk8IYkU0sggKzGfQx4FFPGMEsqooIoa6mhIzDfRQhsv6KCLHvoYYIgRxhLzr3jDBFO84wOfmGGOBZb4kphfYY0NtthhjwOO+MaPxW6x/58/4ddmv9O69BaxV2VdZ5tCbaM=
+  </data>
+ </layer>
+ <layer id="11" name="background_forest" width="30" height="20" locked="1">
+  <data encoding="base64" compression="zlib">
+   eJzty7cKAmEQhdF9enMAw5rAHEDX/IKezsVKi79yPjjV3MmyKIqiKHpXoUqNOg2atGjToZtg16PPgCE5I8ZMmDJLsJuzYMmKNRu27NhzSLA7cqLgzIUrN+48eCbYfd6/Ud4XPyj//VsvOq9dsg==
+  </data>
+ </layer>
+ <layer id="1" name="basemap" width="30" height="20" locked="1">
+  <data encoding="base64" compression="zlib">
+   eJztzscKAjEUheEs1JUKri3v/wSWUWzYy9i7vov/YIRwGUYS3ZkD3yI3l5Mo5ePj4+PzKVXUUE/Yaf6gQ6aNDrr6XEQJZcGmw0wPffX6+wBDPR9hjInFX2VkR8UwxQxzLLDUOyFWWH/xblLHBlvssMdBz4844YzA2G/EdMTNZEe00zLuLrjihjseSDvI6L73OUrKsiPnII+CkHXs+hdPQqgyBg==
+  </data>
+ </layer>
+</map>

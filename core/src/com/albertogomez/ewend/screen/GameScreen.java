@@ -97,12 +97,14 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         if(Gdx.input.isTouched()){
-            context.setScreen(ScreenType.LOADING);
+          //  context.setScreen(ScreenType.LOADING);
         }
-
-
         viewport.apply(true);
+
+
         box2DDebugRenderer.render(world, viewport.getCamera().combined);
+
+
 
         final float velx;
         final float vely ;
@@ -127,7 +129,6 @@ public class GameScreen extends AbstractScreen {
                 ((vely-player.getLinearVelocity().y) * player.getMass()),
                 player.getWorldCenter().x,player.getWorldCenter().y,true
         );
-
 
 
 
