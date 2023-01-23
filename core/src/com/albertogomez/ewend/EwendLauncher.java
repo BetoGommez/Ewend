@@ -12,9 +12,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -50,6 +48,7 @@ public class EwendLauncher extends Game {
 	public static final short BIT_CIRCLE = 1 <<0;
 	public static final short BIT_BOX = 1 <<1;
 	public static final short BIT_GROUND = 1 <<2;
+	public static final short BIT_PLAYER = 1 <<3;
 
 	private Box2DDebugRenderer box2DDebugRenderer;
 	private World world;
@@ -57,12 +56,17 @@ public class EwendLauncher extends Game {
 	private static final float FIXED_TIME_STEP = 1/60f;
 	private float accumulator;
 
+	private WorldContactListener wcLstnr;
+
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		Box2D.init();
 		accumulator = 0;
 		world = new World(new Vector2(0,-9.81f),true);
+		wcLstnr = new WorldContactListener();
+		world.setContactListener(wcLstnr);
+
 		box2DDebugRenderer = new Box2DDebugRenderer();
 		viewport = new FitViewport(9,16);
 
@@ -99,12 +103,14 @@ public class EwendLauncher extends Game {
 	public void render() {
 		super.render();
 
-		Gdx.app.debug(TAG,""+ Gdx.graphics.getRawDeltaTime());
+	//	Gdx.app.debug(TAG,""+ Gdx.graphics.getRawDeltaTime());
 		accumulator += Math.min(0.25f,Gdx.graphics.getRawDeltaTime());
 		while(accumulator >= FIXED_TIME_STEP){
 			world.step(FIXED_TIME_STEP,6,2);
 			accumulator -= FIXED_TIME_STEP;
 		}
+
+
 
 		//final float alpha = accumulator/FIXED_TIME_STEP;
 
