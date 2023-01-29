@@ -12,6 +12,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -56,10 +58,16 @@ public class EwendLauncher extends Game {
 
 	private AssetManager assetManager;
 
+	private OrthographicCamera gameCamera;
+
+	private SpriteBatch spriteBatch;
+
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
+
+		spriteBatch = new SpriteBatch();
 		//BOX2D
 		Box2D.init();
 		accumulator = 0;
@@ -71,10 +79,12 @@ public class EwendLauncher extends Game {
 
 		//Initialize AssetManager
 		assetManager = new AssetManager();
+		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 		//SCREENS
-		viewport = new FitViewport(9,16);
+		gameCamera = new OrthographicCamera();
+		viewport = new FitViewport(12,9,gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
-		this.setScreen(ScreenType.GAME);
+		this.setScreen(ScreenType.LOADING);
 		//
 	}
 
@@ -124,6 +134,7 @@ public class EwendLauncher extends Game {
 		super.dispose();
 		box2DDebugRenderer.dispose();;
 		world.dispose();
+		assetManager.dispose();
 	}
 
 	public Box2DDebugRenderer getBox2DDebugRenderer() {
@@ -140,5 +151,17 @@ public class EwendLauncher extends Game {
 	 */
 	public FitViewport getScreenViewport() {
 		return viewport;
+	}
+
+	public AssetManager getAssetManager() {
+		return assetManager;
+	}
+
+	public OrthographicCamera getGameCamera() {
+		return gameCamera;
+	}
+
+	public SpriteBatch getSpriteBatch() {
+		return spriteBatch;
 	}
 }

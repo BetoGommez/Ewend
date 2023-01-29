@@ -4,7 +4,11 @@ import com.albertogomez.ewend.EwendLauncher;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ObjectFloatMap;
@@ -12,8 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.albertogomez.ewend.EwendLauncher.*;
-import static com.albertogomez.ewend.constants.Constants.BIT_GROUND;
-import static com.albertogomez.ewend.constants.Constants.BIT_PLAYER;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 /**
  * Screen of the gameplay
@@ -32,9 +35,16 @@ public class GameScreen extends AbstractScreen {
 
     private final Body player;
 
+    private final AssetManager assetManager;
+
+    private final OrthogonalTiledMapRenderer mapRenderer;
+    private final OrthographicCamera gameCamera;
     public GameScreen(final EwendLauncher context) {
         super(context);
 
+        mapRenderer = new OrthogonalTiledMapRenderer(null,UNIT_SCALE,context.getSpriteBatch());
+        assetManager = context.getAssetManager();
+        gameCamera = context.getGameCamera();
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
         Body body = world.createBody(bodyDef);
@@ -93,20 +103,11 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-
+        mapRenderer.setMap(assetManager.get("maps/mapa.tmx", TiledMap.class));
     }
 
     @Override
     public void render(float delta) {
-        if(Gdx.input.isTouched()){
-          //  context.setScreen(ScreenType.LOADING);
-        }
-        viewport.apply(true);
-
-
-        box2DDebugRenderer.render(world, viewport.getCamera().combined);
-
-
 
         final float velx;
         final float vely ;
@@ -132,6 +133,11 @@ public class GameScreen extends AbstractScreen {
                 player.getWorldCenter().x,player.getWorldCenter().y,true
         );
 
+        viewport.apply(true);
+        mapRenderer.setView(gameCamera);
+        mapRenderer.render();
+        box2DDebugRenderer.render(world, viewport.getCamera().combined);
+
 
 
     }
@@ -155,6 +161,6 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-
+        mapRenderer.dispose();
     }
 }
