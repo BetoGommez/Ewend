@@ -10,6 +10,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.albertogomez.ewend.EwendLauncher.*;
 import static com.albertogomez.ewend.constants.Constants.*;
+import static com.badlogic.gdx.graphics.VertexAttributes.Usage.Position;
 
 /**
  * Screen of the gameplay
@@ -36,7 +38,7 @@ public class GameScreen extends AbstractScreen {
      */
     private final FixtureDef fixtureDef;
 
-    private final Body player;
+    private Body player;
 
     private final AssetManager assetManager;
 
@@ -61,14 +63,33 @@ public class GameScreen extends AbstractScreen {
         profiler.enable();
         //////////
 
+        ///////////
 
-        //crea el personaje
+        //Coge el mapa, lo mete en renderizador y se crea la clase mapa para su procesado
+        TiledMap tiledMap = assetManager.get("maps/mapa.tmx", TiledMap.class);
+        mapRenderer.setMap(tiledMap);
+        map = new Map(tiledMap);
+
+        /////////////////
+
+        //Gestor de formas y fisicas
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
+        ////////////
 
-        bodyDef.position.set(5f,5f);
+        //Spawn personaje y objetos
+        spawnPlayer();
+        spawnCollisionAreas();
+        ////////////
+    }
+
+    private void spawnPlayer(){
+        resetBodieAndFixtureDefinition();
+
+        bodyDef.position.set(map.getStartLocation());
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.gravityScale=1;
+        bodyDef.fixedRotation=true;
 
         player= world.createBody(bodyDef);
         player.setUserData("PLAYER");
@@ -79,29 +100,28 @@ public class GameScreen extends AbstractScreen {
         fixtureDef.friction=0.5f;
         fixtureDef.filter.categoryBits = BIT_PLAYER;
         fixtureDef.filter.maskBits = BIT_GROUND;
-
         final PolygonShape pShape = new PolygonShape();
         pShape.setAsBox(0.5f,0.5f);
-
         fixtureDef.shape = pShape;
 
         player.createFixture(fixtureDef);
         pShape.dispose();
-
-
-
-        ///////////
-
-        //Coge el mapa, lo mete en renderizador y se crea la clase mapa para su procesado
-        TiledMap tiledMap = assetManager.get("maps/mapa.tmx", TiledMap.class);
-        mapRenderer.setMap(tiledMap);
-        map = new Map(tiledMap);
-        spawnCollisionAreas();
-        /////////////////
     }
 
     private void resetBodieAndFixtureDefinition(){
 
+        bodyDef.position.set(0,0);
+        bodyDef.fixedRotation=false;
+        bodyDef.gravityScale = 1;
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        fixtureDef.density=0;
+        fixtureDef.isSensor=false;
+        fixtureDef.restitution=0;
+        fixtureDef.friction=0.2f;
+
+        fixtureDef.filter.categoryBits = 0x0001;
+        fixtureDef.filter.maskBits = -1;
+        fixtureDef.shape = null;
     }
     private void spawnCollisionAreas(){
         for(final CollisionArea collisionArea : map.getCollisionAreas()){
@@ -156,6 +176,9 @@ public class GameScreen extends AbstractScreen {
         }else{
             vely = player.getLinearVelocity().y;
         }
+
+
+
 
         player.applyLinearImpulse(
                 ((velx-player.getLinearVelocity().x) * player.getMass()),
