@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="15">
  <tileset firstgid="1" source="tilesheet.tsx"/>
- <tileset firstgid="33" source="entities.tsx"/>
  <tileset firstgid="38" source="fondo1.tsx"/>
  <tileset firstgid="110" source="fondo2.tsx"/>
  <tileset firstgid="182" source="props.tsx"/>
