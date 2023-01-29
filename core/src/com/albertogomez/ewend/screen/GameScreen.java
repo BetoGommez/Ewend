@@ -1,6 +1,8 @@
 package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.map.CollisionArea;
+import com.albertogomez.ewend.map.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -42,66 +44,86 @@ public class GameScreen extends AbstractScreen {
     private final OrthographicCamera gameCamera;
     private final GLProfiler profiler;
 
+    private final Map map;
+
     public GameScreen(final EwendLauncher context) {
         super(context);
 
+        //Lanza el renderizador de mapa
         mapRenderer = new OrthogonalTiledMapRenderer(null,UNIT_SCALE,context.getSpriteBatch());
         assetManager = context.getAssetManager();
         this.gameCamera = context.getGameCamera();
+        //////////
 
+
+        //Gestor de recursos
         profiler = new GLProfiler(Gdx.graphics);
         profiler.enable();
+        //////////
 
+
+        //crea el personaje
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
-        Body body = world.createBody(bodyDef);
 
-        //create a box
-
-
-        bodyDef.position.set(4.5f,3);
-        bodyDef.gravityScale = 0;
+        bodyDef.position.set(5f,5f);
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        player = world.createBody(bodyDef);
+        bodyDef.gravityScale=1;
+
+        player= world.createBody(bodyDef);
         player.setUserData("PLAYER");
 
         fixtureDef.density=1;
-        fixtureDef.isSensor = false;
-        fixtureDef.restitution = 0.5f;
-        fixtureDef.friction = 0.2f;
+        fixtureDef.isSensor=false;
+        fixtureDef.restitution=0;
+        fixtureDef.friction=0.5f;
         fixtureDef.filter.categoryBits = BIT_PLAYER;
-        fixtureDef.filter.maskBits = BIT_GROUND ;
-        PolygonShape boxShape = new PolygonShape();
-        boxShape.setAsBox(0.5f,0.5f);
-        fixtureDef.shape = boxShape;
+        fixtureDef.filter.maskBits = BIT_GROUND;
+
+        final PolygonShape pShape = new PolygonShape();
+        pShape.setAsBox(0.5f,0.5f);
+
+        fixtureDef.shape = pShape;
+
         player.createFixture(fixtureDef);
-
-        boxShape.dispose();
-
+        pShape.dispose();
 
 
-        //create a room
 
-        bodyDef.position.set(0,0);
-        bodyDef.gravityScale = 1;
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        body = world.createBody(bodyDef);
+        ///////////
 
-        body.setUserData("GROUND");
-        fixtureDef.isSensor = false;
-        fixtureDef.restitution = 0.5f;
-        fixtureDef.friction = 0.2f;
-        fixtureDef.filter.categoryBits = BIT_GROUND;
-        fixtureDef.filter.maskBits = -1;
-        ChainShape cShape = new ChainShape();
-        cShape.createChain(new float[]{1,1,1,15,15,15,15,1});
-        fixtureDef.shape = cShape;
-        body.createFixture(fixtureDef);
-        boxShape.dispose();
+        //Coge el mapa, lo mete en renderizador y se crea la clase mapa para su procesado
+        TiledMap tiledMap = assetManager.get("maps/mapa.tmx", TiledMap.class);
+        mapRenderer.setMap(tiledMap);
+        map = new Map(tiledMap);
+        spawnCollisionAreas();
+        /////////////////
+    }
 
-
+    private void resetBodieAndFixtureDefinition(){
 
     }
+    private void spawnCollisionAreas(){
+        for(final CollisionArea collisionArea : map.getCollisionAreas()){
+            resetBodieAndFixtureDefinition();
+
+            bodyDef.position.set(collisionArea.getX(),collisionArea.getY());
+            bodyDef.fixedRotation=true;
+            bodyDef.gravityScale = 1;
+            bodyDef.type = BodyDef.BodyType.StaticBody;
+            final Body body = world.createBody(bodyDef);
+
+            body.setUserData("GROUND");
+            fixtureDef.filter.categoryBits = BIT_GROUND;
+            fixtureDef.filter.maskBits = -1;
+            ChainShape cShape = new ChainShape();
+            cShape.createChain(collisionArea.getVertices());
+            fixtureDef.shape = cShape;
+            body.createFixture(fixtureDef);
+            cShape.dispose();
+        }
+    }
+
 
     @Override
     public void resize(int width, int height) {
@@ -110,7 +132,8 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        mapRenderer.setMap(assetManager.get("maps/mapa.tmx", TiledMap.class));
+
+
     }
 
     @Override
@@ -131,7 +154,7 @@ public class GameScreen extends AbstractScreen {
         }else if(Gdx.input.isKeyPressed(Input.Keys.S)){
             vely=-3;
         }else{
-            vely=0;
+            vely = player.getLinearVelocity().y;
         }
 
         player.applyLinearImpulse(
@@ -151,6 +174,8 @@ public class GameScreen extends AbstractScreen {
 
 
     }
+
+
 
 
 

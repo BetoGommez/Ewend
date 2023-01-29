@@ -1,0 +1,132 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "mapa.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Todos los archivos (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/Drive/mapaweno/entities.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/Drive/mapaweno/fondo1.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/Drive/mapaweno/fondo2.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/Drive/mapaweno/props.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Trabajo/Desktop/Drive/mapaweno/tilesheet.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/mapa/map.tmx": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 479.5,
+                "y": 178
+            }
+        },
+        "C:/Users/Trabajo/Desktop/recursos/entities.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/recursos/fondo1.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/recursos/fondo2.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/recursos/mapa.tmx": {
+            "scale": 0.6709375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 480.67070330693986,
+                "y": 108.0577550069865
+            }
+        },
+        "C:/Users/Trabajo/Desktop/recursos/props.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Trabajo/Desktop/recursos/tilesheet.tsx": {
+            "scaleInDock": 1
+        },
+        "background.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "entities.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "fondo1.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "fondo2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "mapa.tmx": {
+            "expandedObjectLayers": [
+                12
+            ],
+            "scale": 3,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 171.16666666666669,
+                "y": 535.8333333333333
+            }
+        },
+        "props.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "tilesheet.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 2,
+            "scaleInEditor": 4
+        }
+    },
+    "last.imagePath": "C:/Users/Trabajo/Desktop/EwendGame/assets/maps",
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": null,
+    "openFiles": [
+        "C:/Users/Trabajo/Desktop/mapa/map.tmx",
+        "tilesheet.tsx",
+        "fondo1.tsx",
+        "fondo2.tsx",
+        "props.tsx",
+        "mapa.tmx"
+    ],
+    "project": "sin nombre.tiled-project",
+    "recentFiles": [
+        "C:/Users/Trabajo/Desktop/mapa/map.tmx",
+        "tilesheet.tsx",
+        "fondo1.tsx",
+        "fondo2.tsx",
+        "props.tsx",
+        "mapa.tmx",
+        "C:/Users/Trabajo/Desktop/recursos/mapa.tmx",
+        "C:/Users/Trabajo/Desktop/Drive/mapaweno/props.tsx",
+        "background.tsx",
+        "entities.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 0
+}

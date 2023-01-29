@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Polyline;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
@@ -44,6 +45,30 @@ public class Map {
         for(final MapObject mapObject: mapObjects){
             if(mapObject instanceof  RectangleMapObject){
                 final RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+                final Rectangle rectangle = rectangleMapObject.getRectangle();
+                final float[] rectVertices = new float[10];
+
+                //left-bot
+                    rectVertices[0] = 0;
+                    rectVertices[1] = 0;
+                //left-top
+                    rectVertices[2] = 0;
+                    rectVertices[3] = rectangle.getHeight();
+
+                //right-top
+                    rectVertices[4] = rectangle.getWidth();
+                    rectVertices[5] = rectangle.getHeight();
+
+                //right-bottom
+                    rectVertices[6] = rectangle.getWidth();
+                    rectVertices[7] = 0;
+
+                //left-bottom
+                    rectVertices[8] = 0;
+                    rectVertices[9] = 0;
+
+                    collisionAreas.add(new CollisionArea(rectangle.x,rectangle.y,rectVertices));
+
             } else if (mapObject instanceof PolylineMapObject) {
                 final PolylineMapObject polylineMapObject = (PolylineMapObject) mapObject;
                 final Polyline polyline = polylineMapObject.getPolyline();
@@ -52,5 +77,9 @@ public class Map {
                 Gdx.app.debug(TAG,"MapObject: "+mapObject+ " is not supported for the collision layer!");
             }
         }
+    }
+
+    public Array<CollisionArea> getCollisionAreas() {
+        return collisionAreas;
     }
 }
