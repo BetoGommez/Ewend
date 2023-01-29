@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="15">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="30">
  <tileset firstgid="1" source="tilesheet.tsx"/>
- <tileset firstgid="38" source="fondo1.tsx"/>
- <tileset firstgid="110" source="fondo2.tsx"/>
- <tileset firstgid="182" source="props.tsx"/>
+ <tileset firstgid="33" source="fondo1.tsx"/>
+ <tileset firstgid="105" source="fondo2.tsx"/>
+ <tileset firstgid="177" source="props.tsx"/>
  <layer id="9" name="background" width="30" height="20" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt0UdvwkAQhmH/GmOHFnroEHoJnQSSUEInIf//ynuJFK2wscweOOxIz2E0386utLqmaR4YMPEAL3zwI4AgdJVTOZW7u5zd3LiB6WC3m5nY/xF7K27vFYkz48p5p//xiJDEfBgRRBFDHAk8IYkU0sggKzGfQx4FFPGMEsqooIoa6mhIzDfRQhsv6KCLHvoYYIgRxhLzr3jDBFO84wOfmGGOBZb4kphfYY0NtthhjwOO+MaPxW6x/58/4ddmv9O69BaxV2VdZ5tCbaM=
+   eJzt0cduwkAQxnG/irFDCz10CL2ETgJJKKGTkPd/Av6XSNEKG8vsgcOO9DuM5tvZlVbXNM0DAyYe4IUPfgQQhK5yKqdyd5ezmxs3MB3sdjMT+z9ib8XtvSJxZlw57/Q/HhGSmA8jgihiiCOBJySRQhoZZCXmc8ijgCKeUUIZFVRRQx0NifkmWmjjBR100UMfAwwxwlhi/hVvmGCKd3zgEzPMscASXxLzK6yxwRY77HHAEd/4sdgt9v/zJ/za7Hdal94i9qqs6wycpGOA
   </data>
  </layer>
  <layer id="11" name="background_forest" width="30" height="20" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzty7cKAmEQhdF9enMAw5rAHEDX/IKezsVKi79yPjjV3MmyKIqiKHpXoUqNOg2atGjToZtg16PPgCE5I8ZMmDJLsJuzYMmKNRu27NhzSLA7cqLgzIUrN+48eCbYfd6/Ud4XPyj//VsvOq9dsg==
+   eJzty7cKAmEQhdF9dXMAw5rAHEDX/IyezsVKi79yPjjV3MmyKIqiKHpXoUqNOg2atGjToZtg16PPgCE5I8ZMmDJLsJuzYMmKNRu27NhzSLA7cqLgzIUrN+48eCbYfd6/Ud4XPyj//VsvBnFaxA==
   </data>
  </layer>
  <layer id="1" name="basemap" width="30" height="20" locked="1">
   <data encoding="base64" compression="zlib">
-   eJztzscKAjEUheEs1JUKri3v/wSWUWzYy9i7vov/YIRwGUYS3ZkD3yI3l5Mo5ePj4+PzKVXUUE/Yaf6gQ6aNDrr6XEQJZcGmw0wPffX6+wBDPR9hjInFX2VkR8UwxQxzLLDUOyFWWH/xblLHBlvssMdBz4844YzA2G/EdMTNZEe00zLuLrjihjseSDvI6L73OUrKsiPnII+CkHXs+hdPQqgyBg==
+   eJztzscKAjEUheEs1JUKri3vv7WMYsNext71cfwHI4TLMJLozhz4Frm5nEQpHx8fH59PqaKGesJO8wcdMm100NXnIkooCzYdZnroq9ffBxjq+QhjTCz+KiM7KoYpZphjgaXeCbHC+ot3kzo22GKHPQ56fsQJZwTGfiOmI24mO6KdlnF3wRU33PFA2kFG973PUVKWHTkHeRSErGPXv3gCHqcw7g==
   </data>
  </layer>
+ <objectgroup id="12" name="objetos">
+  <object id="15" x="225" y="384" width="126" height="29"/>
+  <object id="17" x="175" y="384" width="30" height="30"/>
+  <object id="18" x="479" y="527" width="64" height="16"/>
+  <object id="19" x="1" y="526" width="430" height="113"/>
+  <object id="20" x="593" y="526" width="356" height="121"/>
+  <object id="21" x="721" y="431" width="15" height="17"/>
+  <object id="22" x="754" y="433" width="12" height="15"/>
+  <object id="24" x="784" y="432" width="15" height="16"/>
+  <object id="29" gid="182" x="183" y="510" width="32" height="32"/>
+ </objectgroup>
 </map>

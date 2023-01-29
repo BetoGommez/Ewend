@@ -51,7 +51,6 @@ public class EwendLauncher extends Game {
 
 	private Box2DDebugRenderer box2DDebugRenderer;
 	private World world;
-
 	private float accumulator;
 
 	private WorldContactListener wcLstnr;

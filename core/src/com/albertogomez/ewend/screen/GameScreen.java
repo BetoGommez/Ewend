@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -39,12 +40,18 @@ public class GameScreen extends AbstractScreen {
 
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final OrthographicCamera gameCamera;
+    private final GLProfiler profiler;
+
     public GameScreen(final EwendLauncher context) {
         super(context);
 
         mapRenderer = new OrthogonalTiledMapRenderer(null,UNIT_SCALE,context.getSpriteBatch());
         assetManager = context.getAssetManager();
-        gameCamera = context.getGameCamera();
+        this.gameCamera = context.getGameCamera();
+
+        profiler = new GLProfiler(Gdx.graphics);
+        profiler.enable();
+
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
         Body body = world.createBody(bodyDef);
@@ -87,7 +94,7 @@ public class GameScreen extends AbstractScreen {
         fixtureDef.filter.categoryBits = BIT_GROUND;
         fixtureDef.filter.maskBits = -1;
         ChainShape cShape = new ChainShape();
-        cShape.createChain(new float[]{1,1,1,15,8,15,8,1});
+        cShape.createChain(new float[]{1,1,1,15,15,15,15,1});
         fixtureDef.shape = cShape;
         body.createFixture(fixtureDef);
         boxShape.dispose();
@@ -138,6 +145,9 @@ public class GameScreen extends AbstractScreen {
         mapRenderer.render();
         box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
+        Gdx.app.debug("RenderInfo","Bindings: "+profiler.getTextureBindings());
+        Gdx.app.debug("RenderInfo","Drawcalls: "+profiler.getDrawCalls());
+        profiler.reset();
 
 
     }
