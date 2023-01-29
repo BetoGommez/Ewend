@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.albertogomez.ewend.EwendLauncher.*;
+import static com.albertogomez.ewend.constants.Constants.BIT_GROUND;
+import static com.albertogomez.ewend.constants.Constants.BIT_PLAYER;
 
 /**
  * Screen of the gameplay

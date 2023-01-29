@@ -25,6 +25,8 @@ import java.util.EnumMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import jdk.jfr.internal.LogLevel;
 
+import static com.albertogomez.ewend.constants.Constants.FIXED_TIME_STEP;
+
 /**
  * The Game Principal Launcher
  * @author Alberto Gómez
@@ -45,16 +47,9 @@ public class EwendLauncher extends Game {
 	 */
 	private FitViewport viewport;
 
-
-	public static final short BIT_CIRCLE = 1 <<0;
-	public static final short BIT_BOX = 1 <<1;
-	public static final short BIT_GROUND = 1 <<2;
-	public static final short BIT_PLAYER = 1 <<3;
-
 	private Box2DDebugRenderer box2DDebugRenderer;
 	private World world;
 
-	private static final float FIXED_TIME_STEP = 1/60f;
 	private float accumulator;
 
 	private WorldContactListener wcLstnr;
