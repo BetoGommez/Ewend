@@ -2,6 +2,7 @@ package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ui.LoadingUI;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -14,7 +15,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * Screen interface for all game screens
  * @see com.badlogic.gdx.Screen
  */
-public abstract class AbstractScreen implements Screen {
+public abstract class AbstractScreen<T extends Table> implements Screen {
     /**
      * It's the main class launcher
      */
@@ -30,8 +31,9 @@ public abstract class AbstractScreen implements Screen {
 
     protected final Box2DDebugRenderer box2DDebugRenderer;
 
-    protected final Table screenUI;
     protected final Stage stage;
+
+    protected final T screenUI;
 
     /**
      * Constructor of the Abstract Screen
@@ -60,17 +62,17 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void show() {
-
         stage.addActor(screenUI);
     }
 
     @Override
     public void hide() {
+
         stage.getRoot().removeActor(screenUI);
     }
 
 
 
-    protected abstract Table getScreenUI(Skin skin);
+    protected abstract T getScreenUI(Skin skin);
 
 }

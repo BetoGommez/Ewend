@@ -10,8 +10,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -70,6 +73,9 @@ public class EwendLauncher extends Game {
 	private Skin skin;
 	private Stage stage;
 
+	private static float HEIGHT;
+	private static float WIDTH;
+
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -86,14 +92,17 @@ public class EwendLauncher extends Game {
 		box2DDebugRenderer = new Box2DDebugRenderer();
 		////
 
+		WIDTH = Gdx.graphics.getWidth();
+		HEIGHT = Gdx.graphics.getHeight();
+
 		//Initialize AssetManager
 		assetManager = new AssetManager();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 		initializeSkin();
-		stage = new Stage(new FitViewport(800*UNIT_SCALE,800*UNIT_SCALE),spriteBatch);
+		stage = new Stage(new FitViewport(WIDTH,HEIGHT),spriteBatch);
 		//SCREENS
 		gameCamera = new OrthographicCamera();
-		viewport = new FitViewport(800*UNIT_SCALE,800*UNIT_SCALE,gameCamera);
+		viewport = new FitViewport(WIDTH*UNIT_SCALE,HEIGHT*UNIT_SCALE,gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		this.setScreen(ScreenType.LOADING);
 		//
@@ -179,6 +188,11 @@ public class EwendLauncher extends Game {
 	}
 
 	private void initializeSkin(){
+		//Setup markup colors
+		Colors.put("Red", Color.RED);
+		Colors.put("Azul", Color.BLUE);
+
+
 		//ttf bitmap
 		final ObjectMap<String,Object> resources = new ObjectMap<String,Object>();
 		final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/customfont.ttf"));
@@ -186,9 +200,11 @@ public class EwendLauncher extends Game {
 		fontParameter.minFilter=Texture.TextureFilter.Linear;
 		fontParameter.magFilter=Texture.TextureFilter.Linear;
 		final int[] sizeToChange = {16,20,26,32};
-		for(int  size : sizeToChange){
+		for(int size : sizeToChange){
 			fontParameter.size = size;
-		    resources.put("font_"+size, fontGenerator.generateFont(fontParameter));
+			final BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
+			bitmapFont.getData().markupEnabled=true;
+		    resources.put("font_"+size, bitmapFont);
 		}
 		fontGenerator.dispose();
 		//load skin

@@ -21,7 +21,7 @@ import static com.albertogomez.ewend.constants.Constants.*;
 /**
  * Screen of the gameplay
  */
-public class GameScreen extends AbstractScreen {
+public class GameScreen extends AbstractScreen<GameUI> {
 
     /**
      * Body object
@@ -145,11 +145,7 @@ public class GameScreen extends AbstractScreen {
         super.resize(width, height);
     }
 
-    @Override
-    public void show() {
 
-
-    }
 
     @Override
     public void render(float delta) {
@@ -194,7 +190,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     @Override
-    protected Table getScreenUI(Skin skin) {
+    protected GameUI getScreenUI(Skin skin) {
         return new GameUI(stage,skin);
     }
 
@@ -208,10 +204,6 @@ public class GameScreen extends AbstractScreen {
 
     }
 
-    @Override
-    public void hide() {
-
-    }
 
     @Override
     public void dispose() {

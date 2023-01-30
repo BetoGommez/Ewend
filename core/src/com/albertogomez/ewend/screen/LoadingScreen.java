@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 /**
  * Represent the screen when the game is loading
  */
-public class LoadingScreen extends AbstractScreen{
+public class LoadingScreen extends AbstractScreen<LoadingUI>{
 
     private final AssetManager assetManager;
     public LoadingScreen(final EwendLauncher context) {
@@ -34,11 +34,12 @@ public class LoadingScreen extends AbstractScreen{
         if(assetManager.update()){
             //context.setScreen(ScreenType.GAME);
         }
+        screenUI.setProgress(assetManager.getProgress());
 
     }
 
     @Override
-    protected Table getScreenUI(Skin skin) {
+    protected LoadingUI getScreenUI(Skin skin) {
         return new LoadingUI(stage,skin);
     }
 
@@ -46,10 +47,7 @@ public class LoadingScreen extends AbstractScreen{
     public void resize(int width, int height) {
         super.resize(width, height);
     }
-    @Override
-    public void show() {
 
-    }
 
 
     @Override
@@ -62,10 +60,7 @@ public class LoadingScreen extends AbstractScreen{
 
     }
 
-    @Override
-    public void hide() {
 
-    }
 
     @Override
     public void dispose() {
