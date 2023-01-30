@@ -12,18 +12,39 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
+
 
 public class Map {
     private static final String TAG = Map.class.getSimpleName();
     private final TiledMap tiledMap;
+    private final Vector2 startLocation;
 
     private final Array<CollisionArea> collisionAreas;
 
     public Map(TiledMap tiledMap) {
         this.tiledMap = tiledMap;
 
+        startLocation = new Vector2();
         collisionAreas = new Array<CollisionArea>();
         parseCollisionLayer();
+        parsePlayerStartLocation();
+    }
+
+    private void parsePlayerStartLocation(){
+        final MapLayer startLocationLayer = tiledMap.getLayers().get("playerLocation");
+        if(startLocationLayer==null){
+            Gdx.app.debug(TAG,"There wasnt foun any starter location");
+            return;
+        }
+        final MapObjects objects = startLocationLayer.getObjects();
+        for (final MapObject mapObj : objects){
+            if(mapObj instanceof RectangleMapObject){
+                final RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObj;
+                startLocation.set(rectangleMapObject.getRectangle().x*UNIT_SCALE,rectangleMapObject.getRectangle().y*UNIT_SCALE);
+
+            }
+        }
     }
 
     private void parseCollisionLayer(){
@@ -81,5 +102,9 @@ public class Map {
 
     public Array<CollisionArea> getCollisionAreas() {
         return collisionAreas;
+    }
+
+    public Vector2 getStartLocation() {
+        return startLocation;
     }
 }

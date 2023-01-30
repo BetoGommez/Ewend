@@ -28,6 +28,7 @@
             "scaleInEditor": 1
         },
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/tilesheet.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1
         },
         "C:/Users/Trabajo/Desktop/mapa/map.tmx": {
@@ -86,10 +87,10 @@
                 12
             ],
             "scale": 3,
-            "selectedLayer": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 171.16666666666669,
-                "y": 535.8333333333333
+                "x": 190.83333333333331,
+                "y": 423.83333333333326
             }
         },
         "props.tsx": {
