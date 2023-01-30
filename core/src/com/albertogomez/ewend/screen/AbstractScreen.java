@@ -1,9 +1,13 @@
 package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
@@ -26,17 +30,21 @@ public abstract class AbstractScreen implements Screen {
 
     protected final Box2DDebugRenderer box2DDebugRenderer;
 
+    protected final Table screenUI;
+    protected final Stage stage;
+
     /**
      * Constructor of the Abstract Screen
      * @param context Main Launcher class
      */
     public AbstractScreen(EwendLauncher context) {
         this.context = context;
-        //this.viewport = context.getScreenViewport(viewport);
         this.viewport =context.getScreenViewport();
         box2DDebugRenderer = context.getBox2DDebugRenderer();
         world = context.getWorld();
 
+        stage = context.getStage();
+        screenUI = getScreenUI(context.getSkin());
     }
 
     /**
@@ -47,6 +55,22 @@ public abstract class AbstractScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width,height);
+        stage.getViewport().update(width,height,true);
     }
+
+    @Override
+    public void show() {
+
+        stage.addActor(screenUI);
+    }
+
+    @Override
+    public void hide() {
+        stage.getRoot().removeActor(screenUI);
+    }
+
+
+
+    protected abstract Table getScreenUI(Skin skin);
 
 }

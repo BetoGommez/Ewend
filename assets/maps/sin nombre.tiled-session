@@ -35,8 +35,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 479.5,
-                "y": 178
+                "x": 583.5,
+                "y": 412.5
             }
         },
         "C:/Users/Trabajo/Desktop/recursos/entities.tsx": {
@@ -87,10 +87,10 @@
                 12
             ],
             "scale": 3,
-            "selectedLayer": 2,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 190.83333333333331,
-                "y": 423.83333333333326
+                "x": 131.5,
+                "y": 502.8333333333333
             }
         },
         "props.tsx": {

@@ -9,14 +9,19 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
@@ -28,6 +33,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import jdk.jfr.internal.LogLevel;
 
 import static com.albertogomez.ewend.constants.Constants.FIXED_TIME_STEP;
+import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
 /**
  * The Game Principal Launcher
@@ -61,9 +67,13 @@ public class EwendLauncher extends Game {
 
 	private SpriteBatch spriteBatch;
 
+	private Skin skin;
+	private Stage stage;
+
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
 
 
 		spriteBatch = new SpriteBatch();
@@ -79,9 +89,11 @@ public class EwendLauncher extends Game {
 		//Initialize AssetManager
 		assetManager = new AssetManager();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
+		initializeSkin();
+		stage = new Stage(new FitViewport(800*UNIT_SCALE,800*UNIT_SCALE),spriteBatch);
 		//SCREENS
 		gameCamera = new OrthographicCamera();
-		viewport = new FitViewport(12,9,gameCamera);
+		viewport = new FitViewport(800*UNIT_SCALE,800*UNIT_SCALE,gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		this.setScreen(ScreenType.LOADING);
 		//
@@ -122,9 +134,10 @@ public class EwendLauncher extends Game {
 			accumulator -= FIXED_TIME_STEP;
 		}
 
-
-
 		//final float alpha = accumulator/FIXED_TIME_STEP;
+		stage.getViewport().apply();
+		stage.act();
+		stage.draw();
 
 	}
 
@@ -134,6 +147,7 @@ public class EwendLauncher extends Game {
 		box2DDebugRenderer.dispose();;
 		world.dispose();
 		assetManager.dispose();
+		stage.dispose();
 	}
 
 	public Box2DDebugRenderer getBox2DDebugRenderer() {
@@ -162,5 +176,36 @@ public class EwendLauncher extends Game {
 
 	public SpriteBatch getSpriteBatch() {
 		return spriteBatch;
+	}
+
+	private void initializeSkin(){
+		//ttf bitmap
+		final ObjectMap<String,Object> resources = new ObjectMap<String,Object>();
+		final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/customfont.ttf"));
+		final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		fontParameter.minFilter=Texture.TextureFilter.Linear;
+		fontParameter.magFilter=Texture.TextureFilter.Linear;
+		final int[] sizeToChange = {16,20,26,32};
+		for(int  size : sizeToChange){
+			fontParameter.size = size;
+		    resources.put("font_"+size, fontGenerator.generateFont(fontParameter));
+		}
+		fontGenerator.dispose();
+		//load skin
+
+		final SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("ui/hud.atlas",resources);
+		assetManager.load("ui/hud.json", Skin.class,skinParameter);
+		assetManager.finishLoading();
+
+		skin = assetManager.get("ui/hud.json", Skin.class);
+	}
+
+
+	public Stage getStage() {
+		return stage;
+	}
+
+	public Skin getSkin() {
+		return skin;
 	}
 }

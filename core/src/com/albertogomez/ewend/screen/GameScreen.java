@@ -3,25 +3,20 @@ package com.albertogomez.ewend.screen;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.map.CollisionArea;
 import com.albertogomez.ewend.map.Map;
+import com.albertogomez.ewend.ui.GameUI;
+import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.ObjectFloatMap;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import static com.albertogomez.ewend.EwendLauncher.*;
 import static com.albertogomez.ewend.constants.Constants.*;
-import static com.badlogic.gdx.graphics.VertexAttributes.Usage.Position;
 
 /**
  * Screen of the gameplay
@@ -198,9 +193,10 @@ public class GameScreen extends AbstractScreen {
 
     }
 
-
-
-
+    @Override
+    protected Table getScreenUI(Skin skin) {
+        return new GameUI(stage,skin);
+    }
 
     @Override
     public void pause() {
