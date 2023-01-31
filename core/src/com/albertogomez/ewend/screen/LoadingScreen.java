@@ -32,15 +32,16 @@ public class LoadingScreen extends AbstractScreen<LoadingUI>{
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(assetManager.update()){
-            context.setScreen(ScreenType.GAME);
+            //context.setScreen(ScreenType.GAME);
         }
         screenUI.setProgress(assetManager.getProgress());
 
     }
 
     @Override
-    protected LoadingUI getScreenUI(Skin skin) {
-        return new LoadingUI(stage,skin);
+    protected LoadingUI getScreenUI(EwendLauncher context) {
+
+        return new LoadingUI(context);
     }
 
     @Override

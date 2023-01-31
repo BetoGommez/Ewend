@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -72,6 +73,8 @@ public class EwendLauncher extends Game {
 
 	private Skin skin;
 	private Stage stage;
+
+	private I18NBundle i18NBundle;
 
 	private static float HEIGHT;
 	private static float WIDTH;
@@ -203,7 +206,7 @@ public class EwendLauncher extends Game {
 		for(int size : sizeToChange){
 			fontParameter.size = size;
 			final BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
-			bitmapFont.getData().markupEnabled=true;
+			bitmapFont.getData().markupEnabled = true;
 		    resources.put("font_"+size, bitmapFont);
 		}
 		fontGenerator.dispose();
@@ -211,9 +214,10 @@ public class EwendLauncher extends Game {
 
 		final SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("ui/hud.atlas",resources);
 		assetManager.load("ui/hud.json", Skin.class,skinParameter);
+		assetManager.load("ui/strings", I18NBundle.class);
 		assetManager.finishLoading();
-
 		skin = assetManager.get("ui/hud.json", Skin.class);
+		i18NBundle = assetManager.get("ui/strings");
 	}
 
 
@@ -223,5 +227,9 @@ public class EwendLauncher extends Game {
 
 	public Skin getSkin() {
 		return skin;
+	}
+
+	public I18NBundle getI18NBundle() {
+		return i18NBundle;
 	}
 }

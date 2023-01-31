@@ -190,8 +190,8 @@ public class GameScreen extends AbstractScreen<GameUI> {
     }
 
     @Override
-    protected GameUI getScreenUI(Skin skin) {
-        return new GameUI(stage,skin);
+    protected GameUI getScreenUI(EwendLauncher context) {
+        return new GameUI(context);
     }
 
     @Override

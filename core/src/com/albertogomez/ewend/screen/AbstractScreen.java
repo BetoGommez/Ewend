@@ -46,7 +46,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen {
         world = context.getWorld();
 
         stage = context.getStage();
-        screenUI = getScreenUI(context.getSkin());
+        screenUI = getScreenUI(context);
     }
 
     /**
@@ -73,6 +73,6 @@ public abstract class AbstractScreen<T extends Table> implements Screen {
 
 
 
-    protected abstract T getScreenUI(Skin skin);
+    protected abstract T getScreenUI(final EwendLauncher context);
 
 }

@@ -6,9 +6,9 @@ filter: Nearest, Nearest
 repeat: none
 2
   rotate: false
-  xy: 480, 972
-  size: 892, 57
-  orig: 892, 57
+  xy: 1412, 1986
+  size: 55, 57
+  orig: 55, 57
   offset: 0, 0
   index: -1
 3
@@ -20,7 +20,7 @@ repeat: none
   index: -1
 95
   rotate: false
-  xy: 1080, 687
+  xy: 300, 301
   size: 200, 70
   orig: 200, 70
   offset: 0, 0
@@ -34,7 +34,7 @@ repeat: none
   index: -1
 about
   rotate: false
-  xy: 480, 671
+  xy: 480, 728
   size: 300, 301
   orig: 300, 301
   offset: 0, 0
@@ -48,28 +48,28 @@ bg
   index: -1
 btn
   rotate: false
-  xy: 1003, 1554
+  xy: 480, 621
   size: 308, 107
   orig: 308, 107
   offset: 0, 0
   index: -1
 close
   rotate: false
-  xy: 978, 1339
+  xy: 514, 406
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 close
   rotate: false
-  xy: 1742, 1681
+  xy: 391, 154
   size: 150, 147
   orig: 150, 147
   offset: 0, 0
   index: 2
 face
   rotate: false
-  xy: 912, 164
+  xy: 214, 108
   size: 177, 177
   orig: 177, 177
   offset: 0, 0
@@ -90,7 +90,7 @@ header
   index: -1
 heart
   rotate: false
-  xy: 728, 168
+  xy: 1731, 1440
   size: 184, 173
   orig: 184, 173
   offset: 0, 0
@@ -118,42 +118,42 @@ lock
   index: -1
 menu
   rotate: false
-  xy: 1192, 1339
+  xy: 978, 1331
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 misic
   rotate: false
-  xy: 978, 1124
+  xy: 728, 398
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 music_off
   rotate: false
-  xy: 300, 156
+  xy: 1517, 1498
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 next
   rotate: false
-  xy: 728, 456
+  xy: 1517, 1828
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 ok
   rotate: false
-  xy: 1303, 1747
+  xy: 1294, 814
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 pause
   rotate: false
-  xy: 514, 456
+  xy: 1303, 1747
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
@@ -167,14 +167,14 @@ play
   index: -1
 prew
   rotate: false
-  xy: 514, 126
+  xy: 1742, 1613
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 prize
   rotate: false
-  xy: 780, 671
+  xy: 780, 728
   size: 300, 301
   orig: 300, 301
   offset: 0, 0
@@ -202,49 +202,49 @@ setting
   index: -1
 settings
   rotate: false
-  xy: 1192, 1124
+  xy: 978, 1116
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 shop
   rotate: false
-  xy: 942, 456
+  xy: 1731, 1828
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 sound
   rotate: false
-  xy: 1517, 1828
+  xy: 1305, 599
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 sound_off
   rotate: false
-  xy: 1731, 1828
+  xy: 1303, 1532
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 514, 341
+  xy: 788, 613
   size: 225, 115
   orig: 225, 115
   offset: 0, 0
   index: 2
 star
   rotate: false
-  xy: 739, 341
+  xy: 1003, 1546
   size: 225, 115
   orig: 225, 115
   offset: 0, 0
   index: 4
 star
   rotate: false
-  xy: 964, 341
+  xy: 1080, 699
   size: 225, 115
   orig: 225, 115
   offset: 0, 0
@@ -258,14 +258,14 @@ star
   index: 3
 text
   rotate: false
-  xy: 214, 116
+  xy: 214, 68
   size: 220, 40
   orig: 220, 40
   offset: 0, 0
   index: -1
 upgrade
   rotate: false
-  xy: 1080, 757
+  xy: 1080, 814
   size: 214, 215
   orig: 214, 215
   offset: 0, 0
