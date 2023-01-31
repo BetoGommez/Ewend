@@ -1,6 +1,9 @@
 package com.albertogomez.ewend.ui;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.input.GameKeys;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -16,7 +19,7 @@ public class LoadingUI extends Table {
     private final TextButton pressAnyKeyButton;
 
     private String loadingString ;
-    public LoadingUI(EwendLauncher context) {
+    public LoadingUI(final EwendLauncher context) {
         super(context.getSkin());
         setFillParent(true);
 
@@ -32,7 +35,16 @@ public class LoadingUI extends Table {
         pressAnyKeyButton.getLabel().setWrap(true);
         pressAnyKeyButton.setVisible(false);
 
-        add(pressAnyKeyButton).expandX().fill().center().row();
+
+        pressAnyKeyButton.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                context.getInputManager().notifyKeyDown(GameKeys.INTERACT);
+                return true;
+            }
+        } );
+
+        add(pressAnyKeyButton).expand().fill().center().row();
         add(txtButton).expand().fillX().bottom().row();
         add(progressBar).expandX().fillX().bottom().pad(20,25,20,25);
         bottom();

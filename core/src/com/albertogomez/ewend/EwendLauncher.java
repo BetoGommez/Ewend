@@ -1,13 +1,10 @@
 package com.albertogomez.ewend;
 
+import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.screen.AbstractScreen;
 import com.albertogomez.ewend.screen.LoadingScreen;
 import com.albertogomez.ewend.screen.ScreenType;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.Color;
@@ -76,13 +73,14 @@ public class EwendLauncher extends Game {
 
 	private I18NBundle i18NBundle;
 
+	private InputManager inputManager;
+
 	private static float HEIGHT;
 	private static float WIDTH;
 
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-
 
 
 		spriteBatch = new SpriteBatch();
@@ -103,6 +101,12 @@ public class EwendLauncher extends Game {
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 		initializeSkin();
 		stage = new Stage(new FitViewport(WIDTH,HEIGHT),spriteBatch);
+
+		//input
+		inputManager = new InputManager();
+		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager,stage));
+		/////
+
 		//SCREENS
 		gameCamera = new OrthographicCamera();
 		viewport = new FitViewport(WIDTH*UNIT_SCALE,HEIGHT*UNIT_SCALE,gameCamera);
@@ -130,7 +134,6 @@ public class EwendLauncher extends Game {
 			}
 		}else {
 			Gdx.app.debug(TAG,"Switching to screen: "+ screenType);
-
 			setScreen(screen);
 		}
 	}
@@ -231,5 +234,9 @@ public class EwendLauncher extends Game {
 
 	public I18NBundle getI18NBundle() {
 		return i18NBundle;
+	}
+
+	public InputManager getInputManager() {
+		return inputManager;
 	}
 }

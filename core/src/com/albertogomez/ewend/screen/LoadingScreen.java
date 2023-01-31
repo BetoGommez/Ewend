@@ -1,6 +1,9 @@
 package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.input.GameKeys;
+import com.albertogomez.ewend.input.InputListener;
+import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -12,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 /**
  * Represent the screen when the game is loading
  */
-public class LoadingScreen extends AbstractScreen<LoadingUI>{
+public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     private final AssetManager assetManager;
     public LoadingScreen(final EwendLauncher context) {
@@ -20,7 +23,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI>{
 
         this.assetManager = context.getAssetManager();
         assetManager.load("maps/mapa.tmx", TiledMap.class);
-
 
     }
 
@@ -31,9 +33,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI>{
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(assetManager.update()){
-            //context.setScreen(ScreenType.GAME);
-        }
+
+        assetManager.update();
         screenUI.setProgress(assetManager.getProgress());
 
     }
@@ -65,6 +66,18 @@ public class LoadingScreen extends AbstractScreen<LoadingUI>{
 
     @Override
     public void dispose() {
+
+    }
+
+    @Override
+    public void keyPressed(InputManager inputManager, GameKeys key) {
+        if(assetManager.getProgress()>=1){
+            context.setScreen(ScreenType.GAME);
+        }
+    }
+
+    @Override
+    public void keyUp(InputManager inputManager, GameKeys key) {
 
     }
 }

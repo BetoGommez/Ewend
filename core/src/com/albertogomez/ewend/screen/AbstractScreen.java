@@ -1,6 +1,9 @@
 package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.input.GameKeys;
+import com.albertogomez.ewend.input.InputListener;
+import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -15,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * Screen interface for all game screens
  * @see com.badlogic.gdx.Screen
  */
-public abstract class AbstractScreen<T extends Table> implements Screen {
+public abstract class AbstractScreen<T extends Table> implements Screen, InputListener {
     /**
      * It's the main class launcher
      */
@@ -35,6 +38,8 @@ public abstract class AbstractScreen<T extends Table> implements Screen {
 
     protected final T screenUI;
 
+    protected final InputManager manager;
+
     /**
      * Constructor of the Abstract Screen
      * @param context Main Launcher class
@@ -44,7 +49,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen {
         this.viewport =context.getScreenViewport();
         box2DDebugRenderer = context.getBox2DDebugRenderer();
         world = context.getWorld();
-
+        manager = context.getInputManager();
         stage = context.getStage();
         screenUI = getScreenUI(context);
     }
@@ -62,12 +67,13 @@ public abstract class AbstractScreen<T extends Table> implements Screen {
 
     @Override
     public void show() {
+        manager.addInputListener(this);
         stage.addActor(screenUI);
     }
 
     @Override
     public void hide() {
-
+        manager.removeInputListener(this);
         stage.getRoot().removeActor(screenUI);
     }
 
@@ -75,4 +81,13 @@ public abstract class AbstractScreen<T extends Table> implements Screen {
 
     protected abstract T getScreenUI(final EwendLauncher context);
 
+    @Override
+    public void keyPressed(InputManager inputManager, GameKeys key) {
+
+    }
+
+    @Override
+    public void keyUp(InputManager inputManager, GameKeys key) {
+
+    }
 }
