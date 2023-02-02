@@ -2,6 +2,7 @@ package com.albertogomez.ewend;
 
 import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.audio.AudioType;
+import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.screen.AbstractScreen;
 import com.albertogomez.ewend.screen.LoadingScreen;
@@ -58,28 +59,26 @@ public class EwendLauncher extends Game {
 	/**
 	 * Viewport for all the game
 	 */
-	private FitViewport viewport;
 
-	private Box2DDebugRenderer box2DDebugRenderer;
 	private World world;
-	private float accumulator;
-
 	private WorldContactListener wcLstnr;
-
-	private AssetManager assetManager;
+	private Box2DDebugRenderer box2DDebugRenderer;
+	private ECSEngine ecsEngine;
 
 	private OrthographicCamera gameCamera;
-
+	private FitViewport viewport;
 	private SpriteBatch spriteBatch;
+	private float accumulator;
 
-	private Skin skin;
-	private Stage stage;
 
+
+	private AssetManager assetManager;
 	private I18NBundle i18NBundle;
-
+	private Stage stage;
+	private Skin skin;
 	private InputManager inputManager;
-
 	private AudioManager audioManager;
+
 
 	private static float HEIGHT;
 	private static float WIDTH;
@@ -114,13 +113,16 @@ public class EwendLauncher extends Game {
 
 		//audio
 		audioManager = new AudioManager(this);
-
 		////////
 
 		//input
 		inputManager = new InputManager();
 		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager,stage));
 		/////
+
+		//Ashley
+		ecsEngine = new ECSEngine(this);
+		//
 
 		//SCREENS
 		gameCamera = new OrthographicCamera();
@@ -157,12 +159,16 @@ public class EwendLauncher extends Game {
 	public void render() {
 		super.render();
 
-	//	Gdx.app.debug(TAG,""+ Gdx.graphics.getRawDeltaTime());
+
+
+		ecsEngine.update(Gdx.graphics.getRawDeltaTime());
 		accumulator += Math.min(0.25f,Gdx.graphics.getRawDeltaTime());
 		while(accumulator >= FIXED_TIME_STEP){
 			world.step(FIXED_TIME_STEP,6,2);
 			accumulator -= FIXED_TIME_STEP;
 		}
+
+
 
 		//final float alpha = accumulator/FIXED_TIME_STEP;
 		stage.getViewport().apply();
@@ -239,7 +245,9 @@ public class EwendLauncher extends Game {
 	}
 
 
-
+	public ECSEngine getEcsEngine() {
+		return ecsEngine;
+	}
 
 	public AudioManager getAudioManager() {
 		return audioManager;

@@ -7,10 +7,12 @@ import java.awt.event.ComponentListener;
 
 public class PlayerComponent implements Component, Pool.Poolable {
 
+    //te sirve de ejemplo de condicion que cumple el personaje
+    public boolean hasItem;
 
 
     @Override
     public void reset() {
-
+        hasItem=false;
     }
 }

@@ -3,7 +3,6 @@ package com.albertogomez.ewend.screen;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.input.GameKeys;
-import com.albertogomez.ewend.input.InputListener;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.Gdx;
@@ -12,8 +11,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 /**
  * Represent the screen when the game is loading

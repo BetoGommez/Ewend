@@ -27,12 +27,12 @@ public class GameScreen extends AbstractScreen<GameUI> {
     /**
      * Body object
      */
-    private final BodyDef bodyDef;
+
 
     /**
      * Defines the body behavior and its shape
      */
-    private final FixtureDef fixtureDef;
+
 
     private Body player;
 
@@ -69,65 +69,23 @@ public class GameScreen extends AbstractScreen<GameUI> {
 
         /////////////////
 
-        //Gestor de formas y fisicas
-        bodyDef = new BodyDef();
-        fixtureDef = new FixtureDef();
-        ////////////
 
         //Spawn personaje y objetos
-        spawnPlayer();
         spawnCollisionAreas();
+        context.getEcsEngine().createPlayer(map.getStartLocation(),1,1);
         ////////////
     }
 
-    private void spawnPlayer(){
-        resetBodieAndFixtureDefinition();
 
-        bodyDef.position.set(map.getStartLocation());
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.gravityScale=1;
-        bodyDef.fixedRotation=true;
-
-        player= world.createBody(bodyDef);
-        player.setUserData("PLAYER");
-
-        fixtureDef.density=1;
-        fixtureDef.isSensor=false;
-        fixtureDef.restitution=0;
-        fixtureDef.friction=0.5f;
-        fixtureDef.filter.categoryBits = BIT_PLAYER;
-        fixtureDef.filter.maskBits = BIT_GROUND;
-        final PolygonShape pShape = new PolygonShape();
-        pShape.setAsBox(0.5f,0.5f);
-        fixtureDef.shape = pShape;
-
-        player.createFixture(fixtureDef);
-        pShape.dispose();
-    }
-
-    private void resetBodieAndFixtureDefinition(){
-
-        bodyDef.position.set(0,0);
-        bodyDef.fixedRotation=false;
-        bodyDef.gravityScale = 1;
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        fixtureDef.density=0;
-        fixtureDef.isSensor=false;
-        fixtureDef.restitution=0;
-        fixtureDef.friction=0.2f;
-
-        fixtureDef.filter.categoryBits = 0x0001;
-        fixtureDef.filter.maskBits = -1;
-        fixtureDef.shape = null;
-    }
     private void spawnCollisionAreas(){
+        final BodyDef bodyDef = new BodyDef();;
+        final FixtureDef fixtureDef = new FixtureDef();
+
         for(final CollisionArea collisionArea : map.getCollisionAreas()){
-            resetBodieAndFixtureDefinition();
+
 
             bodyDef.position.set(collisionArea.getX(),collisionArea.getY());
             bodyDef.fixedRotation=true;
-            bodyDef.gravityScale = 1;
-            bodyDef.type = BodyDef.BodyType.StaticBody;
             final Body body = world.createBody(bodyDef);
 
             body.setUserData("GROUND");
@@ -158,34 +116,14 @@ public class GameScreen extends AbstractScreen<GameUI> {
     public void render(float delta) {
         Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        final float velx;
-        final float vely ;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)||Gdx.input.isTouched()){
-            velx=3;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            velx=-3;
-        }else {
-            velx=0;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            vely=3;
-        }else if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            vely=-3;
-        }else{
-            vely = player.getLinearVelocity().y;
-        }
 
 
 
 
 
 
-        player.applyLinearImpulse(
-                ((velx-player.getLinearVelocity().x) * player.getMass()),
-                ((vely-player.getLinearVelocity().y) * player.getMass()),
-                player.getWorldCenter().x,player.getWorldCenter().y,true
-        );
+
+
 
         viewport.apply(true);
         mapRenderer.setView(gameCamera);

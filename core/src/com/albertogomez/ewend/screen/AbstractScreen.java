@@ -3,15 +3,12 @@ package com.albertogomez.ewend.screen;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.input.GameKeys;
-import com.albertogomez.ewend.input.InputListener;
+import com.albertogomez.ewend.input.GameKeyInputListener;
 import com.albertogomez.ewend.input.InputManager;
-import com.albertogomez.ewend.ui.LoadingUI;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -19,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
  * Screen interface for all game screens
  * @see com.badlogic.gdx.Screen
  */
-public abstract class AbstractScreen<T extends Table> implements Screen, InputListener {
+public abstract class AbstractScreen<T extends Table> implements Screen, GameKeyInputListener {
     /**
      * It's the main class launcher
      */
