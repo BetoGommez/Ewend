@@ -1,5 +1,7 @@
 package com.albertogomez.ewend;
 
+import com.albertogomez.ewend.audio.AudioManager;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.screen.AbstractScreen;
 import com.albertogomez.ewend.screen.LoadingScreen;
@@ -7,6 +9,8 @@ import com.albertogomez.ewend.screen.ScreenType;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -75,12 +79,16 @@ public class EwendLauncher extends Game {
 
 	private InputManager inputManager;
 
+	private AudioManager audioManager;
+
 	private static float HEIGHT;
 	private static float WIDTH;
 
 	@Override
 	public void create () {
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
+
 
 
 		spriteBatch = new SpriteBatch();
@@ -99,8 +107,15 @@ public class EwendLauncher extends Game {
 		//Initialize AssetManager
 		assetManager = new AssetManager();
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
+
 		initializeSkin();
 		stage = new Stage(new FitViewport(WIDTH,HEIGHT),spriteBatch);
+		////////
+
+		//audio
+		audioManager = new AudioManager(this);
+
+		////////
 
 		//input
 		inputManager = new InputManager();
@@ -109,7 +124,7 @@ public class EwendLauncher extends Game {
 
 		//SCREENS
 		gameCamera = new OrthographicCamera();
-		viewport = new FitViewport(WIDTH*UNIT_SCALE,HEIGHT*UNIT_SCALE,gameCamera);
+		viewport = new FitViewport(WIDTH/2*UNIT_SCALE,HEIGHT/2*UNIT_SCALE,gameCamera);
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		this.setScreen(ScreenType.LOADING);
 		//
@@ -223,6 +238,12 @@ public class EwendLauncher extends Game {
 		i18NBundle = assetManager.get("ui/strings");
 	}
 
+
+
+
+	public AudioManager getAudioManager() {
+		return audioManager;
+	}
 
 	public Stage getStage() {
 		return stage;

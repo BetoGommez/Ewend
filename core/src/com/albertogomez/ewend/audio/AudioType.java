@@ -1,9 +1,9 @@
 package com.albertogomez.ewend.audio;
 
 public enum AudioType {
-    INTRO("audio/intro.flac",true,0.3f),
-    SELECT("audio/select.wav",false,0.5f),
-    LEVEL("audio/level_music.mp3",true,0.3f);
+
+    SELECT("audio/select.mp3",false,0.5f),
+    LEVEL("audio/level_music.mp3",true,0.4f);
 
     private final String filePath;
     private final boolean isMusic;

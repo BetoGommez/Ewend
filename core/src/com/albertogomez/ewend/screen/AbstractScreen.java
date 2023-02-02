@@ -1,6 +1,7 @@
 package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputListener;
 import com.albertogomez.ewend.input.InputManager;
@@ -40,6 +41,8 @@ public abstract class AbstractScreen<T extends Table> implements Screen, InputLi
 
     protected final InputManager manager;
 
+    protected final AudioManager audioManager;
+
     /**
      * Constructor of the Abstract Screen
      * @param context Main Launcher class
@@ -52,6 +55,8 @@ public abstract class AbstractScreen<T extends Table> implements Screen, InputLi
         manager = context.getInputManager();
         stage = context.getStage();
         screenUI = getScreenUI(context);
+
+        audioManager = context.getAudioManager();
     }
 
     /**

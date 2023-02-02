@@ -8,6 +8,7 @@ import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -62,6 +63,7 @@ public class GameScreen extends AbstractScreen<GameUI> {
 
         //Coge el mapa, lo mete en renderizador y se crea la clase mapa para su procesado
         TiledMap tiledMap = assetManager.get("maps/mapa.tmx", TiledMap.class);
+
         mapRenderer.setMap(tiledMap);
         map = new Map(tiledMap);
 
@@ -139,6 +141,11 @@ public class GameScreen extends AbstractScreen<GameUI> {
         }
     }
 
+    @Override
+    public void show() {
+        super.show();
+
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -149,10 +156,11 @@ public class GameScreen extends AbstractScreen<GameUI> {
 
     @Override
     public void render(float delta) {
-
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         final float velx;
         final float vely ;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+        if(Gdx.input.isKeyPressed(Input.Keys.D)||Gdx.input.isTouched()){
             velx=3;
         }else if(Gdx.input.isKeyPressed(Input.Keys.A)){
             velx=-3;
@@ -167,6 +175,8 @@ public class GameScreen extends AbstractScreen<GameUI> {
         }else{
             vely = player.getLinearVelocity().y;
         }
+
+
 
 
 
