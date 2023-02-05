@@ -1,13 +1,19 @@
 package com.albertogomez.ewend.input;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 
-public class InputManager implements InputProcessor {
+public class InputManager extends InputAdapter {
     private final GameKeys[] keyMapping ;
     private final boolean[] keyState;
 
     private final Array<GameKeyInputListener> listeners;
+
 
 
 
@@ -24,39 +30,9 @@ public class InputManager implements InputProcessor {
 
     }
 
-    public void addInputListener(final GameKeyInputListener listener){
-        listeners.add(listener);
-    }
-
-    public void removeInputListener(final GameKeyInputListener listener){
-        listeners.removeValue(listener,true);
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        final GameKeys gameKey = keyMapping[keycode];
-        if(gameKey==null){
-            //no mapping -> nothing to do
-            return false;
-        }
-
-        notifyKeyDown(gameKey);
-
-        return false;
-    }
-
-    public void notifyKeyDown(GameKeys gameKey){
-        keyState[gameKey.ordinal()]=true;
-        for(final GameKeyInputListener listener:listeners){
-            listener.keyPressed(this,gameKey);
-        }
-    }
-
-
-
-
-    @Override
+@Override
     public boolean keyUp(int keycode) {
+
         final GameKeys gameKey = keyMapping[keycode];
         if(gameKey==null){
             //no mapping -> nothing to do
@@ -68,44 +44,69 @@ public class InputManager implements InputProcessor {
         return false;
     }
 
-    public void notifyKeyUp(GameKeys gameKey){
-        keyState[gameKey.ordinal()]=false;
-        for(final GameKeyInputListener listener:listeners){
+
+
+
+    @Override
+    public boolean keyDown(int keycode) {
+        final GameKeys gameKey = keyMapping[keycode];
+        if(gameKey==null){
+            //no mapping -> nothing to do
+            return false;
+        }
+
+
+        notifyKeyDown(gameKey);
+        Gdx.app.debug("SE ESTA PULSANDO","AAAAAAAAAAAA");
+
+
+        return true;
+
+    }
+
+
+
+
+
+    public void notifyKeyDown(GameKeys gameKey){
+        keyState[gameKey.ordinal()]=true;
+        for( GameKeyInputListener listener:listeners){
             listener.keyPressed(this,gameKey);
         }
     }
+
+
+
+
+
+
+    public void notifyKeyUp(GameKeys gameKey){
+        keyState[gameKey.ordinal()]=false;
+
+        for(final GameKeyInputListener listener:listeners){
+
+            listener.keyUp(this,gameKey);
+        }
+
+    }
+
+
 
     public boolean isKeyPressed(final GameKeys gameKey){
         return keyState[gameKey.ordinal()];
     }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
+    public void addInputListener(final GameKeyInputListener listener){
+        listeners.add(listener);
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+    public void removeInputListener(final GameKeyInputListener listener){
+        listeners.removeValue(listener,true);
     }
 
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
 
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
 
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
 
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
+
+
 }

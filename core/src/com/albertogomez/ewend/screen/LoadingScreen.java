@@ -101,7 +101,9 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
     }
 
     @Override
-    public void keyUp(InputManager inputManager, GameKeys key) {
-
+    public boolean keyUp(InputManager inputManager, GameKeys key) {
+        return false;
     }
+
+
 }

@@ -88,8 +88,5 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
 
     }
 
-    @Override
-    public void keyUp(InputManager inputManager, GameKeys key) {
 
-    }
 }

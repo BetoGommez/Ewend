@@ -52,6 +52,9 @@ public class EwendLauncher extends Game {
 	 */
 	private  static final String TAG = EwendLauncher.class.getSimpleName();
 
+	public static final FixtureDef FIXTURE_DEF = new FixtureDef();
+	public static final BodyDef BODY_DEF = new BodyDef();
+
 	/**
 	 * Contains the mapping of the screens and its type
 	 */
@@ -110,7 +113,6 @@ public class EwendLauncher extends Game {
 		initializeSkin();
 		stage = new Stage(new FitViewport(WIDTH,HEIGHT),spriteBatch);
 		////////
-
 		//audio
 		audioManager = new AudioManager(this);
 		////////
@@ -120,13 +122,18 @@ public class EwendLauncher extends Game {
 		Gdx.input.setInputProcessor(new InputMultiplexer(inputManager,stage));
 		/////
 
+
+
+		//Setup game viewport
+		gameCamera = new OrthographicCamera();
+		viewport = new FitViewport(WIDTH*UNIT_SCALE,HEIGHT*UNIT_SCALE,gameCamera);
+		//
+
 		//Ashley
 		ecsEngine = new ECSEngine(this);
 		//
 
-		//SCREENS
-		gameCamera = new OrthographicCamera();
-		viewport = new FitViewport(WIDTH/2*UNIT_SCALE,HEIGHT/2*UNIT_SCALE,gameCamera);
+		//Set first screen
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
 		this.setScreen(ScreenType.LOADING);
 		//
@@ -167,6 +174,9 @@ public class EwendLauncher extends Game {
 			world.step(FIXED_TIME_STEP,6,2);
 			accumulator -= FIXED_TIME_STEP;
 		}
+
+
+
 
 
 
@@ -212,6 +222,10 @@ public class EwendLauncher extends Game {
 
 	public SpriteBatch getSpriteBatch() {
 		return spriteBatch;
+	}
+
+	public WorldContactListener getWcLstnr() {
+		return wcLstnr;
 	}
 
 	private void initializeSkin(){

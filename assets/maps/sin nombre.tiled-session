@@ -17,6 +17,7 @@
             "scaleInDock": 1
         },
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/fondo1.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1
         },
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/fondo2.tsx": {
@@ -35,8 +36,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 583.5,
-                "y": 412.5
+                "x": 814,
+                "y": 381.5
             }
         },
         "C:/Users/Trabajo/Desktop/recursos/entities.tsx": {
@@ -79,6 +80,7 @@
             "scaleInEditor": 1
         },
         "fondo2.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -86,11 +88,11 @@
             "expandedObjectLayers": [
                 12
             ],
-            "scale": 3,
-            "selectedLayer": 4,
+            "scale": 0.5,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 131.5,
-                "y": 502.8333333333333
+                "x": 114,
+                "y": -43
             }
         },
         "props.tsx": {

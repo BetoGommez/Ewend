@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="18" nextobjectid="66">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="66">
  <tileset firstgid="1" source="tilesheet.tsx"/>
  <tileset firstgid="33" source="fondo1.tsx"/>
  <tileset firstgid="105" source="fondo2.tsx"/>
  <tileset firstgid="177" source="props.tsx"/>
  <layer id="9" name="background" width="30" height="20" locked="1">
   <data encoding="base64" compression="zlib">
-   eJzt0cduwkAQxnG/irFDCz10CL2ETgJJKKGTkPd/Av6XSNEKG8vsgcOO9DuM5tvZlVbXNM0DAyYe4IUPfgQQhK5yKqdyd5ezmxs3MB3sdjMT+z9ib8XtvSJxZlw57/Q/HhGSmA8jgihiiCOBJySRQhoZZCXmc8ijgCKeUUIZFVRRQx0NifkmWmjjBR100UMfAwwxwlhi/hVvmGCKd3zgEzPMscASXxLzK6yxwRY77HHAEd/4sdgt9v/zJ/za7Hdal94i9qqs6wycpGOA
+   eJzt0clSwkAUQNH8SkxQBhGZFJR5nmdFZhAQ/v8LuJtUpboqEEIvsCqLs3jpm9eLVhVFeYAGHR484gle+OCH6nZu53Z31507126g29jt5EycDeJsxem9IvFMu/C/3fcI4FliH8QLQnhFGBFEEUMcb3hHQmKfxAc+kUIaGWSRQx4FFFGS2JdRQRU11NFAEy200UEXPYl9HwMMMcIXvjHGDyaYYoa5xH6BJVZYY4NfbLHDHn8Wu8XZ3B9wPLPf7r3GHvM3c3PtHln9f7n3BPyEgoM=
   </data>
  </layer>
  <layer id="11" name="background_forest" width="30" height="20" locked="1">

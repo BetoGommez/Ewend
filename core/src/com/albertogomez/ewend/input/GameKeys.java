@@ -3,12 +3,14 @@ package com.albertogomez.ewend.input;
 import com.badlogic.gdx.Input;
 
 public enum GameKeys {
-    LEFT(Input.Keys.A),
-    RIGHT(Input.Keys.D),
-    JUMP(Input.Keys.SPACE),
+    LEFT(Input.Keys.A,Input.Keys.LEFT),
+    RIGHT(Input.Keys.D,Input.Keys.RIGHT),
+    JUMP(Input.Keys.W,Input.Keys.UP),
     ATTACK(Input.Keys.F),
-    LOAD(Input.Keys.SHIFT_LEFT),
-    INTERACT(Input.Keys.E);
+    LOAD(Input.Keys.CONTROL_LEFT),
+    INTERACT(Input.Keys.E),
+
+    DASH(Input.Keys.SHIFT_LEFT);
 
     final int[] keyCode;
 
