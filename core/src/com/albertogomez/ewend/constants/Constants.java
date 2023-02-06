@@ -9,4 +9,5 @@ public class Constants {
     public static final short BIT_BOX = 1 <<1;
     public static final short BIT_GROUND = 1 <<2;
     public static final short BIT_PLAYER = 1 <<3;
+    public static final String PLAYER_SPRITE_PATH = "character/character_effects.atlas";
 }

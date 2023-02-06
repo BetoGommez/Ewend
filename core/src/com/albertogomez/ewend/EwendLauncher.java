@@ -182,7 +182,7 @@ public class EwendLauncher extends Game {
 		ecsEngine.update(deltaTime);
 		accumulator += deltaTime;
 		while(accumulator >= FIXED_TIME_STEP){
-			world.step(FIXED_TIME_STEP,6,2);
+			world.step(FIXED_TIME_STEP,12,2);
 			accumulator -= FIXED_TIME_STEP;
 		}
 
@@ -196,6 +196,7 @@ public class EwendLauncher extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
+		gameRenderer.dispose();
 		box2DDebugRenderer.dispose();;
 		world.dispose();
 		assetManager.dispose();

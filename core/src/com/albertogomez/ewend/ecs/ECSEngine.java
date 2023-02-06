@@ -4,8 +4,11 @@ import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.PlayerComponent;
+import com.albertogomez.ewend.ecs.system.AnimationSystem;
+import com.albertogomez.ewend.ecs.system.PlayerAnimationSystem;
 import com.albertogomez.ewend.ecs.system.PlayerCameraSystem;
 import com.albertogomez.ewend.ecs.system.PlayerMovementSystem;
+import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
@@ -17,13 +20,13 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import static com.albertogomez.ewend.EwendLauncher.BODY_DEF;
 import static com.albertogomez.ewend.EwendLauncher.FIXTURE_DEF;
-import static com.albertogomez.ewend.constants.Constants.BIT_GROUND;
-import static com.albertogomez.ewend.constants.Constants.BIT_PLAYER;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 public class ECSEngine extends PooledEngine {
 
     public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
     public static final ComponentMapper<B2DComponent> b2dCmpMapper = ComponentMapper.getFor(B2DComponent.class);
+    public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
     private final World world;
 
     public ECSEngine(final EwendLauncher context) {
@@ -32,6 +35,8 @@ public class ECSEngine extends PooledEngine {
 
         this.addSystem(new PlayerMovementSystem(context));
         this.addSystem(new PlayerCameraSystem(context));
+        this.addSystem(new AnimationSystem(context));
+        this.addSystem(new PlayerAnimationSystem(context));
 
     }
 
@@ -58,7 +63,7 @@ public class ECSEngine extends PooledEngine {
 
         b2DComponent.width = width;
         b2DComponent.height = height;
-        b2DComponent.renderPosition = b2DComponent.body.getPosition();
+        b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
 
 
         FIXTURE_DEF.density=1;
@@ -69,7 +74,7 @@ public class ECSEngine extends PooledEngine {
         FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
         FIXTURE_DEF.filter.maskBits = BIT_GROUND;
         final PolygonShape pShape = new PolygonShape();
-        pShape.setAsBox(0.5f,0.5f);
+        pShape.setAsBox(0.4f,0.4f);
         FIXTURE_DEF.shape = pShape;
         b2DComponent.body.createFixture(FIXTURE_DEF);
         pShape.dispose();
@@ -78,7 +83,11 @@ public class ECSEngine extends PooledEngine {
 
         //animation component
         final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+        animationComponent.aniType = AnimationType.PLAYER_IDLE;
+        animationComponent.width = 80 * UNIT_SCALE;
+        animationComponent.height = 80 * UNIT_SCALE;
         player.add(animationComponent);
+
 
         this.addEntity(player);
     }

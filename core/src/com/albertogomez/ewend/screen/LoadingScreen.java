@@ -28,6 +28,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
         //load characters and effects
         assetManager.load("character/character_effects.atlas", TextureAtlas.class);
+        assetManager.load("character/prueba.atlas", TextureAtlas.class);
 
         //load maps
         for(final MapType mapType : MapType.values()){
@@ -62,12 +63,12 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         assetManager.update();
-        screenUI.setProgress(assetManager.getProgress());
 
         if(!isMusicLoaded&& assetManager.isLoaded(AudioType.LEVEL.getFilePath())){
             isMusicLoaded=true;
             audioManager.playAudio(AudioType.LEVEL);
         }
+        screenUI.setProgress(assetManager.getProgress());
 
     }
 

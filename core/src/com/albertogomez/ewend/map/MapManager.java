@@ -69,7 +69,7 @@ public class MapManager {
             listener.mapChange(currentMap);
         }
 
-        context.getEcsEngine().removeAllEntities();
+
     }
 
     private void destroyCollisionAreas(){

@@ -1,6 +1,6 @@
 
 character_effects.png
-size: 2048, 2048
+size: 2048, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
@@ -20,378 +20,357 @@ throw_attack
   index: 1
 AttackA
   rotate: false
-  xy: 216, 2
+  xy: 66, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 AttackA
   rotate: false
-  xy: 432, 2
+  xy: 132, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 AttackA
   rotate: false
-  xy: 648, 2
+  xy: 198, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
 AttackA
   rotate: false
-  xy: 864, 2
+  xy: 264, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 5
 AttackA
   rotate: false
-  xy: 1080, 2
+  xy: 330, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 6
 AttackA
   rotate: false
-  xy: 1296, 2
+  xy: 396, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 7
 death
   rotate: false
-  xy: 1512, 2
+  xy: 462, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 death
   rotate: false
-  xy: 1728, 2
+  xy: 528, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 death
   rotate: false
-  xy: 0, 219
+  xy: 594, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 death
   rotate: false
-  xy: 216, 219
+  xy: 660, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
 death
   rotate: false
-  xy: 432, 219
+  xy: 726, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 5
 hit
   rotate: false
-  xy: 648, 219
+  xy: 792, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 hit
   rotate: false
-  xy: 864, 219
+  xy: 858, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 hit
   rotate: false
-  xy: 1080, 219
+  xy: 924, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 idle
   rotate: false
-  xy: 1296, 219
+  xy: 990, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 idle
   rotate: false
-  xy: 1512, 219
+  xy: 1056, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 idle
   rotate: false
-  xy: 1728, 219
+  xy: 1122, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 idle
   rotate: false
-  xy: 0, 436
+  xy: 1188, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
 idle
   rotate: false
-  xy: 216, 436
+  xy: 1254, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 5
 idle
   rotate: false
-  xy: 432, 436
+  xy: 1320, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 6
 idle
   rotate: false
-  xy: 648, 436
+  xy: 1386, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 7
 idle
   rotate: false
-  xy: 864, 436
+  xy: 1452, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 8
 idle
   rotate: false
-  xy: 1080, 436
+  xy: 1518, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 9
 jump_landing
   rotate: false
-  xy: 1296, 436
+  xy: 1584, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 jump_mid
   rotate: false
-  xy: 1512, 436
+  xy: 1650, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 jump_mid
   rotate: false
-  xy: 1728, 436
+  xy: 1716, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 jump_mid
   rotate: false
-  xy: 0, 653
+  xy: 1782, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 jump_mid
   rotate: false
-  xy: 216, 653
+  xy: 1848, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
-jump_start
-  rotate: false
-  xy: 432, 653
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: 1
-jump_start
-  rotate: false
-  xy: 648, 653
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: 2
-play
-  rotate: false
-  xy: 864, 653
-  size: 214, 215
-  orig: 214, 215
-  offset: 0, 0
-  index: -1
 run
   rotate: false
-  xy: 1080, 653
+  xy: 1914, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 run
   rotate: false
-  xy: 1296, 653
+  xy: 1980, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 run
   rotate: false
-  xy: 1512, 653
+  xy: 0, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 run
   rotate: false
-  xy: 1728, 653
+  xy: 66, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
 run
   rotate: false
-  xy: 0, 870
+  xy: 132, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 5
 run
   rotate: false
-  xy: 216, 870
+  xy: 198, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 6
 run
   rotate: false
-  xy: 432, 870
+  xy: 264, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 7
 run
   rotate: false
-  xy: 648, 870
+  xy: 330, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 8
 slide
   rotate: false
-  xy: 864, 870
+  xy: 396, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 slide_end
   rotate: false
-  xy: 1080, 870
+  xy: 462, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 slide_end
   rotate: false
-  xy: 1296, 870
+  xy: 528, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 slide_start
   rotate: false
-  xy: 1512, 870
+  xy: 594, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 slide_start
   rotate: false
-  xy: 1728, 870
+  xy: 660, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 throw_attack
   rotate: false
-  xy: 0, 1087
+  xy: 726, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 throw_attack
   rotate: false
-  xy: 216, 1087
+  xy: 792, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 throw_attack
   rotate: false
-  xy: 432, 1087
+  xy: 858, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 4
 throw_attack
   rotate: false
-  xy: 648, 1087
+  xy: 924, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 5
 throw_attack
   rotate: false
-  xy: 864, 1087
+  xy: 990, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 6
 throw_attack
   rotate: false
-  xy: 1080, 1087
+  xy: 1056, 68
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 7
 throw_dagger
   rotate: false
-  xy: 1296, 1087
+  xy: 1122, 68
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: -1
 throw_dagger_hit
   rotate: false
-  xy: 1512, 1087
+  xy: 1188, 68
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: 1
 throw_dagger_hit
   rotate: false
-  xy: 1728, 1087
+  xy: 1254, 68
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
   index: 2
 throw_dagger_hit
   rotate: false
-  xy: 0, 1304
+  xy: 1320, 68
   size: 15, 16
   orig: 15, 16
   offset: 0, 0
