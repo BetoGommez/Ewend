@@ -1,8 +1,6 @@
-package com.albertogomez.ewend.ui;
+package com.albertogomez.ewend.view;
 
 import com.albertogomez.ewend.EwendLauncher;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 

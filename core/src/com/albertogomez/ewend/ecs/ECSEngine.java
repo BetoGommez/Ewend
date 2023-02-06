@@ -1,6 +1,7 @@
 package com.albertogomez.ewend.ecs;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.PlayerComponent;
 import com.albertogomez.ewend.ecs.system.PlayerCameraSystem;
@@ -31,6 +32,7 @@ public class ECSEngine extends PooledEngine {
 
         this.addSystem(new PlayerMovementSystem(context));
         this.addSystem(new PlayerCameraSystem(context));
+
     }
 
 
@@ -43,7 +45,7 @@ public class ECSEngine extends PooledEngine {
         player.add(playerComponent);
 
         //box2d
-        resetBodieAndFixtureDefinition();
+        EwendLauncher.resetBodieAndFixtureDefinition();
         final B2DComponent b2DComponent = this.createComponent(B2DComponent.class);
 
         BODY_DEF.type = BodyDef.BodyType.DynamicBody;
@@ -56,6 +58,7 @@ public class ECSEngine extends PooledEngine {
 
         b2DComponent.width = width;
         b2DComponent.height = height;
+        b2DComponent.renderPosition = b2DComponent.body.getPosition();
 
 
         FIXTURE_DEF.density=1;
@@ -72,24 +75,14 @@ public class ECSEngine extends PooledEngine {
         pShape.dispose();
         player.add(b2DComponent);
 
+
+        //animation component
+        final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+        player.add(animationComponent);
+
         this.addEntity(player);
     }
 
 
-    private void resetBodieAndFixtureDefinition(){
 
-
-        BODY_DEF.position.set(0,0);
-        BODY_DEF.fixedRotation=false;
-        BODY_DEF.gravityScale = 1;
-        BODY_DEF.type = BodyDef.BodyType.StaticBody;
-        FIXTURE_DEF.density=0;
-        FIXTURE_DEF.isSensor=false;
-        FIXTURE_DEF.restitution=0;
-        FIXTURE_DEF.friction=0.2f;
-
-        FIXTURE_DEF.filter.categoryBits = 0x0001;
-        FIXTURE_DEF.filter.maskBits = -1;
-        FIXTURE_DEF.shape = null;
-    }
 }

@@ -4,12 +4,14 @@ import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
-import com.albertogomez.ewend.ui.LoadingUI;
+import com.albertogomez.ewend.map.MapType;
+import com.albertogomez.ewend.view.LoadingUI;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
 /**
@@ -23,7 +25,14 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         super(context);
 
         this.assetManager = context.getAssetManager();
-        assetManager.load("maps/mapa.tmx", TiledMap.class);
+
+        //load characters and effects
+        assetManager.load("character/character_effects.atlas", TextureAtlas.class);
+
+        //load maps
+        for(final MapType mapType : MapType.values()){
+            assetManager.load(mapType.getFilePath(),TiledMap.class);
+        }
 
         //load audio
         isMusicLoaded=false;
@@ -94,8 +103,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     @Override
     public void keyPressed(InputManager inputManager, GameKeys key) {
-        audioManager.playAudio(AudioType.SELECT);
         if(assetManager.getProgress()>=1){
+            audioManager.playAudio(AudioType.SELECT);
             context.setScreen(ScreenType.GAME);
         }
     }

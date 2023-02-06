@@ -20,8 +20,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
     private float dashDelay;
     private boolean dash;
     private int dashMultiplier;
-private boolean jump;
-
+    private boolean jump;
     private int xFactor;
 
 
@@ -34,7 +33,6 @@ private boolean jump;
         xFactor =0;
         dashDelay=0;
         dashMultiplier=5;
-
     }
 
     @Override
@@ -45,15 +43,13 @@ private boolean jump;
         if(dashDelay<0){
             dashDelay+=deltaTime;
         }
-
         jumpMovement(b2DComponent,playerComponent);
+
         if(dash) {
             dashMovement(b2DComponent, playerComponent, deltaTime);
         }else{
             horizontalMovement(b2DComponent,playerComponent);
-
         }
-
     }
 
 
@@ -83,7 +79,7 @@ private boolean jump;
 
     private void dashMovement(B2DComponent b2DComponent,PlayerComponent playerComponent,float deltaTime){
             dashDelay+=deltaTime;
-            b2DComponent.body.setLinearVelocity(playerComponent.speed.x*dashMultiplier,0);
+            b2DComponent.body.setLinearVelocity(playerComponent.speed.x*dashMultiplier*xFactor,0);
 
             if(dashDelay>0.2){//Time that lasts the dash
                 dash=false;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 public enum GameKeys {
     LEFT(Input.Keys.A,Input.Keys.LEFT),
     RIGHT(Input.Keys.D,Input.Keys.RIGHT),
-    JUMP(Input.Keys.W,Input.Keys.UP),
+    JUMP(Input.Keys.W,Input.Keys.UP,Input.Keys.SPACE),
     ATTACK(Input.Keys.F),
     LOAD(Input.Keys.CONTROL_LEFT),
     INTERACT(Input.Keys.E),

@@ -55,7 +55,7 @@ public class Map {
         //TODO CUANDO CAMBIES DE MAPA COJES DE AQUÍ LAS CAPAS DE COLISIONES
         final MapLayer objetos = tiledMap.getLayers().get("objetos");
         if(objetos==null){
-            Gdx.app.debug(TAG,"The colision layer: "+objetos.getName()+" wasn't found");
+            Gdx.app.debug(TAG,"The collision layer: "+objetos.getName()+" wasn't found");
             return;
         }
 
@@ -114,5 +114,9 @@ public class Map {
 
     public Vector2 getStartLocation() {
         return startLocation;
+    }
+
+    public TiledMap getTiledMap() {
+        return tiledMap;
     }
 }

@@ -88,11 +88,22 @@
             "expandedObjectLayers": [
                 12
             ],
-            "scale": 0.5,
-            "selectedLayer": 0,
+            "scale": 1.5,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 114,
-                "y": -43
+                "x": 290,
+                "y": 398.3333333333333
+            }
+        },
+        "mapa2.tmx": {
+            "expandedObjectLayers": [
+                12
+            ],
+            "scale": 1,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 544,
+                "y": 400.5
             }
         },
         "props.tsx": {
@@ -115,7 +126,8 @@
         "fondo1.tsx",
         "fondo2.tsx",
         "props.tsx",
-        "mapa.tmx"
+        "mapa.tmx",
+        "mapa2.tmx"
     ],
     "project": "sin nombre.tiled-project",
     "recentFiles": [
@@ -124,6 +136,7 @@
         "fondo1.tsx",
         "fondo2.tsx",
         "props.tsx",
+        "mapa2.tmx",
         "mapa.tmx",
         "C:/Users/Trabajo/Desktop/recursos/mapa.tmx",
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/props.tsx",

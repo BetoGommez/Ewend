@@ -4,9 +4,12 @@ import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.input.InputManager;
+import com.albertogomez.ewend.map.MapManager;
 import com.albertogomez.ewend.screen.AbstractScreen;
+import com.albertogomez.ewend.screen.GameScreen;
 import com.albertogomez.ewend.screen.LoadingScreen;
 import com.albertogomez.ewend.screen.ScreenType;
+import com.albertogomez.ewend.view.GameRenderer;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
@@ -74,13 +77,15 @@ public class EwendLauncher extends Game {
 	private float accumulator;
 
 
-
+	private MapManager mapManager;
 	private AssetManager assetManager;
 	private I18NBundle i18NBundle;
 	private Stage stage;
 	private Skin skin;
 	private InputManager inputManager;
 	private AudioManager audioManager;
+
+	private GameRenderer gameRenderer;
 
 
 	private static float HEIGHT;
@@ -113,6 +118,10 @@ public class EwendLauncher extends Game {
 		initializeSkin();
 		stage = new Stage(new FitViewport(WIDTH,HEIGHT),spriteBatch);
 		////////
+
+		//MapManager
+		mapManager = new MapManager(this);
+		/////
 		//audio
 		audioManager = new AudioManager(this);
 		////////
@@ -132,6 +141,9 @@ public class EwendLauncher extends Game {
 		//Ashley
 		ecsEngine = new ECSEngine(this);
 		//
+
+		//Game Renderer
+		gameRenderer = new GameRenderer(this);
 
 		//Set first screen
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
@@ -165,26 +177,20 @@ public class EwendLauncher extends Game {
 	@Override
 	public void render() {
 		super.render();
+		final float deltaTime = Math.min(0.25f,Gdx.graphics.getRawDeltaTime());
 
-
-
-		ecsEngine.update(Gdx.graphics.getRawDeltaTime());
-		accumulator += Math.min(0.25f,Gdx.graphics.getRawDeltaTime());
+		ecsEngine.update(deltaTime);
+		accumulator += deltaTime;
 		while(accumulator >= FIXED_TIME_STEP){
 			world.step(FIXED_TIME_STEP,6,2);
 			accumulator -= FIXED_TIME_STEP;
 		}
 
-
-
-
-
-
+		gameRenderer.render(accumulator/FIXED_TIME_STEP);
 		//final float alpha = accumulator/FIXED_TIME_STEP;
 		stage.getViewport().apply();
-		stage.act();
+		stage.act(deltaTime);
 		stage.draw();
-
 	}
 
 	@Override
@@ -281,5 +287,26 @@ public class EwendLauncher extends Game {
 
 	public InputManager getInputManager() {
 		return inputManager;
+	}
+
+	public MapManager getMapManager() {
+		return mapManager;
+	}
+
+	public static void resetBodieAndFixtureDefinition(){
+
+
+		BODY_DEF.position.set(0,0);
+		BODY_DEF.fixedRotation=false;
+		BODY_DEF.gravityScale = 1;
+		BODY_DEF.type = BodyDef.BodyType.StaticBody;
+		FIXTURE_DEF.density=0;
+		FIXTURE_DEF.isSensor=false;
+		FIXTURE_DEF.restitution=0;
+		FIXTURE_DEF.friction=0.2f;
+
+		FIXTURE_DEF.filter.categoryBits = 0x0001;
+		FIXTURE_DEF.filter.maskBits = -1;
+		FIXTURE_DEF.shape = null;
 	}
 }
