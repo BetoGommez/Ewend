@@ -2,6 +2,7 @@ package com.albertogomez.ewend.map;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -21,6 +22,9 @@ public class MapManager {
 
     private final AssetManager assetManager;
 
+    private final ECSEngine ecsEngine;
+    private final Array<Entity> gameObjectsToRemove;
+
     private MapType currentMapType;
     private Map currentMap;
     private EnumMap<MapType, Map> mapCache;
@@ -31,10 +35,12 @@ public class MapManager {
         currentMapType = null;
         currentMap = null;
         world = context.getWorld();
+        ecsEngine = context.getEcsEngine();
         assetManager = context.getAssetManager();
         bodies = new Array<Body>();
         mapCache = new EnumMap<MapType, Map>(MapType.class);
         listeners = new Array<MapListener>();
+        gameObjectsToRemove = new Array<Entity>();
         this.context = context;
     }
 
@@ -50,6 +56,7 @@ public class MapManager {
         if(currentMap!=null){
             world.getBodies(bodies);
             destroyCollisionAreas();
+            destroyGameObjects();
         }
 
         //set new map
@@ -64,12 +71,31 @@ public class MapManager {
 
         //create map entities/bodies
         spawnCollisionAreas();
+        spawnGameObjects();
 
         for(final MapListener listener: listeners){
             listener.mapChange(currentMap);
         }
 
 
+    }
+
+    private void spawnGameObjects(){
+        for(final GameObject gameObject : currentMap.getGameObjects()){
+            ecsEngine.createGameObject(gameObject);
+        }
+    }
+
+    private void destroyGameObjects(){
+        for(final Entity entity : ecsEngine.getEntities()){
+            if(ECSEngine.gameObjCmpMapper.get(entity)!=null){
+                gameObjectsToRemove.add(entity);
+            }
+        }
+        for(final Entity entity : gameObjectsToRemove){
+            ecsEngine.removeEntity(entity);
+        }
+        gameObjectsToRemove.clear();
     }
 
     private void destroyCollisionAreas(){
@@ -81,7 +107,7 @@ public class MapManager {
     }
 
     private void spawnCollisionAreas(){
-        EwendLauncher.resetBodieAndFixtureDefinition();
+        EwendLauncher.resetBodyAndFixtureDefinition();
         for(final CollisionArea collisionArea : currentMap.getCollisionAreas()) {
             EwendLauncher.BODY_DEF.position.set(collisionArea.getX(), collisionArea.getY());
             EwendLauncher.BODY_DEF.fixedRotation = true;

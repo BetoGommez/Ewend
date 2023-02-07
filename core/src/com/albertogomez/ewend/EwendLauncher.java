@@ -1,5 +1,7 @@
 package com.albertogomez.ewend;
 
+import box2dLight.Light;
+import box2dLight.RayHandler;
 import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
@@ -41,8 +43,7 @@ import java.util.EnumMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import jdk.jfr.internal.LogLevel;
 
-import static com.albertogomez.ewend.constants.Constants.FIXED_TIME_STEP;
-import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 /**
  * The Game Principal Launcher
@@ -84,8 +85,10 @@ public class EwendLauncher extends Game {
 	private Skin skin;
 	private InputManager inputManager;
 	private AudioManager audioManager;
-
+	private RayHandler rayHandler;
 	private GameRenderer gameRenderer;
+
+	private PreferenceManager preferenceManager;
 
 
 	private static float HEIGHT;
@@ -105,7 +108,9 @@ public class EwendLauncher extends Game {
 		world = new World(new Vector2(0,-9.81f),true);
 		wcLstnr = new WorldContactListener();
 		world.setContactListener(wcLstnr);
-		box2DDebugRenderer = new Box2DDebugRenderer();
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(0,0,0,0.2f);
+		Light.setGlobalContactFilter(BIT_PLAYER, (short)1, BIT_GROUND);
 		////
 
 		WIDTH = Gdx.graphics.getWidth();
@@ -119,9 +124,7 @@ public class EwendLauncher extends Game {
 		stage = new Stage(new FitViewport(WIDTH,HEIGHT),spriteBatch);
 		////////
 
-		//MapManager
-		mapManager = new MapManager(this);
-		/////
+
 		//audio
 		audioManager = new AudioManager(this);
 		////////
@@ -142,8 +145,15 @@ public class EwendLauncher extends Game {
 		ecsEngine = new ECSEngine(this);
 		//
 
+		//MapManager
+		mapManager = new MapManager(this);
+		/////
+
 		//Game Renderer
 		gameRenderer = new GameRenderer(this);
+
+		//preference manager
+		preferenceManager = new PreferenceManager();
 
 		//Set first screen
 		screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
@@ -197,7 +207,8 @@ public class EwendLauncher extends Game {
 	public void dispose() {
 		super.dispose();
 		gameRenderer.dispose();
-		box2DDebugRenderer.dispose();;
+		box2DDebugRenderer.dispose();
+		rayHandler.dispose();
 		world.dispose();
 		assetManager.dispose();
 		stage.dispose();
@@ -294,7 +305,15 @@ public class EwendLauncher extends Game {
 		return mapManager;
 	}
 
-	public static void resetBodieAndFixtureDefinition(){
+	public RayHandler getRayHandler() {
+		return rayHandler;
+	}
+
+	public PreferenceManager getPreferenceManager() {
+		return preferenceManager;
+	}
+
+	public static void resetBodyAndFixtureDefinition(){
 
 
 		BODY_DEF.position.set(0,0);

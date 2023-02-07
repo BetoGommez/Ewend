@@ -1,5 +1,6 @@
 package com.albertogomez.ewend.screen;
 
+import box2dLight.RayHandler;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.input.GameKeys;
@@ -35,7 +36,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
     protected final Stage stage;
 
     protected final T screenUI;
-
+    protected final RayHandler rayHandler;
     protected final InputManager manager;
 
     protected final AudioManager audioManager;
@@ -52,7 +53,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
         manager = context.getInputManager();
         stage = context.getStage();
         screenUI = getScreenUI(context);
-
+        rayHandler = context.getRayHandler();
         audioManager = context.getAudioManager();
     }
 
@@ -65,6 +66,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
     public void resize(int width, int height) {
         viewport.update(width,height);
         stage.getViewport().update(width,height,true);
+        rayHandler.useCustomViewport(viewport.getScreenX(),viewport.getScreenY(), viewport.getScreenWidth(),viewport.getScreenHeight());
     }
 
     @Override

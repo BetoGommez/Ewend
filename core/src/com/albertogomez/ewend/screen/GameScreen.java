@@ -1,10 +1,12 @@
 package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.PreferenceManager;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.*;
 import com.albertogomez.ewend.view.GameUI;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,36 +20,23 @@ import static com.albertogomez.ewend.constants.Constants.*;
  * Screen of the gameplay
  */
 public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
-
-    /**
-     * Body object
-     */
-
-
-    /**
-     * Defines the body behavior and its shape
-     */
-
-
-    private Body player;
-
-
-    private final OrthographicCamera gameCamera;
-
     private final MapManager mapManager;
+    private final PreferenceManager prefMgr;
+    private final Entity player;
+
     public GameScreen(final EwendLauncher context) {
         super(context);
 
         //Lanza el renderizador de mapa
 
-        this.gameCamera = context.getGameCamera();
-
         mapManager = context.getMapManager();
-        mapManager.addMapListener(this);
         mapManager.setMap(MapType.MAP_1);
+        prefMgr = context.getPreferenceManager();
+
+
 
         //SE ENCARGA EL MAPMANAGER
-        context.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartLocation(),0.75f,0.75f);
+        player = context.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartLocation(),0.75f,0.75f);
         ////////////
     }
 
@@ -71,6 +60,8 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
         } else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
             mapManager.setMap(MapType.MAP_2);
 
+        } else if(Gdx.input.isKeyPressed(Input.Keys.NUM_3)){
+            prefMgr.saveGameState(player);
         }
 
 

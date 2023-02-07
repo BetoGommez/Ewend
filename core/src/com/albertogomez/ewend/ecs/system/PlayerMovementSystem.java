@@ -56,7 +56,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         if (jump) {
             jump = false;
             b2DComponent.body.applyLinearImpulse(
-                    (b2DComponent.body.getLinearVelocity().x),
+                    (b2DComponent.body.getLinearVelocity().x)* b2DComponent.orientation,
                     ((playerComponent.speed.y - b2DComponent.body.getLinearVelocity().y)),
                     b2DComponent.body.getWorldCenter().x, b2DComponent.body.getWorldCenter().y, true
             );

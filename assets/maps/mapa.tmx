@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="67">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="20" nextobjectid="83">
  <tileset firstgid="1" source="tilesheet.tsx"/>
  <tileset firstgid="33" source="fondo1.tsx"/>
  <tileset firstgid="105" source="fondo2.tsx"/>
@@ -16,20 +16,36 @@
  </layer>
  <layer id="1" name="basemap" width="30" height="20" locked="1">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMFSANBDLALEsGh4KQA4JjwIGBlYyMBuaXhBgIdEMXjIwHxALomEeMs0aKRgAt2EGNA==
+   eJxjYBgFo2AUjIJRMApoD+SQ8ChgYGAlA7Oh6QUBFhLN4CUD82FxPw+ZZo0UDAD68AVF
   </data>
  </layer>
- <objectgroup id="17" name="playerLocation">
-  <object id="60" x="56" y="420.667">
+ <objectgroup id="17" name="playerLocation" locked="1">
+  <object id="60" x="50" y="479.334">
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="12" name="objetos">
-  <object id="41" x="433" y="576" width="158" height="64"/>
-  <object id="44" x="593" y="528" width="175" height="110"/>
-  <object id="55" x="226" y="383.333" width="126.667" height="31.3333"/>
-  <object id="56" x="176.667" y="384" width="30.6667" height="30"/>
-  <object id="57" x="-1.33333" y="528" width="431.333" height="111.333"/>
-  <object id="63" gid="182" x="-4.33333" y="446" width="131" height="135"/>
+ <objectgroup id="19" name="basebox" visible="0" locked="1">
+  <object id="69" x="481.333" y="528.667" width="62.6667" height="14.6667"/>
+  <object id="71" x="-1.33333" y="1.33333" width="961.333" height="640"/>
+  <object id="73" x="1.33333" y="528.667" width="428" height="109.333"/>
+  <object id="75" x="433.333" y="576.667" width="156" height="60.6667"/>
+  <object id="76" x="592.667" y="530" width="365.333" height="109.333"/>
+ </objectgroup>
+ <objectgroup id="12" name="gameObjects">
+  <object id="77" name="POTION" gid="182" x="432" y="536" width="32" height="32">
+   <properties>
+    <property name="type" value="POTION"/>
+   </properties>
+  </object>
+  <object id="80" name="SPIKE" gid="17" x="312" y="524.667" width="32" height="32">
+   <properties>
+    <property name="type" value="SPIKE"/>
+   </properties>
+  </object>
+  <object id="81" name="box" gid="29" x="183.333" y="475.333" width="32" height="32">
+   <properties>
+    <property name="type" value="BOX"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

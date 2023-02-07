@@ -4,7 +4,7 @@ import static com.albertogomez.ewend.constants.Constants.PLAYER_SPRITE_PATH;
 
 public enum AnimationType {
 
-    PLAYER_IDLE(PLAYER_SPRITE_PATH,"idle",0.05f),
+    PLAYER_IDLE(PLAYER_SPRITE_PATH,"idle",0.1f),
     PLAYER_JUMP_START(PLAYER_SPRITE_PATH,"jump_mid",0.05f),
     PLAYER_LANDING(PLAYER_SPRITE_PATH,"jump_landing",0.05f),
 

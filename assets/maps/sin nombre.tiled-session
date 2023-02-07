@@ -36,8 +36,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 814,
-                "y": 381.5
+                "x": 479.5,
+                "y": 178
             }
         },
         "C:/Users/Trabajo/Desktop/recursos/entities.tsx": {
@@ -77,39 +77,40 @@
         "fondo1.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 4
         },
         "fondo2.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 4
         },
         "mapa.tmx": {
             "expandedObjectLayers": [
                 12
             ],
-            "scale": 1.5,
-            "selectedLayer": 4,
+            "scale": 3,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 290,
-                "y": 398.3333333333333
+                "x": 479.8333333333333,
+                "y": 319.8333333333333
             }
         },
         "mapa2.tmx": {
             "expandedObjectLayers": [
+                19,
                 12
             ],
-            "scale": 1,
-            "selectedLayer": 4,
+            "scale": 0.75,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 544,
-                "y": 400.5
+                "x": 479.3333333333333,
+                "y": 320.66666666666663
             }
         },
         "props.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 2
+            "scaleInEditor": 4
         },
         "tilesheet.tsx": {
             "dynamicWrapping": false,

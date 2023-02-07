@@ -1,20 +1,28 @@
 package com.albertogomez.ewend.map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Polyline;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 
 import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
@@ -24,15 +32,23 @@ public class Map {
     private final TiledMap tiledMap;
     private final Vector2 startLocation;
 
+    private final Array<GameObject> gameObjects;
+    private final IntMap<Animation<Sprite>> mapAnimations;
+
     private final Array<CollisionArea> collisionAreas;
 
     public Map(TiledMap tiledMap) {
         this.tiledMap = tiledMap;
+        collisionAreas = new Array<CollisionArea>();
 
         startLocation = new Vector2();
-        collisionAreas = new Array<CollisionArea>();
+
+        mapAnimations = new IntMap<Animation<Sprite>>();
+        gameObjects = new Array<GameObject>();
         parseCollisionLayer();
+
         parsePlayerStartLocation();
+        parseMapObjectLayer();
     }
 
     private void parsePlayerStartLocation(){
@@ -53,7 +69,7 @@ public class Map {
 
     private void parseCollisionLayer(){
         //TODO CUANDO CAMBIES DE MAPA COJES DE AQUÍ LAS CAPAS DE COLISIONES
-        final MapLayer objetos = tiledMap.getLayers().get("objetos");
+        final MapLayer objetos = tiledMap.getLayers().get("basebox");
         if(objetos==null){
             Gdx.app.debug(TAG,"The collision layer: "+objetos.getName()+" wasn't found");
             return;
@@ -108,6 +124,74 @@ public class Map {
         }
     }
 
+    private void parseMapObjectLayer(){
+        final MapLayer gameObjectsLayer = tiledMap.getLayers().get("gameObjects");
+        if (gameObjectsLayer==null){
+            Gdx.app.debug("Map","There is no gameobjects in this layer");
+            return;
+        }
+
+        final MapObjects objects = gameObjectsLayer.getObjects();
+        for(final MapObject object : objects){
+            if(!(object instanceof TiledMapTileMapObject)){
+                Gdx.app.debug("Map","GameObject of type: "+object+" is not supported!");
+                continue;
+            }
+            final TiledMapTileMapObject tiledMapObj = (TiledMapTileMapObject) object;
+            final MapProperties tiledMapObjProperties = tiledMapObj.getProperties();
+            final MapProperties tileProperties = tiledMapObj.getTile().getProperties();
+            final GameObjectType gameObjType;
+            if(tiledMapObjProperties.containsKey("type")){
+                gameObjType = GameObjectType.valueOf(tiledMapObjProperties.get("type",String.class));
+            }else if(tileProperties.containsKey("type")){
+                gameObjType = GameObjectType.valueOf(tileProperties.get("type",String.class));
+            }else{
+                Gdx.app.debug("Map","There is no gameobjecttype defined for tile: "+tiledMapObj.getProperties().get("id", Integer.class));
+                continue;
+            }
+
+            final int animationIndex = tiledMapObj.getTile().getId();
+            if(!createAnimation(animationIndex,tiledMapObj.getTile())){
+                Gdx.app.debug("Map","Could not create animation for: "+tiledMapObj.getProperties().get("id", Integer.class));
+                continue;
+
+            }
+
+            final float width = tiledMapObjProperties.get("width",Float.class)*UNIT_SCALE;
+            final float height = tiledMapObjProperties.get("height",Float.class)*UNIT_SCALE;
+            gameObjects.add(new GameObject(gameObjType, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),width,height,tiledMapObj.getRotation(),animationIndex));
+        }
+
+
+    }
+
+    private boolean createAnimation(final int animationIndex, final TiledMapTile tile){
+        Animation<Sprite> animation = mapAnimations.get(animationIndex);
+        if(animation==null){
+            Gdx.app.debug("Map","Creating new map animation for tile: "+tile.getId());
+
+            if(tile instanceof AnimatedTiledMapTile){
+                final AnimatedTiledMapTile aniTile = (AnimatedTiledMapTile) tile;
+                final Sprite[] keyframes = new Sprite[aniTile.getFrameTiles().length];
+                int i=0;
+                for(final StaticTiledMapTile staticTile : aniTile.getFrameTiles()){
+                    keyframes[i++] = new Sprite(staticTile.getTextureRegion());
+                }
+                animation = new Animation<Sprite>(aniTile.getAnimationIntervals()[0] * 0.001f,keyframes);
+                animation.setPlayMode(Animation.PlayMode.LOOP);
+                mapAnimations.put(animationIndex,animation);
+            }else if(tile instanceof StaticTiledMapTile){
+                animation = new Animation<Sprite>(0,new Sprite(tile.getTextureRegion()));
+                mapAnimations.put(animationIndex,animation);
+            }else{
+                Gdx.app.log("Map","Tile of file "+tile+" is not supported for map animation");
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     public Array<CollisionArea> getCollisionAreas() {
         return collisionAreas;
     }
@@ -119,4 +203,14 @@ public class Map {
     public TiledMap getTiledMap() {
         return tiledMap;
     }
+
+    public Array<GameObject> getGameObjects() {
+        return gameObjects;
+    }
+
+    public IntMap<Animation<Sprite>> getMapAnimations() {
+        return mapAnimations;
+    }
+
+
 }

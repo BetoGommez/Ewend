@@ -28,7 +28,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
         //load characters and effects
         assetManager.load("character/character_effects.atlas", TextureAtlas.class);
-        assetManager.load("character/prueba.atlas", TextureAtlas.class);
 
         //load maps
         for(final MapType mapType : MapType.values()){
@@ -59,8 +58,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        /*Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);*/
 
         assetManager.update();
 
