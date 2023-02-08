@@ -2,6 +2,7 @@ package com.albertogomez.ewend.map;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
+import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -72,12 +73,19 @@ public class MapManager {
         //create map entities/bodies
         spawnCollisionAreas();
         spawnGameObjects();
+        spawnEnemies();
 
         for(final MapListener listener: listeners){
             listener.mapChange(currentMap);
         }
 
 
+    }
+
+    private void spawnEnemies(){
+        for(final EnemyObject enemyObject : currentMap.getEnemyObjects()){
+            ecsEngine.createEnemy(enemyObject.position, EnemyType.valueOf(enemyObject.name), enemyObject.height, enemyObject.width);
+        }
     }
 
     private void spawnGameObjects(){

@@ -5,9 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
-
-import static com.albertogomez.ewend.constants.Constants.BIT_GAME_OBJECT;
-import static com.albertogomez.ewend.constants.Constants.BIT_PLAYER;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 public class WorldContactListener implements ContactListener {
     private final Array<PlayerCollisionListener> listeners;
@@ -23,6 +21,7 @@ public class WorldContactListener implements ContactListener {
         final Body bodyB = contact.getFixtureB().getBody();
         final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
         final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+        Gdx.app.debug("COLISION: ","Player is colliding with a object");
 
 
         if ((int) (catFixA & BIT_PLAYER) == BIT_PLAYER) {
@@ -56,6 +55,37 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
+        /*
+        final Entity player;
+        final Entity enemyEntity;
+        final Body bodyA = contact.getFixtureA().getBody();
+        final Body bodyB = contact.getFixtureB().getBody();
+        final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
+        final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+
+
+        if ((int) (catFixA & BIT_PLAYER) == BIT_PLAYER) {
+            player = (Entity) bodyA.getUserData();
+        } else if((int) (catFixB & BIT_PLAYER)==BIT_PLAYER){
+            player = (Entity) bodyB.getUserData();
+        } else{
+            return;
+        }
+
+        if ((int) (catFixA & BIT_ENEMY) == BIT_ENEMY) {
+            enemyEntity = (Entity) bodyA.getUserData();
+
+        } else if((int) (catFixB & BIT_ENEMY)==BIT_ENEMY){
+            enemyEntity = (Entity) bodyB.getUserData();
+
+        } else{
+            return;
+        }
+
+        contact.setEnabled(false);
+        */
+
+
     }
 
     @Override

@@ -37,6 +37,8 @@ public class Map {
 
     private final Array<CollisionArea> collisionAreas;
 
+    private final Array<EnemyObject> enemyObjects;
+
     public Map(TiledMap tiledMap) {
         this.tiledMap = tiledMap;
         collisionAreas = new Array<CollisionArea>();
@@ -45,16 +47,18 @@ public class Map {
 
         mapAnimations = new IntMap<Animation<Sprite>>();
         gameObjects = new Array<GameObject>();
+        enemyObjects = new Array<EnemyObject>();
         parseCollisionLayer();
 
         parsePlayerStartLocation();
         parseMapObjectLayer();
+        parseEnemiesInfo();
     }
 
     private void parsePlayerStartLocation(){
         final MapLayer startLocationLayer = tiledMap.getLayers().get("playerLocation");
         if(startLocationLayer==null){
-            Gdx.app.debug(TAG,"There wasnt foun any starter location");
+            Gdx.app.debug(TAG,"There wasnt found any starter location");
             return;
         }
         final MapObjects objects = startLocationLayer.getObjects();
@@ -65,6 +69,38 @@ public class Map {
 
             }
         }
+    }
+
+    private void parseEnemiesInfo(){
+        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("enemies");
+        String name;
+        if (gameEnemiesLayer==null){
+            Gdx.app.debug("Map","There is no enemies in this layer");
+            return;
+        }
+
+        final MapObjects objects = gameEnemiesLayer.getObjects();
+        for(final MapObject object : objects){
+
+            if(!(object instanceof TiledMapTileMapObject)){
+                Gdx.app.debug("Map","Enemy of type: "+object+" is not supported!");
+                continue;
+            }
+            final TiledMapTileMapObject tiledMapObj = (TiledMapTileMapObject) object;
+            final MapProperties tiledMapObjProperties = tiledMapObj.getProperties();
+            final MapProperties tileProperties = tiledMapObj.getTile().getProperties();
+            if(tiledMapObj.getName()!=null) {
+                name = tiledMapObj.getName();
+            } else{
+                Gdx.app.debug("Map","There is no name defined for tile: "+tiledMapObj.getProperties().get("id", Integer.class));
+                continue;
+            }
+
+            final float width = tiledMapObjProperties.get("width",Float.class)*UNIT_SCALE;
+            final float height = tiledMapObjProperties.get("height",Float.class)*UNIT_SCALE;
+            enemyObjects.add(new EnemyObject(name, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),64*UNIT_SCALE/2,64*UNIT_SCALE/2));
+        }
+
     }
 
     private void parseCollisionLayer(){
@@ -137,7 +173,9 @@ public class Map {
                 Gdx.app.debug("Map","GameObject of type: "+object+" is not supported!");
                 continue;
             }
+
             final TiledMapTileMapObject tiledMapObj = (TiledMapTileMapObject) object;
+
             final MapProperties tiledMapObjProperties = tiledMapObj.getProperties();
             final MapProperties tileProperties = tiledMapObj.getTile().getProperties();
             final GameObjectType gameObjType;
@@ -156,6 +194,8 @@ public class Map {
                 continue;
 
             }
+
+
 
             final float width = tiledMapObjProperties.get("width",Float.class)*UNIT_SCALE;
             final float height = tiledMapObjProperties.get("height",Float.class)*UNIT_SCALE;
@@ -212,5 +252,7 @@ public class Map {
         return mapAnimations;
     }
 
-
+    public Array<EnemyObject> getEnemyObjects() {
+        return enemyObjects;
+    }
 }

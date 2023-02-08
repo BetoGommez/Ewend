@@ -73,6 +73,8 @@ public class GameRenderer implements Disposable, MapListener {
         box2DDebugRenderer = new Box2DDebugRenderer();
         world = context.getWorld();
 
+
+
         if (profiler.isEnabled()) {
         } else {
             //box2DDebugRenderer = null;
@@ -81,7 +83,7 @@ public class GameRenderer implements Disposable, MapListener {
         rayHandler = context.getRayHandler();
 
 
-        //TODO aqui puedes probar los cambios de mapa con un input
+
 
         //profiler.reset();
     }
@@ -109,7 +111,6 @@ public class GameRenderer implements Disposable, MapListener {
         }
 
         spriteBatch.end();
-
         rayHandler.setCombinedMatrix(gameCamera);
         rayHandler.updateAndRender();
 

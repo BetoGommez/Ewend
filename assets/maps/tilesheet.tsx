@@ -28,9 +28,7 @@
  </tile>
  <tile id="16">
   <objectgroup draworder="index" id="2">
-   <object id="1" x="16" y="28.875" width="16.3125" height="3.125"/>
-   <object id="6" x="18.1875" y="22.375" width="12.5" height="6.5"/>
-   <object id="7" x="23.25" y="19.0625" width="2.6875" height="3.5625"/>
+   <object id="8" name="pincho" x="17" y="18.9091" width="14.3636" height="13.1818"/>
   </objectgroup>
  </tile>
  <tile id="26">

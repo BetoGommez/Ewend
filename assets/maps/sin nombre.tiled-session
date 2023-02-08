@@ -21,6 +21,7 @@
             "scaleInDock": 1
         },
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/fondo2.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/props.tsx": {
@@ -36,8 +37,8 @@
             "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 479.5,
-                "y": 178
+                "x": 787.5,
+                "y": 381.5
             }
         },
         "C:/Users/Trabajo/Desktop/recursos/entities.tsx": {
@@ -69,6 +70,11 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "enemies.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "entities.tsx": {
             "dynamicWrapping": true,
             "scaleInDock": 1,
@@ -88,11 +94,11 @@
             "expandedObjectLayers": [
                 12
             ],
-            "scale": 3,
+            "scale": 1.5,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 479.8333333333333,
-                "y": 319.8333333333333
+                "x": 76.33333333333331,
+                "y": 448.66666666666663
             }
         },
         "mapa2.tmx": {
@@ -100,11 +106,11 @@
                 19,
                 12
             ],
-            "scale": 0.75,
+            "scale": 1.5,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 479.3333333333333,
-                "y": 320.66666666666663
+                "x": 464.99999999999994,
+                "y": 373.33333333333326
             }
         },
         "props.tsx": {
@@ -128,22 +134,28 @@
         "fondo2.tsx",
         "props.tsx",
         "mapa.tmx",
-        "mapa2.tmx"
+        "mapa2.tmx",
+        "enemies.tsx"
     ],
     "project": "sin nombre.tiled-project",
     "recentFiles": [
+        "props.tsx",
+        "mapa.tmx",
         "C:/Users/Trabajo/Desktop/mapa/map.tmx",
         "tilesheet.tsx",
         "fondo1.tsx",
         "fondo2.tsx",
-        "props.tsx",
+        "enemies.tsx",
         "mapa2.tmx",
-        "mapa.tmx",
         "C:/Users/Trabajo/Desktop/recursos/mapa.tmx",
         "C:/Users/Trabajo/Desktop/Drive/mapaweno/props.tsx",
         "background.tsx",
         "entities.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
     "tileset.type": 0
 }

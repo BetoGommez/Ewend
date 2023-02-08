@@ -8,6 +8,8 @@ import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.GameObjectComponent;
 import com.albertogomez.ewend.ecs.components.PlayerComponent;
+import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
+import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
 import com.albertogomez.ewend.ecs.system.*;
 import com.albertogomez.ewend.map.GameObject;
 import com.albertogomez.ewend.view.AnimationType;
@@ -53,6 +55,64 @@ public class ECSEngine extends PooledEngine {
         this.addSystem(new PlayerAnimationSystem(context));
         this.addSystem(new LightSystem());
         this.addSystem(new PlayerCollisionSystem(context));
+        this.addSystem(new EnemyAnimationSystem(context));
+    }//TODO EL TAMAÑO DE LA HITBOX REAL SE PONDRÁ EN ESTE CREADOR
+
+    public Entity createEnemy(final Vector2 spawnLocation, EnemyType type,final float height,final float width){
+        final Entity enemy = this.createEntity();
+        //player component
+        final EnemyComponent enemyComponent = this.createComponent(EnemyComponent.class);
+        enemyComponent.speed.set(3,5);
+        enemy.add(enemyComponent);
+
+        //box2d
+        EwendLauncher.resetBodyAndFixtureDefinition();
+        final B2DComponent b2DComponent = this.createComponent(B2DComponent.class);
+
+        BODY_DEF.type = BodyDef.BodyType.DynamicBody;
+        BODY_DEF.position.set(spawnLocation.x,spawnLocation.y);
+        BODY_DEF.gravityScale=1;
+        BODY_DEF.fixedRotation=true;
+
+        b2DComponent.body = world.createBody(BODY_DEF);
+        b2DComponent.body.setUserData(enemy);
+
+        b2DComponent.width = width;
+        b2DComponent.height = height;
+        b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
+
+
+        FIXTURE_DEF.density=1;
+        FIXTURE_DEF.isSensor=false;
+        FIXTURE_DEF.restitution=0;
+
+        FIXTURE_DEF.friction=0;
+        FIXTURE_DEF.filter.categoryBits = BIT_ENEMY;
+        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER);
+        final PolygonShape pShape = new PolygonShape();
+        pShape.setAsBox(width,height);
+        FIXTURE_DEF.shape = pShape;
+        b2DComponent.body.createFixture(FIXTURE_DEF);
+        pShape.dispose();
+        enemy.add(b2DComponent);
+
+        //create enemy light
+        b2DComponent.lightDistance = 2;
+        b2DComponent.lightFluctuationSpeed = 4;
+        b2DComponent.light = new PointLight(rayHandler,32, new Color(1,1,1,0.73f),7,b2DComponent.body.getPosition().x,b2DComponent.body.getPosition().y);
+        b2DComponent.lightFluctuationDistance = b2DComponent.light.getDistance()*0.02f;
+        b2DComponent.light.attachToBody(b2DComponent.body);
+
+        //animation component
+        final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
+        animationComponent.aniType = type.defaultAnimation;
+        animationComponent.width = 80 * UNIT_SCALE;
+        animationComponent.height = 80 * UNIT_SCALE;
+        enemy.add(animationComponent);
+
+
+        this.addEntity(enemy);
+        return enemy;
     }
 
 
@@ -87,7 +147,7 @@ public class ECSEngine extends PooledEngine {
 
         FIXTURE_DEF.friction=0;
         FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
-        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_GAME_OBJECT);
+        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_GAME_OBJECT|BIT_ENEMY);
         final PolygonShape pShape = new PolygonShape();
         pShape.setAsBox(0.4f,0.6f);
         FIXTURE_DEF.shape = pShape;
