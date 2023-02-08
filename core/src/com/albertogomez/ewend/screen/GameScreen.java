@@ -62,6 +62,8 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
 
         } else if(Gdx.input.isKeyPressed(Input.Keys.NUM_3)){
             prefMgr.saveGameState(player);
+        } else if(Gdx.input.isKeyPressed(Input.Keys.NUM_4)){
+            prefMgr.loadGameState(player);
         }
 
 

@@ -191,11 +191,15 @@ public class EwendLauncher extends Game {
 
 		ecsEngine.update(deltaTime);
 		accumulator += deltaTime;
+
+
 		while(accumulator >= FIXED_TIME_STEP){
+			//TODO save the previous postion of body
 			world.step(FIXED_TIME_STEP,12,2);
 			accumulator -= FIXED_TIME_STEP;
 		}
 
+		//TODO calculate renderPosition from previous position and real body position
 		gameRenderer.render(accumulator/FIXED_TIME_STEP);
 		//final float alpha = accumulator/FIXED_TIME_STEP;
 		stage.getViewport().apply();
