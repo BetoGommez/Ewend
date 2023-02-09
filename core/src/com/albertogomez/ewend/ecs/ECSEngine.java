@@ -129,7 +129,11 @@ public class ECSEngine extends PooledEngine {
         //damage component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
         attackComponent.damage=10;
-
+        attackComponent.attacking=false;
+        attackComponent.attackHitboxHeight= b2DComponent.height/2;
+        attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
+        attackComponent.isPlayer=false;
+        enemy.add(attackComponent);
 
         this.addEntity(enemy);
         return enemy;
