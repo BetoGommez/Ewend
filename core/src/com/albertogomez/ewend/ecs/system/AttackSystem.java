@@ -19,6 +19,7 @@ import static com.albertogomez.ewend.constants.Constants.*;
 public class AttackSystem extends IteratingSystem {
 
 
+
     private World world;
     public AttackSystem(EwendLauncher context) {
         super(Family.all(AttackComponent.class, B2DComponent.class).get());
@@ -29,9 +30,10 @@ public class AttackSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Body entityBody = ECSEngine.b2dCmpMapper.get(entity).body;
+
         AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
         attackComponent.delayAccum+=deltaTime;
+
         if(attackComponent.attacking&& attackComponent.canAttack()){
             if(attackComponent.canAttack()){
                 attackComponent.delayAccum=0;
@@ -39,19 +41,30 @@ public class AttackSystem extends IteratingSystem {
                 createAttackBox(attackComponent,entity);
             }
         }
+        if(attackComponent.attackBox!=null&&attackComponent.delayAccum>attackComponent.delay/4){
+            world.destroyBody(attackComponent.attackBox);
+            attackComponent.attackBox=null;
+        }
     }
 
     private void createAttackBox(AttackComponent attackComponent,Entity entity){
-        Body entityBody = ECSEngine.b2dCmpMapper.get(entity).body;
+        B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
+        Body entityBody = b2DComponent.body;
         EwendLauncher.resetBodyAndFixtureDefinition();
-        EwendLauncher.BODY_DEF.position.set(entityBody.getPosition().x+attackComponent.attackHitboxWidth/2,
+        float positionX = 0;
+        if(b2DComponent.orientation==1){
+            positionX = entityBody.getPosition().x;
+        }else{
+            positionX = entityBody.getPosition().x- attackComponent.attackHitboxWidth;
+        }
+        EwendLauncher.BODY_DEF.position.set(positionX+attackComponent.attackHitboxWidth/2,
                 entityBody.getPosition().y);
         EwendLauncher.BODY_DEF.type = BodyDef.BodyType.StaticBody;
         BODY_DEF.fixedRotation=true;
 
         Body body = world.createBody(BODY_DEF);
 
-        body.setUserData(entity);
+        body.setUserData(attackComponent.damage);
 
 
         FIXTURE_DEF.density=1;
@@ -70,6 +83,8 @@ public class AttackSystem extends IteratingSystem {
         pShape.setAsBox(attackComponent.attackHitboxWidth,attackComponent.attackHitboxHeight);
         FIXTURE_DEF.shape = pShape;
         body.createFixture(FIXTURE_DEF);
+        attackComponent.attackBox= body;
         pShape.dispose();
+
     }
 }

@@ -34,6 +34,7 @@ public class ECSEngine extends PooledEngine {
     public static final ComponentMapper<EnemyComponent> eneObjCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
     public static final ComponentMapper<AIComponent> aiCmoMapper = ComponentMapper.getFor(AIComponent.class);
     public static final ComponentMapper<AttackComponent> attCmpMapper = ComponentMapper.getFor(AttackComponent.class);
+    public static final ComponentMapper<LifeComponent> lifeCmpMapper = ComponentMapper.getFor(LifeComponent.class);
 
     private final RayHandler rayHandler;
     private final Vector2 localPosition;
@@ -49,7 +50,7 @@ public class ECSEngine extends PooledEngine {
         posBeforeRotation = new Vector2();
         posAfterRotation = new Vector2();
 
-        //this.addSystem(new PlayerCameraSystem(context));
+        this.addSystem(new PlayerCameraSystem(context));
         this.addSystem(new AnimationSystem(context));
         this.addSystem(new PlayerAnimationSystem(context));
         this.addSystem(new LightSystem());
@@ -57,6 +58,8 @@ public class ECSEngine extends PooledEngine {
         this.addSystem(new EnemyAnimationSystem(context));
         this.addSystem(new AISystem(context));
         this.addSystem(new AttackSystem(context));
+        this.addSystem(new LifeSystem(context));
+        this.addSystem(new DeadSystem(context));
         this.addSystem(new PlayerMovementSystem(context));
     }//TODO EL TAMAÑO DE LA HITBOX REAL SE PONDRÁ EN ESTE CREADOR
 
@@ -123,9 +126,9 @@ public class ECSEngine extends PooledEngine {
         final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
         lifeComponent.health=100f;
         lifeComponent.charge=0f;
-        //dead component
-        final DeadComponent deadComponent = this.createComponent(DeadComponent.class);
-        deadComponent.isDead = false;
+        lifeComponent.isEnemy=true;
+        enemy.add(lifeComponent);
+
         //damage component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
         attackComponent.damage=10;
@@ -196,12 +199,14 @@ public class ECSEngine extends PooledEngine {
         final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
         lifeComponent.health=100f;
         lifeComponent.charge=0f;
+        lifeComponent.isEnemy=false;
+
         //dead component
         final DeadComponent deadComponent = this.createComponent(DeadComponent.class);
         deadComponent.isDead = false;
         //damage component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
-        attackComponent.damage=10;
+        attackComponent.damage=100;
         attackComponent.attacking=false;
         attackComponent.attackHitboxHeight= b2DComponent.height/2;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;

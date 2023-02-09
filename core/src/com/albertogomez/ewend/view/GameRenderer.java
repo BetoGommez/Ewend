@@ -136,8 +136,7 @@ public class GameRenderer implements Disposable, MapListener {
             frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * b2DComponent.orientation, aniComponent.height);
             frame.draw(spriteBatch);
         }
-        gameCamera.position.set(ECSEngine.b2dCmpMapper.get(entity).renderPosition, 0);
-        gameCamera.update();
+
     }
 
     private void renderGameObject(final Entity entity,final float alpha){

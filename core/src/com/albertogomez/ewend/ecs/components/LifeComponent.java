@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Pool;
 public class LifeComponent implements Component, Pool.Poolable {
 
     public float health;
+    public boolean isEnemy;
     public float charge;
 
     @Override

@@ -61,9 +61,11 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
             horizontalMovement(b2DComponent, playerComponent);
         }
 
-        if(attack&& attackComponent.canAttack()){
+        if(attack){
+            if(attackComponent.canAttack()){
+                attackComponent.attacking=true;
+            }
             attack=false;
-            attackComponent.attacking=true;
         }
     }
 

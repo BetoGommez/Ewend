@@ -7,23 +7,23 @@
  <tileset firstgid="217" source="enemies.tsx"/>
  <tileset firstgid="220" source="prueba.tsx"/>
  <tileset firstgid="348" source="bat.tsx"/>
- <layer id="9" name="background" width="60" height="20">
+ <layer id="9" name="background" width="60" height="20" locked="1">
   <data encoding="base64" compression="zlib">
    eJzt0tlOwkAYhuHeChZEVhcQENkUd0FWAVkVRLz/K+A9adJMQoFpSclkDp6D6Xz/n/mSBgzDOIGJIEI4RRhniCCKgMc5t3OHfp/uq/vqvrqv7qv7HrKv073pQlByt+zcPvMyd+LZIp43cTsnOy/bVyTemVvm/crv+t/HEFcgn0AS57jAJa6QQhrXyCCLnAL5G+RxiwKKKKGMCu5wjyoeFMg/4gnPeMEr3vCOGur4QANNBfIttNFBF5/ooY8BvjDECGMF8hNMMcM3fjDHAr9Y4m/DDvFsz6/w77D/2PJiXytv/2bP7LvHr/yx7dF9vc2vAQHSBxI=
   </data>
  </layer>
- <layer id="11" name="background_forest" width="60" height="20">
+ <layer id="11" name="background_forest" width="60" height="20" locked="1">
   <data encoding="base64" compression="zlib">
    eJztzc0KglAURWFfvdJKIdP8gbSshNLUfMbWUKRBjYLDXvCN7j5cx1FKKaWUUkqpzy2wxAouPKyxwRY+AkO7HULsESHGAQlSZMgN7Y4oUOKEMypccMUNtaHdHQ80aPFEhx4DXhgN7ebv35jumx/M7/7xr7LdG7WWtYc=
   </data>
  </layer>
- <layer id="1" name="basemap" width="60" height="20">
+ <layer id="1" name="basemap" width="60" height="20" locked="1">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMApGwSgYBaNgFIwC+gI5JDyUQAzjQLtgeAF+IJalo32sZGA2NL0gwEKiGfT2JwzwkoH5sJjDQ6ZZhDC1AS3cOBD+IBaMNP8CAKFIBnw=
   </data>
  </layer>
- <objectgroup id="17" name="playerLocation" locked="1">
-  <object id="60" x="63.3333" y="497.334">
+ <objectgroup id="17" name="playerLocation">
+  <object id="60" x="84.6667" y="229.334">
    <point/>
   </object>
  </objectgroup>
@@ -66,7 +66,7 @@
     <property name="type" value="BOX"/>
    </properties>
   </object>
-  <object id="106" gid="23" x="262" y="472" width="32" height="32">
+  <object id="106" gid="23" x="232.667" y="425.333" width="32" height="32">
    <properties>
     <property name="type" value="BOX"/>
    </properties>
