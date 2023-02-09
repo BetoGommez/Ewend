@@ -103,6 +103,7 @@ public class GameRenderer implements Disposable, MapListener {
                 mapRenderer.renderTileLayer(layer);
             }
         }
+        AnimatedTiledMapTile.updateAnimationBaseTime();
         for (final Entity entity : gameObjectEntities) {
             renderGameObject(entity, alpha);
         }

@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="21" nextobjectid="101">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="32" tileheight="32" infinite="0" nextlayerid="21" nextobjectid="102">
  <tileset firstgid="1" source="tilesheet.tsx"/>
  <tileset firstgid="33" source="fondo1.tsx"/>
  <tileset firstgid="105" source="fondo2.tsx"/>
  <tileset firstgid="177" source="props.tsx"/>
  <tileset firstgid="217" source="enemies.tsx"/>
  <tileset firstgid="220" source="prueba.tsx"/>
- <layer id="9" name="background" width="60" height="20" visible="0" locked="1">
+ <tileset firstgid="348" source="bat.tsx"/>
+ <layer id="9" name="background" width="60" height="20" locked="1">
   <data encoding="base64" compression="zlib">
    eJzt0tlOwkAYhuHeChZEVhcQENkUd0FWAVkVRLz/K+A9adJMQoFpSclkDp6D6Xz/n/mSBgzDOIGJIEI4RRhniCCKgMc5t3OHfp/uq/vqvrqv7qv7HrKv073pQlByt+zcPvMyd+LZIp43cTsnOy/bVyTemVvm/crv+t/HEFcgn0AS57jAJa6QQhrXyCCLnAL5G+RxiwKKKKGMCu5wjyoeFMg/4gnPeMEr3vCOGur4QANNBfIttNFBF5/ooY8BvjDECGMF8hNMMcM3fjDHAr9Y4m/DDvFsz6/w77D/2PJiXytv/2bP7LvHr/yx7dF9vc2vAQHSBxI=
   </data>
  </layer>
- <layer id="11" name="background_forest" width="60" height="20" visible="0" locked="1">
+ <layer id="11" name="background_forest" width="60" height="20" locked="1">
   <data encoding="base64" compression="zlib">
    eJztzc0KglAURWFfvdJKIdP8gbSshNLUfMbWUKRBjYLDXvCN7j5cx1FKKaWUUkqpzy2wxAouPKyxwRY+AkO7HULsESHGAQlSZMgN7Y4oUOKEMypccMUNtaHdHQ80aPFEhx4DXhgN7ebv35jumx/M7/7xr7LdG7WWtYc=
   </data>
  </layer>
- <layer id="1" name="basemap" width="60" height="20" visible="0" locked="1">
+ <layer id="1" name="basemap" width="60" height="20">
   <data encoding="base64" compression="zlib">
-   eJztzzEKwCAQRFELTWXMCfT+x9QUgoRAzKJr4X8wpbOOMQAAAACgKzXBvq6SqHjPCXI83t7szw7tndUpSHjp8cKur4w2448rdvTabW8GoasGHw==
+   eJxjYBgFo2AUjIJRMApGwSgYBaNgFIwC+gI5JDyUQAzjQLtgeAF+IJalo32sZGA2NL0gwEKiGfT2JwzwkoH5sJjDQ6ZZhDC1AS3cOBD+IBaMNP8CAKFIBnw=
   </data>
  </layer>
  <objectgroup id="17" name="playerLocation" visible="0" locked="1">
@@ -26,7 +27,7 @@
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="19" name="basebox" visible="0">
+ <objectgroup id="19" name="basebox">
   <object id="69" x="481.333" y="528.667" width="62.6667" height="14.6667"/>
   <object id="71" x="-1.33333" y="1.33333" width="1312.33" height="640"/>
   <object id="73" x="1.33333" y="528.667" width="428" height="109.333"/>
@@ -61,7 +62,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="20" name="enemies" visible="0" locked="1">
+ <objectgroup id="20" name="enemies" locked="1">
   <object id="84" name="SHEEP" gid="217" x="624.333" y="523" width="70" height="70"/>
   <object id="85" name="SHEEP" gid="217" x="765.337" y="519.667" width="70" height="70"/>
  </objectgroup>

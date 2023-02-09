@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Align;
 
 public class GameUI extends Table {
@@ -39,6 +40,9 @@ public class GameUI extends Table {
         add(createButton("right")).size(80,80).bottom().right();
 
         add(createButton("right")).size(80,80).bottom().right();
+
+
+
     }
 
     private TextButton createButton(String nombre){

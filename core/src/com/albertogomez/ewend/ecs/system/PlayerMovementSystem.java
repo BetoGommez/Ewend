@@ -140,4 +140,13 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         return true;
     }
 
+    public void setJump(boolean jump) {
+        this.jump = jump;
+    }
+
+    public void setxFactor(int xFactor) {
+
+        //if with direction button type
+        this.xFactor = xFactor;
+    }
 }

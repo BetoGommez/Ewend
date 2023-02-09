@@ -277,7 +277,10 @@ public class EwendLauncher extends Game {
 		assetManager.load("ui/strings", I18NBundle.class);
 		assetManager.finishLoading();
 		skin = assetManager.get("ui/hud.json", Skin.class);
+
 		i18NBundle = assetManager.get("ui/strings");
+
+
 	}
 
 
