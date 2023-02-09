@@ -1,13 +1,11 @@
 package com.albertogomez.ewend.ecs;
 
-import box2dLight.DirectionalLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.albertogomez.ewend.EwendLauncher;
-import com.albertogomez.ewend.ecs.components.AnimationComponent;
-import com.albertogomez.ewend.ecs.components.B2DComponent;
-import com.albertogomez.ewend.ecs.components.GameObjectComponent;
-import com.albertogomez.ewend.ecs.components.PlayerComponent;
+import com.albertogomez.ewend.ecs.ai.AIComponent;
+import com.albertogomez.ewend.ecs.ai.AISystem;
+import com.albertogomez.ewend.ecs.components.*;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
 import com.albertogomez.ewend.ecs.system.*;
@@ -20,7 +18,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -34,6 +31,9 @@ public class ECSEngine extends PooledEngine {
     public static final ComponentMapper<B2DComponent> b2dCmpMapper = ComponentMapper.getFor(B2DComponent.class);
     public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
     public static final ComponentMapper<GameObjectComponent> gameObjCmpMapper = ComponentMapper.getFor(GameObjectComponent.class);
+    public static final ComponentMapper<EnemyComponent> eneObjCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
+    public static final ComponentMapper<AIComponent> aiCmoMapper = ComponentMapper.getFor(AIComponent.class);
+    public static final ComponentMapper<AttackComponent> attCmpMapper = ComponentMapper.getFor(AttackComponent.class);
 
     private final RayHandler rayHandler;
     private final Vector2 localPosition;
@@ -49,20 +49,22 @@ public class ECSEngine extends PooledEngine {
         posBeforeRotation = new Vector2();
         posAfterRotation = new Vector2();
 
-        this.addSystem(new PlayerMovementSystem(context));
         //this.addSystem(new PlayerCameraSystem(context));
         this.addSystem(new AnimationSystem(context));
         this.addSystem(new PlayerAnimationSystem(context));
         this.addSystem(new LightSystem());
         this.addSystem(new PlayerCollisionSystem(context));
         this.addSystem(new EnemyAnimationSystem(context));
+        this.addSystem(new AISystem(context));
+        this.addSystem(new AttackSystem(context));
+        this.addSystem(new PlayerMovementSystem(context));
     }//TODO EL TAMAÑO DE LA HITBOX REAL SE PONDRÁ EN ESTE CREADOR
 
     public Entity createEnemy(final Vector2 spawnLocation, EnemyType type,final float height,final float width){
         final Entity enemy = this.createEntity();
-        //player component
+        //enemy component
         final EnemyComponent enemyComponent = this.createComponent(EnemyComponent.class);
-        enemyComponent.speed.set(3,5);
+        enemyComponent.speed.set(0.5f,0);
         enemy.add(enemyComponent);
 
         //box2d
@@ -88,7 +90,7 @@ public class ECSEngine extends PooledEngine {
 
         FIXTURE_DEF.friction=0;
         FIXTURE_DEF.filter.categoryBits = BIT_ENEMY;
-        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER);
+        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER|BIT_PLAYER_ATTACK);
         final PolygonShape pShape = new PolygonShape();
         pShape.setAsBox(width,height);
         FIXTURE_DEF.shape = pShape;
@@ -109,6 +111,24 @@ public class ECSEngine extends PooledEngine {
         animationComponent.width = 80 * UNIT_SCALE;
         animationComponent.height = 80 * UNIT_SCALE;
         enemy.add(animationComponent);
+
+        //ai component
+        final AIComponent aiComponent = this.createComponent(AIComponent.class);
+        aiComponent.idleDelay =3;
+        aiComponent.maxDistanceFactor = 0.9f;
+        aiComponent.initialPosition = spawnLocation;
+        enemy.add(aiComponent);
+
+        //life component
+        final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
+        lifeComponent.health=100f;
+        lifeComponent.charge=0f;
+        //dead component
+        final DeadComponent deadComponent = this.createComponent(DeadComponent.class);
+        deadComponent.isDead = false;
+        //damage component
+        final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
+        attackComponent.damage=10;
 
 
         this.addEntity(enemy);
@@ -147,7 +167,7 @@ public class ECSEngine extends PooledEngine {
 
         FIXTURE_DEF.friction=0;
         FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
-        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_GAME_OBJECT|BIT_ENEMY);
+        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_GAME_OBJECT|BIT_ENEMY|BIT_ENEMY_ATTACK);
         final PolygonShape pShape = new PolygonShape();
         pShape.setAsBox(0.4f,0.6f);
         FIXTURE_DEF.shape = pShape;
@@ -168,6 +188,22 @@ public class ECSEngine extends PooledEngine {
         animationComponent.width = 80 * UNIT_SCALE;
         animationComponent.height = 80 * UNIT_SCALE;
         player.add(animationComponent);
+        //life component
+        final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
+        lifeComponent.health=100f;
+        lifeComponent.charge=0f;
+        //dead component
+        final DeadComponent deadComponent = this.createComponent(DeadComponent.class);
+        deadComponent.isDead = false;
+        //damage component
+        final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
+        attackComponent.damage=10;
+        attackComponent.attacking=false;
+        attackComponent.attackHitboxHeight= b2DComponent.height/2;
+        attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
+        attackComponent.isPlayer=true;
+        player.add(attackComponent);
+
 
 
         this.addEntity(player);

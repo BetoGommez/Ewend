@@ -10,10 +10,13 @@ public class PlayerComponent implements Component, Pool.Poolable {
 
     //te sirve de ejemplo de condicion que cumple el personaje
     public boolean hasItem;
+
+    public boolean touchingGround;
     public Vector2 speed=new Vector2();
     @Override
     public void reset() {
         hasItem=false;
         speed.set(0,0);
+        touchingGround=false;
     }
 }

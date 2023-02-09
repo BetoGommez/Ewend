@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Pool;
 public class EnemyComponent implements Component, Pool.Poolable {
 
     public Vector2 speed=new Vector2();
+
     public EnemyType enemyType;
     @Override
     public void reset() {
