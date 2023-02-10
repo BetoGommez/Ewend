@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import static com.albertogomez.ewend.EwendLauncher.BODY_DEF;
 import static com.albertogomez.ewend.EwendLauncher.FIXTURE_DEF;
@@ -40,11 +41,13 @@ public class ECSEngine extends PooledEngine {
     private final Vector2 localPosition;
     private final Vector2 posBeforeRotation;
     private final Vector2 posAfterRotation;
+
     private final World world;
 
     public ECSEngine(final EwendLauncher context) {
         super();
         world = context.getWorld();
+
         rayHandler = context.getRayHandler();
         localPosition = new Vector2();
         posBeforeRotation = new Vector2();
@@ -206,7 +209,7 @@ public class ECSEngine extends PooledEngine {
         deadComponent.isDead = false;
         //damage component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
-        attackComponent.damage=100;
+        attackComponent.damage=30f;
         attackComponent.attacking=false;
         attackComponent.attackHitboxHeight= b2DComponent.height/2;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;

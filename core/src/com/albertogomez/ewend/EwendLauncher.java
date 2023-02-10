@@ -91,8 +91,8 @@ public class EwendLauncher extends Game {
 	private PreferenceManager preferenceManager;
 
 
-	private static float HEIGHT;
-	private static float WIDTH;
+	public static float HEIGHT;
+	public static float WIDTH;
 
 	@Override
 	public void create () {

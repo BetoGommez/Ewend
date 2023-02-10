@@ -36,14 +36,6 @@ public class EnemyAnimationSystem extends IteratingSystem {
         } else if (b2DComponent.body.getLinearVelocity().x != 0&&b2DComponent.body.getLinearVelocity().y==0) {
             //enemy  moves and is on earth
             animationComponent.aniType = AnimationType.SHEEP_RUN;
-        }else if(b2DComponent.body.getLinearVelocity().y!=0){
-            if (b2DComponent.body.getLinearVelocity().y > 0) {
-                //enemy jump
-                animationComponent.aniType = AnimationType.PLAYER_JUMP_START;
-            } else if (b2DComponent.body.getLinearVelocity().y < 0) {
-                //enemy land
-                animationComponent.aniType = AnimationType.PLAYER_LANDING;
-            }
         }
 
 

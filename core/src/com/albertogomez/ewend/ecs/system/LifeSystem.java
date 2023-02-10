@@ -11,8 +11,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-public class LifeSystem extends IteratingSystem {
+public class LifeSystem extends IteratingSystem implements EventListener {
 
 
     private World world;
@@ -35,4 +37,13 @@ public class LifeSystem extends IteratingSystem {
 
     }
 
+    @Override
+    public boolean handle(Event event) {
+        //vida
+        //entidad
+
+        //LifeComponent lifeComponent = ECSEngine.lifeCmpMapper.get(entidad);
+        //lifeComponent.health-=5;
+        return false;
+    }
 }

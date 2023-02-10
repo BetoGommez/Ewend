@@ -2,7 +2,7 @@ package com.albertogomez.ewend.screen;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.PreferenceManager;
-import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
+import com.albertogomez.ewend.events.MessageEvent;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.*;
@@ -10,13 +10,7 @@ import com.albertogomez.ewend.view.GameUI;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-
-import static com.albertogomez.ewend.constants.Constants.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Screen of the gameplay
@@ -25,18 +19,20 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
     private final MapManager mapManager;
     private final PreferenceManager prefMgr;
     private final Entity player;
-
+    private final Stage stage;
 
 
 
     public GameScreen(final EwendLauncher context) {
         super(context);
 
+
         //Lanza el renderizador de mapa
 
         mapManager = context.getMapManager();
         mapManager.setMap(MapType.MAP_1);
         prefMgr = context.getPreferenceManager();
+        stage = context.getStage();
 
 
 
@@ -69,6 +65,9 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
             prefMgr.saveGameState(player);
         } else if(Gdx.input.isKeyPressed(Input.Keys.NUM_4)){
             prefMgr.loadGameState(player);
+        }else if(Gdx.input.isKeyPressed(Input.Keys.NUM_5)){
+            stage.getRoot().fire(new MessageEvent("hola"));
+
         }
 
 

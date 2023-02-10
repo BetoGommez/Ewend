@@ -4,6 +4,7 @@ import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
+import com.albertogomez.ewend.events.MessageEvent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -11,20 +12,23 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import static com.albertogomez.ewend.EwendLauncher.BODY_DEF;
 import static com.albertogomez.ewend.EwendLauncher.FIXTURE_DEF;
 import static com.albertogomez.ewend.constants.Constants.*;
 
-public class AttackSystem extends IteratingSystem {
+public class AttackSystem extends IteratingSystem implements EventListener {
 
 
 
     private World world;
     public AttackSystem(EwendLauncher context) {
         super(Family.all(AttackComponent.class, B2DComponent.class).get());
-
+        context.getStage().addListener(this);
         world = context.getWorld();
+
 
     }
 
@@ -86,5 +90,13 @@ public class AttackSystem extends IteratingSystem {
         attackComponent.attackBox= body;
         pShape.dispose();
 
+    }
+
+    @Override
+    public boolean handle(Event event) {
+        if(event instanceof MessageEvent){
+
+        }
+        return true;
     }
 }
