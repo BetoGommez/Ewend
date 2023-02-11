@@ -53,6 +53,8 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         if (dashDelay < 0) {
             dashDelay += deltaTime;
         }
+
+
         jumpMovement(b2DComponent, playerComponent);
 
         if (dash) {
@@ -71,13 +73,14 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
 
 
     private void jumpMovement(B2DComponent b2DComponent, PlayerComponent playerComponent) {
-        if (jump) {
+        float speedY = b2DComponent.body.getLinearVelocity().y;
+        if (jump&& speedY>-10) {
             playerComponent.touchingGround=false;
             jump = false;
             jumpCount++;
             b2DComponent.body.applyLinearImpulse(
                     (b2DComponent.body.getLinearVelocity().x)* b2DComponent.orientation,
-                    ((playerComponent.speed.y - b2DComponent.body.getLinearVelocity().y)),
+                    ((playerComponent.speed.y - speedY)),
                     b2DComponent.body.getWorldCenter().x, b2DComponent.body.getWorldCenter().y, true
             );
         }
@@ -103,13 +106,25 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
 
     private void dashMovement(B2DComponent b2DComponent, PlayerComponent playerComponent, float deltaTime) {
         dashDelay += deltaTime;
-        b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier * xFactor, 0);
+        if(playerComponent.touchingGround==false){
+            if(jumpCount<2){
+                jumpCount++;
+            }
+            if(xFactor==0){
+                b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier , 0);
+            }else{
+                b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier * xFactor, 0);
 
-        if (dashDelay > 0.2) {//Time that lasts the dash
-            dash = false;
-            dashDelay = -3;
-            b2DComponent.body.setLinearVelocity(0, 0);
+            }
         }
+
+
+
+            if (dashDelay > 0.2) {//Time that lasts the dash
+                dash = false;
+                dashDelay = -0.5f;
+                b2DComponent.body.setLinearVelocity(0, 0);
+            }
     }
 
 
@@ -118,6 +133,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         switch (key) {
             case JUMP:
                 if(jumpCount<2){
+
                     jump = true;
 
                 }

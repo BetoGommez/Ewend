@@ -1,7 +1,7 @@
 package com.albertogomez.ewend.view;
 
 import com.albertogomez.ewend.EwendLauncher;
-import com.albertogomez.ewend.events.ButtonListener;
+import com.albertogomez.ewend.input.ButtonListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;

@@ -14,4 +14,8 @@ public class LifeComponent implements Component, Pool.Poolable {
         health=100f;
         charge=0f;
     }
+
+    public void removeHealth(AttackComponent attackComponent){
+        health -= attackComponent.damage;
+    }
 }

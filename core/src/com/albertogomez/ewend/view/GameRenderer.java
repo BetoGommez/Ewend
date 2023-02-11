@@ -8,6 +8,8 @@ import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.GameObjectComponent;
 import com.albertogomez.ewend.map.Map;
 import com.albertogomez.ewend.map.MapListener;
+import com.albertogomez.ewend.screen.GameScreen;
+import com.albertogomez.ewend.utils.CameraStyles;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -23,21 +25,25 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.EnumMap;
 
 import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
+import static com.albertogomez.ewend.map.Map.MAP_HEIGHT;
+import static com.albertogomez.ewend.map.Map.MAP_WIDTH;
 
 public class GameRenderer implements Disposable, MapListener {
 
     private final AssetManager assetManager;
-    private final FitViewport viewport;
+    private final ExtendViewport viewport;
     private final OrthographicCamera gameCamera;
     private final SpriteBatch spriteBatch;
     private final EnumMap<AnimationType, Animation<Sprite>> animationCache;
@@ -45,12 +51,15 @@ public class GameRenderer implements Disposable, MapListener {
     private final OrthogonalTiledMapRenderer mapRenderer;
     private final GLProfiler profiler;
     private final World world;
+
+    private B2DComponent playerB2dComp;
     private final Box2DDebugRenderer box2DDebugRenderer;
     private final ImmutableArray<Entity> animatedEntities;
     private final ImmutableArray<Entity> gameObjectEntities;
 
     private final Array<TiledMapTileLayer> tiledMapLayers;
     private IntMap<Animation<Sprite>> mapAnimations;
+
     private final RayHandler rayHandler;
 
     public GameRenderer(final EwendLauncher context) {
@@ -94,6 +103,7 @@ public class GameRenderer implements Disposable, MapListener {
 
 
         viewport.apply(false);
+
         spriteBatch.begin();
 
         if (mapRenderer.getMap() != null) {
@@ -111,9 +121,26 @@ public class GameRenderer implements Disposable, MapListener {
             renderEntity(entity, alpha);
         }
 
+
+
         spriteBatch.end();
         rayHandler.setCombinedMatrix(gameCamera);
         rayHandler.updateAndRender();
+
+
+        float startX = gameCamera.viewportWidth/4;
+        float startY = gameCamera.viewportHeight/4;
+        if(playerB2dComp!=null){
+            CameraStyles.lerpToTarget(gameCamera,playerB2dComp.renderPosition);
+            CameraStyles.boundary(gameCamera,startX,startY,MAP_WIDTH /UNIT_SCALE,MAP_HEIGHT / UNIT_SCALE);
+        }
+
+
+        gameCamera.zoom=0.5f;
+
+
+
+        gameCamera.update();
 
         if (profiler.isEnabled()) {
             Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
@@ -129,11 +156,21 @@ public class GameRenderer implements Disposable, MapListener {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
 
+
         if (aniComponent.aniType != null) {
             final Animation<Sprite> animation = getAnimation(aniComponent.aniType);
             final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
             b2DComponent.renderPosition.lerp(b2DComponent.body.getPosition(), alpha);
-            frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * b2DComponent.orientation, aniComponent.height);
+            if(ECSEngine.playerCmpMapper.get(entity)!=null)
+            {
+                    playerB2dComp = b2DComponent;
+                frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width*3/2 * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height*4/3, aniComponent.width * b2DComponent.orientation, aniComponent.height);
+
+
+            }else{
+                frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * b2DComponent.orientation, aniComponent.height);
+
+            }
             frame.draw(spriteBatch);
         }
 

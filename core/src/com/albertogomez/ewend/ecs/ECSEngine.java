@@ -53,7 +53,6 @@ public class ECSEngine extends PooledEngine {
         posBeforeRotation = new Vector2();
         posAfterRotation = new Vector2();
 
-        this.addSystem(new PlayerCameraSystem(context));
         this.addSystem(new AnimationSystem(context));
         this.addSystem(new PlayerAnimationSystem(context));
         this.addSystem(new LightSystem());
@@ -71,6 +70,7 @@ public class ECSEngine extends PooledEngine {
         //enemy component
         final EnemyComponent enemyComponent = this.createComponent(EnemyComponent.class);
         enemyComponent.speed.set(0.5f,0);
+        enemyComponent.enemyType = type;
         enemy.add(enemyComponent);
 
         //box2d
@@ -98,7 +98,7 @@ public class ECSEngine extends PooledEngine {
         FIXTURE_DEF.filter.categoryBits = BIT_ENEMY;
         FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER|BIT_PLAYER_ATTACK);
         final PolygonShape pShape = new PolygonShape();
-        pShape.setAsBox(width,height);
+        pShape.setAsBox(height,width);
         FIXTURE_DEF.shape = pShape;
         b2DComponent.body.createFixture(FIXTURE_DEF);
         pShape.dispose();
@@ -114,8 +114,8 @@ public class ECSEngine extends PooledEngine {
         //animation component
         final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
         animationComponent.aniType = type.defaultAnimation;
-        animationComponent.width = 80 * UNIT_SCALE;
-        animationComponent.height = 80 * UNIT_SCALE;
+        animationComponent.width = 70 * UNIT_SCALE;
+        animationComponent.height = 70 * UNIT_SCALE;
         enemy.add(animationComponent);
 
         //ai component
@@ -151,8 +151,11 @@ public class ECSEngine extends PooledEngine {
 
         //player component
         final  PlayerComponent playerComponent = this.createComponent(PlayerComponent.class);
-        playerComponent.speed.set(3,5);
+        playerComponent.speed.set(4,15);
         player.add(playerComponent);
+        ///remove component
+        final RemoveComponent removeComponent = this.createComponent(RemoveComponent.class);
+        player.add(removeComponent);
 
         //box2d
         EwendLauncher.resetBodyAndFixtureDefinition();
@@ -165,7 +168,6 @@ public class ECSEngine extends PooledEngine {
 
         b2DComponent.body = world.createBody(BODY_DEF);
         b2DComponent.body.setUserData(player);
-
         b2DComponent.width = width;
         b2DComponent.height = height;
         b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
@@ -175,11 +177,11 @@ public class ECSEngine extends PooledEngine {
         FIXTURE_DEF.isSensor=false;
         FIXTURE_DEF.restitution=0;
 
-        FIXTURE_DEF.friction=0;
+        FIXTURE_DEF.friction=0f;
         FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
         FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_GAME_OBJECT|BIT_ENEMY|BIT_ENEMY_ATTACK);
         final PolygonShape pShape = new PolygonShape();
-        pShape.setAsBox(0.4f,0.6f);
+        pShape.setAsBox(0.5f,0.9f);
         FIXTURE_DEF.shape = pShape;
         b2DComponent.body.createFixture(FIXTURE_DEF);
         pShape.dispose();
@@ -195,14 +197,15 @@ public class ECSEngine extends PooledEngine {
         //animation component
         final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
         animationComponent.aniType = AnimationType.PLAYER_IDLE;
-        animationComponent.width = 80 * UNIT_SCALE;
-        animationComponent.height = 80 * UNIT_SCALE;
+        animationComponent.width = 55 * UNIT_SCALE;
+        animationComponent.height = 55 * UNIT_SCALE;
         player.add(animationComponent);
         //life component
         final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
         lifeComponent.health=100f;
         lifeComponent.charge=0f;
         lifeComponent.isEnemy=false;
+        player.add(lifeComponent);
 
         //dead component
         final DeadComponent deadComponent = this.createComponent(DeadComponent.class);

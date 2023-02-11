@@ -11,6 +11,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
 /**
  * Screen of the gameplay
@@ -20,6 +23,7 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
     private final PreferenceManager prefMgr;
     private final Entity player;
     private final Stage stage;
+
 
 
 
@@ -36,9 +40,14 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
 
 
 
+
         //SE ENCARGA EL MAPMANAGER
         player = context.getEcsEngine().createPlayer(mapManager.getCurrentMap().getStartLocation(),0.75f,0.75f);
         ////////////
+    }
+
+    public Entity getPlayer() {
+        return player;
     }
 
     @Override
@@ -49,7 +58,7 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener {
 
     @Override
     public void resize(int width, int height) {
-        super.resize(width, height);
+        super.resize(width,height);
     }
 
     @Override

@@ -12,6 +12,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 
 public class PlayerAnimationSystem extends IteratingSystem {
+
+    public static B2DComponent playerB2dComp;
     public PlayerAnimationSystem(final EwendLauncher context) {
 
         super(Family.all(AnimationComponent.class, PlayerComponent.class, B2DComponent.class).get());
@@ -21,7 +23,8 @@ public class PlayerAnimationSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent animationComponent = ECSEngine.aniCmpMapper.get(entity);
-
+        final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
+        playerB2dComp = b2DComponent;
         //orientation calc
         if (b2DComponent.body.getLinearVelocity().x > 0) {
             b2DComponent.orientation = 1;
@@ -29,10 +32,12 @@ public class PlayerAnimationSystem extends IteratingSystem {
             b2DComponent.orientation = -1;
         }
 
-        if (b2DComponent.body.getLinearVelocity().equals(Vector2.Zero)) {
+        if (b2DComponent.body.getLinearVelocity().y<0.1f&&b2DComponent.body.getLinearVelocity().y>-0.1f
+                &&(b2DComponent.body.getLinearVelocity().x<0.1f&&b2DComponent.body.getLinearVelocity().x>-0.1f)) {
             //player doesn't move
             animationComponent.aniType = AnimationType.PLAYER_IDLE;
-        } else if (b2DComponent.body.getLinearVelocity().x != 0&&b2DComponent.body.getLinearVelocity().y==0) {
+        } else if (b2DComponent.body.getLinearVelocity().x != 0&&
+                (b2DComponent.body.getLinearVelocity().y<0.5f&&b2DComponent.body.getLinearVelocity().y>-0.3f)&&playerComponent.touchingGround) {
             //player moves and is on earth
             animationComponent.aniType = AnimationType.PLAYER_RUNNING;
         }else if(b2DComponent.body.getLinearVelocity().y!=0){

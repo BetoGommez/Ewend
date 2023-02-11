@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
@@ -25,7 +26,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
     /**
      * Viewport of the screen
      */
-    protected final FitViewport viewport;
+    protected final ExtendViewport viewport;
 
 
 

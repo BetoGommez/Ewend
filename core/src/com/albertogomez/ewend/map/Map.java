@@ -32,6 +32,9 @@ public class Map {
     private final TiledMap tiledMap;
     private final Vector2 startLocation;
 
+    public static float MAP_WIDTH ;
+    public static float MAP_HEIGHT ;
+
     private final Array<GameObject> gameObjects;
     private final IntMap<Animation<Sprite>> mapAnimations;
 
@@ -53,6 +56,8 @@ public class Map {
         parsePlayerStartLocation();
         parseMapObjectLayer();
         parseEnemiesInfo();
+        MAP_WIDTH =Float.parseFloat(tiledMap.getProperties().get("width").toString());
+        MAP_HEIGHT =Float.parseFloat(tiledMap.getProperties().get("height").toString());
     }
 
     private void parsePlayerStartLocation(){
@@ -72,7 +77,7 @@ public class Map {
     }
 
     private void parseEnemiesInfo(){
-        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("enemies");
+        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("Enemies");
         String name;
         if (gameEnemiesLayer==null){
             Gdx.app.debug("Map","There is no enemies in this layer");
@@ -98,16 +103,16 @@ public class Map {
 
             final float width = tiledMapObjProperties.get("width",Float.class)*UNIT_SCALE;
             final float height = tiledMapObjProperties.get("height",Float.class)*UNIT_SCALE;
-            enemyObjects.add(new EnemyObject(name, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),64*UNIT_SCALE/2,64*UNIT_SCALE/2));
+            enemyObjects.add(new EnemyObject(name, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),64*UNIT_SCALE/3,64*UNIT_SCALE/3));
         }
 
     }
 
     private void parseCollisionLayer(){
         //TODO CUANDO CAMBIES DE MAPA COJES DE AQUÍ LAS CAPAS DE COLISIONES
-        final MapLayer objetos = tiledMap.getLayers().get("basebox");
+        final MapLayer objetos = tiledMap.getLayers().get("Ground");
         if(objetos==null){
-            Gdx.app.debug(TAG,"The collision layer: "+objetos.getName()+" wasn't found");
+            Gdx.app.debug(TAG,"The collision layer:  wasn't found");
             return;
         }
 
@@ -145,6 +150,7 @@ public class Map {
                     rectVertices[8] = 0;
                     rectVertices[9] = 0;
 
+
                     collisionAreas.add(new CollisionArea(rectangle.x,rectangle.y,rectVertices));
 
             } else if (mapObject instanceof PolylineMapObject) {
@@ -152,10 +158,14 @@ public class Map {
                 final PolylineMapObject polylineMapObject = (PolylineMapObject) mapObject;
                 final Polyline polyline = polylineMapObject.getPolyline();
                 collisionAreas.add(new CollisionArea(polyline.getX(),polyline.getY(), polyline.getVertices()));
-            }else{
+            }else if (mapObject instanceof PolygonMapObject){
+                final PolygonMapObject polygonMapObject = (PolygonMapObject) mapObject;
+                final Polygon polygon = polygonMapObject.getPolygon();
+                collisionAreas.add(new CollisionArea(polygon.getX(),polygon.getY(),polygon.getVertices()));
+            }
+            else{
                 Gdx.app.debug(TAG,"MapObject: "+mapObject+ " is not supported for the collision layer!");
                 Gdx.app.debug(TAG,"MapObject: "+mapObject+ " AAAAAAAAAAAAAAAAAAAAAA");
-
             }
         }
     }

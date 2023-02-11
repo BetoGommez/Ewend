@@ -1,9 +1,12 @@
 package com.albertogomez.ewend;
 
 import com.albertogomez.ewend.ecs.ECSEngine;
+import com.albertogomez.ewend.ecs.ai.AIComponent;
+import com.albertogomez.ewend.ecs.ai.AIState;
 import com.albertogomez.ewend.ecs.components.LifeComponent;
 import com.albertogomez.ewend.ecs.components.PlayerComponent;
 import com.albertogomez.ewend.ecs.system.PlayerMovementSystem;
+import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -40,7 +43,7 @@ public class WorldContactListener implements ContactListener {
         if((catFixB & BIT_PLAYER) == BIT_PLAYER){
             playerCollions(contact.getFixtureB(),contact.getFixtureA(),contact);
         }else{
-            if((catFixB & BIT_PLAYER) == BIT_PLAYER){
+            if((catFixA & BIT_PLAYER) == BIT_PLAYER){
                 playerCollions(contact.getFixtureA(),contact.getFixtureB(),contact);
             }
         }
@@ -77,12 +80,15 @@ public class WorldContactListener implements ContactListener {
 
         switch (categoryBitsB){
             case BIT_ENEMY:
+                ECSEngine.aiCmoMapper.get((Entity) fixtureB.getBody().getUserData()).state = AIState.ATTACKING;
+                ECSEngine.lifeCmpMapper.get(player).removeHealth(ECSEngine.attCmpMapper.get((Entity)fixtureB.getBody().getUserData()));
+                ECSEngine.aniCmpMapper.get(player).aniType = AnimationType.PLAYER_DAMAGED;
+
                 break;
             case  BIT_ENEMY_ATTACK:
                 break;
             case  BIT_GROUND:
-                if(checkCollisionGround()&&contact.getWorldManifold().getNormal().angleDeg()<91f){
-
+                if(checkCollisionGround()&&contact.getWorldManifold().getNormal().angleDeg()<170f){
                     ECSEngine.playerCmpMapper.get(player).touchingGround=true;
                 }else {
                     return;
@@ -133,6 +139,29 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
+        final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+        //player collision cases
+
+        if((catFixB & BIT_GROUND) == BIT_GROUND||(catFixA & BIT_GROUND) == BIT_GROUND){
+           // Gdx.app.debug("COLISION: ","Player is colliding with a object");
+
+        }else{
+            return;
+        }
+        if((catFixB & BIT_PLAYER) == BIT_PLAYER){
+            contact.getFixtureB().getBody().setGravityScale(1);
+            Gdx.app.debug("SALTA",contact.getFixtureA().getUserData()+"");
+
+
+        }else if((catFixA & BIT_PLAYER) == BIT_PLAYER){
+            Gdx.app.debug("SALTA",contact.getFixtureA().getUserData()+"");
+            ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureA().getBody().getUserData()).touchingGround=false;
+        }
+           return;
+
+
+
     }
 
 
@@ -146,26 +175,15 @@ public class WorldContactListener implements ContactListener {
         final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
         final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
 
-
-        if ((int) (catFixA & BIT_PLAYER_ATTACK) == BIT_PLAYER_ATTACK) {
-
-        } else if((int) (catFixB & BIT_PLAYER_ATTACK)==BIT_PLAYER_ATTACK){
-
-        } else{
-            return;
+        if(defaultPresolver(BIT_PLAYER_ATTACK,BIT_ENEMY,catFixA,catFixB)){
+            contact.setEnabled(false);
         }
 
-        if ((int) (catFixA & BIT_ENEMY) == BIT_ENEMY) {
-            enemyEntity = (Entity) bodyA.getUserData();
-
-        } else if((int) (catFixB & BIT_ENEMY)==BIT_ENEMY){
-            enemyEntity = (Entity) bodyB.getUserData();
-
-        } else{
-            return;
+        if(defaultPresolver(BIT_PLAYER,BIT_ENEMY,catFixA,catFixB)){
+            contact.setEnabled(false);
         }
 
-        contact.setEnabled(false);
+
 
 
         //ATAQUE
@@ -173,8 +191,64 @@ public class WorldContactListener implements ContactListener {
 
     }
 
+    private boolean defaultPresolver(short maskBitA,short maskBitB,int catFixA,int catFixB){
+        if ((int) (catFixA & maskBitA) == maskBitA) {
+
+        } else if((int) (catFixB & maskBitA)==maskBitA){
+
+        } else{
+            return false;
+        }
+
+        if ((int) (catFixA & maskBitB) == maskBitB) {
+        } else if((int) (catFixB & maskBitB)==maskBitB){
+        } else{
+            return false;
+        }
+        return true;
+    }
+
+
+
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
+
+        final Entity player;
+        final Entity enemyEntity;
+        final Body bodyA = contact.getFixtureA().getBody();
+        final Body bodyB = contact.getFixtureB().getBody();
+        final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
+        final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+        Body bodyPlayer;
+
+
+
+        if((catFixB & BIT_GROUND) == BIT_GROUND||(catFixA & BIT_GROUND) == BIT_GROUND){
+            // Gdx.app.debug("COLISION: ","Player is colliding with a object");
+
+        }else{
+            return;
+        }
+        if((catFixB & BIT_PLAYER) == BIT_PLAYER){
+
+            bodyPlayer = contact.getFixtureB().getBody();
+
+        }else if((catFixA & BIT_PLAYER) == BIT_PLAYER){
+            bodyPlayer = contact.getFixtureA().getBody();
+        }else{
+            return;
+        }
+        float angleDeg = contact.getWorldManifold().getNormal().angleDeg();
+
+        if((angleDeg<175&&angleDeg>95||angleDeg<85&&angleDeg>5)&&bodyPlayer.getLinearVelocity().y<5){
+            bodyPlayer.setLinearVelocity(bodyPlayer.getLinearVelocity().x,0);
+
+        }
+
+
+        contact.setTangentSpeed(0);
+
+
     }
 
     public void addPlayerCollisionListener(final PlayerCollisionListener listener){

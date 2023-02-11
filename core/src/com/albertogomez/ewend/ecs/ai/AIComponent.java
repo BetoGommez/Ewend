@@ -7,8 +7,12 @@ import com.badlogic.gdx.utils.Pool;
 public class AIComponent implements Component, Pool.Poolable {
 
     public AIState state = AIState.IDLE;
-    public float idleDelayAccum=0f ;
+    public float milisecAccum=0f ;
     public float idleDelay=1f ;
+
+    public float attackDelay = 3f;
+    public boolean attackedState = false;
+
 
     public float maxDistanceFactor = 2f;
     public Vector2 initialPosition;

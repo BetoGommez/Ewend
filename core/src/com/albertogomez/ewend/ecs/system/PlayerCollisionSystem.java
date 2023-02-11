@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class PlayerCollisionSystem extends IteratingSystem implements WorldContactListener.PlayerCollisionListener {
 
+
     public PlayerCollisionSystem(EwendLauncher context) {
         super(Family.all(RemoveComponent.class).get());
         context.getWcLstnr().addPlayerCollisionListener(this);
@@ -28,6 +29,7 @@ public class PlayerCollisionSystem extends IteratingSystem implements WorldConta
     @Override
     public void playerCollision(Entity player, Entity gameObject) {
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObject);
+
         final Body playerBody =  ECSEngine.b2dCmpMapper.get(player).body;
         if(gameObjCmp.type== GameObjectType.SPIKE){
             //bajar vida

@@ -40,6 +40,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import java.nio.file.DirectoryStream;
 import java.util.EnumMap;
 
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import jdk.jfr.internal.LogLevel;
 
@@ -73,7 +74,7 @@ public class EwendLauncher extends Game {
 	private ECSEngine ecsEngine;
 
 	private OrthographicCamera gameCamera;
-	private FitViewport viewport;
+	private ExtendViewport viewport;
 	private SpriteBatch spriteBatch;
 	private float accumulator;
 
@@ -105,7 +106,7 @@ public class EwendLauncher extends Game {
 		//BOX2D
 		Box2D.init();
 		accumulator = 0;
-		world = new World(new Vector2(0,-9.81f),true);
+		world = new World(new Vector2(0,-9.81f*1.4f),true);
 		wcLstnr = new WorldContactListener();
 		world.setContactListener(wcLstnr);
 		rayHandler = new RayHandler(world);
@@ -115,6 +116,8 @@ public class EwendLauncher extends Game {
 
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
+
+
 
 		//Initialize AssetManager
 		assetManager = new AssetManager();
@@ -138,7 +141,7 @@ public class EwendLauncher extends Game {
 
 		//Setup game viewport
 		gameCamera = new OrthographicCamera();
-		viewport = new FitViewport(WIDTH*UNIT_SCALE,HEIGHT*UNIT_SCALE,gameCamera);
+		viewport = new ExtendViewport(WIDTH*UNIT_SCALE,HEIGHT*UNIT_SCALE,gameCamera);
 		//
 
 		//Ashley
@@ -230,7 +233,7 @@ public class EwendLauncher extends Game {
 	 * Returns the viewport
 	 * @return Viewport object
 	 */
-	public FitViewport getScreenViewport() {
+	public ExtendViewport getScreenViewport() {
 		return viewport;
 	}
 
