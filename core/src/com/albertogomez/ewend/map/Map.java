@@ -77,7 +77,7 @@ public class Map {
     }
 
     private void parseEnemiesInfo(){
-        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("Enemies");
+        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("enemies");
         String name;
         if (gameEnemiesLayer==null){
             Gdx.app.debug("Map","There is no enemies in this layer");
@@ -171,7 +171,7 @@ public class Map {
     }
 
     private void parseMapObjectLayer(){
-        final MapLayer gameObjectsLayer = tiledMap.getLayers().get("gameObjects");
+        final MapLayer gameObjectsLayer = tiledMap.getLayers().get("objects");
         if (gameObjectsLayer==null){
             Gdx.app.debug("Map","There is no gameobjects in this layer");
             return;

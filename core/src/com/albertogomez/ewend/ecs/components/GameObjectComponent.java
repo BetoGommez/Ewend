@@ -7,9 +7,12 @@ import com.badlogic.gdx.utils.Pool;
 public class GameObjectComponent implements Component, Pool.Poolable {
     public GameObjectType type;
     public int animationIndex;
+    public boolean touched = false;
     @Override
     public void reset() {
         type = null;
         animationIndex = -1;
     }
+
+
 }

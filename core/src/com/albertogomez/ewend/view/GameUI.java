@@ -5,7 +5,9 @@ import com.albertogomez.ewend.input.ButtonListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,7 +23,7 @@ public class GameUI extends Table implements EventListener{
     private Skin skin;
     private TextButton.TextButtonStyle style;
     private TextButton button;
-    private ButtonListener buttonListener;
+    private final ButtonListener buttonListener;
 
     private float buttonSize;
 

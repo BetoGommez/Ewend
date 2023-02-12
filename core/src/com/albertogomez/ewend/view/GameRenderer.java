@@ -6,6 +6,7 @@ import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.GameObjectComponent;
+import com.albertogomez.ewend.ecs.components.LifeComponent;
 import com.albertogomez.ewend.map.Map;
 import com.albertogomez.ewend.map.MapListener;
 import com.albertogomez.ewend.screen.GameScreen;
@@ -61,6 +62,7 @@ public class GameRenderer implements Disposable, MapListener {
     private IntMap<Animation<Sprite>> mapAnimations;
 
     private final RayHandler rayHandler;
+    private final Array<TiledMapTileLayer> overlappingLayers;
 
     public GameRenderer(final EwendLauncher context) {
         assetManager = context.getAssetManager();
@@ -71,12 +73,13 @@ public class GameRenderer implements Disposable, MapListener {
         animationCache = new EnumMap<AnimationType, Animation<Sprite>>(AnimationType.class);
 
         gameObjectEntities = context.getEcsEngine().getEntitiesFor(Family.all(GameObjectComponent.class,B2DComponent.class,AnimationComponent.class).get());
-        animatedEntities = context.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, B2DComponent.class).get());
+        animatedEntities = context.getEcsEngine().getEntitiesFor(Family.all(AnimationComponent.class, B2DComponent.class, LifeComponent.class).get());
         mapAnimations = new IntMap<Animation<Sprite>>();
 
         mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, context.getSpriteBatch());
         context.getMapManager().addMapListener(this);
         tiledMapLayers = new Array<TiledMapTileLayer>();
+        overlappingLayers = new Array<TiledMapTileLayer>();
 
         profiler = new GLProfiler(Gdx.graphics);
         box2DDebugRenderer = new Box2DDebugRenderer();
@@ -105,27 +108,39 @@ public class GameRenderer implements Disposable, MapListener {
         viewport.apply(false);
 
         spriteBatch.begin();
-
         if (mapRenderer.getMap() != null) {
             AnimatedTiledMapTile.updateAnimationBaseTime();
             mapRenderer.setView(gameCamera);
             for (final TiledMapTileLayer layer : tiledMapLayers) {
-                mapRenderer.renderTileLayer(layer);
+                if(layer.getName().contains("Overlapping")||layer.getName().contains("Platform")){
+                    overlappingLayers.add(layer);
+                }else{
+                    mapRenderer.renderTileLayer(layer);
+                }
             }
         }
+
         AnimatedTiledMapTile.updateAnimationBaseTime();
-        for (final Entity entity : gameObjectEntities) {
-            renderGameObject(entity, alpha);
-        }
         for (final Entity entity : animatedEntities) {
             renderEntity(entity, alpha);
         }
+        for (final Entity entity : gameObjectEntities) {
+            renderGameObject(entity, alpha);
+        }
 
 
 
+        if(mapRenderer.getMap()!=null){
+            for (TiledMapTileLayer overlapping : overlappingLayers){
+                mapRenderer.renderTileLayer(overlapping);
+            }
+            overlappingLayers.clear();
+        }
         spriteBatch.end();
-        rayHandler.setCombinedMatrix(gameCamera);
+
         rayHandler.updateAndRender();
+
+        rayHandler.setCombinedMatrix(gameCamera);
 
 
         float startX = gameCamera.viewportWidth/4;
@@ -147,7 +162,7 @@ public class GameRenderer implements Disposable, MapListener {
             Gdx.app.debug("RenderInfo", "Drawcalls: " + profiler.getDrawCalls());
             profiler.reset();
         }
-        box2DDebugRenderer.render(world, viewport.getCamera().combined);
+       // box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
 
     }
@@ -180,14 +195,18 @@ public class GameRenderer implements Disposable, MapListener {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
         final GameObjectComponent gameObjectComponent = ECSEngine.gameObjCmpMapper.get(entity);
-
+        Animation<Sprite> animation = null;
         if (gameObjectComponent.animationIndex != -1) {
-            final Animation<Sprite> animation = mapAnimations.get(gameObjectComponent.animationIndex);
+            if(aniComponent.aniType!=null){
+                animation = getAnimation(aniComponent.aniType);
 
+            }else{
+                animation = mapAnimations.get(gameObjectComponent.animationIndex);
+
+            }
             final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
             frame.setBounds(b2DComponent.renderPosition.x, b2DComponent.renderPosition.y , aniComponent.width , aniComponent.height);
-            frame.setOriginCenter();
-            frame.setRotation(b2DComponent.body.getAngle()* MathUtils.radDeg);
+
             frame.draw(spriteBatch);
         }
     }
@@ -196,22 +215,26 @@ public class GameRenderer implements Disposable, MapListener {
         Animation<Sprite> animation = animationCache.get(aniType);
         if (animation == null) {
             //create animation
+            Animation.PlayMode animationMode = Animation.PlayMode.LOOP;
             Gdx.app.debug("GameRenderer", "Creating new animation of type " + aniType);
             final Array<TextureAtlas.AtlasRegion> atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegions(aniType.getAtlasKey());
-            animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(atlasRegion), Animation.PlayMode.LOOP);
+            if(aniType == AnimationType.LAMP_EFFECT){
+                animationMode = Animation.PlayMode.NORMAL;
+            }
+            animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(atlasRegion,aniType.getWidth(), aniType.getHeight()), animationMode);
             animationCache.put(aniType, animation);
         }
         return animation;
     }
 
 
-    private Array<? extends Sprite> getKeyFrame(Array<TextureAtlas.AtlasRegion> atlasRegion) {
+    private Array<? extends Sprite> getKeyFrame(Array<TextureAtlas.AtlasRegion> atlasRegion,float frameWidth,float frameHeight) {
         final Array<Sprite> keyFrames = new Array<Sprite>();
-        TextureRegion[][] textureRegion = atlasRegion.get(0).split(64, 64);
+        TextureRegion[][] textureRegion = atlasRegion.get(0).split((int)frameWidth, (int)frameHeight);
 
         for (int i = 0; i < atlasRegion.size; i++) {
             if (atlasRegion.get(i).getTexture() != null) {
-                textureRegion = atlasRegion.get(i).split(64, 64);
+                textureRegion = atlasRegion.get(i).split((int)frameWidth, (int)frameHeight);
             }
             for (int j = 0; j < textureRegion.length; j++) {
                 for (int k = 0; k < textureRegion[j].length; k++) {

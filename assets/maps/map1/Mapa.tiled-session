@@ -3,31 +3,99 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "map1.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "Animation.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "Boceto.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "Firefly.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "Lamp.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "Luciernaga.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 2,
             "scaleInEditor": 1
+        },
+        "Oak Probs.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "Probs.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "Rock.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 2
+        },
+        "Seta.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "Terrain Probs.tsx": {
+            "scaleInDock": 4
+        },
+        "Terrain.tsx": {
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "Terreno Probs.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "Terreno.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "map1.tmx": {
+            "expandedGroupLayers": [
+                8
+            ],
+            "scale": 1.5,
+            "selectedLayer": 21,
+            "viewCenter": {
+                "x": 826.6666666666665,
+                "y": 314.66666666666663
+            }
         }
     },
-    "last.imagePath": "C:/Users/varog/Desktop/mapa/materiales/Oak Woods/decorations",
+    "frame.defaultDuration": 200,
+    "last.externalTilesetPath": "C:/Users/varog/Desktop/mapa",
+    "last.imagePath": "C:/Users/varog/Desktop/mapa/materials/Lamp",
     "map.height": 30,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
     "map.width": 90,
     "openFiles": [
+        "map1.tmx"
     ],
     "project": "Mapa.tiled-project",
     "recentFiles": [
+        "map1.tmx",
+        "Firefly.tsx",
+        "Lamp.tsx",
+        "Animation.tsx",
+        "Probs.tsx",
+        "Terreno Probs.tsx",
+        "Boceto.tsx",
+        "Terrain.tsx",
+        "Terreno.tsx",
+        "Oak Probs.tsx",
         "Luciernaga.tsx",
-        "Boceto.tsx"
+        "Seta.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

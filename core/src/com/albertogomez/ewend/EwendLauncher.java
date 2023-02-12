@@ -3,20 +3,14 @@ package com.albertogomez.ewend;
 import box2dLight.Light;
 import box2dLight.RayHandler;
 import com.albertogomez.ewend.audio.AudioManager;
-import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.MapManager;
-import com.albertogomez.ewend.screen.AbstractScreen;
-import com.albertogomez.ewend.screen.GameScreen;
-import com.albertogomez.ewend.screen.LoadingScreen;
 import com.albertogomez.ewend.screen.ScreenType;
 import com.albertogomez.ewend.view.GameRenderer;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,22 +21,21 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
-
-import java.nio.file.DirectoryStream;
-import java.util.EnumMap;
-
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import jdk.jfr.internal.LogLevel;
+
+import java.util.EnumMap;
 
 import static com.albertogomez.ewend.constants.Constants.*;
 

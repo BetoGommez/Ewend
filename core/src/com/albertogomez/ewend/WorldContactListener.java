@@ -1,24 +1,14 @@
 package com.albertogomez.ewend;
 
 import com.albertogomez.ewend.ecs.ECSEngine;
-import com.albertogomez.ewend.ecs.ai.AIComponent;
 import com.albertogomez.ewend.ecs.ai.AIState;
 import com.albertogomez.ewend.ecs.components.LifeComponent;
-import com.albertogomez.ewend.ecs.components.PlayerComponent;
-import com.albertogomez.ewend.ecs.system.PlayerMovementSystem;
 import com.albertogomez.ewend.view.AnimationType;
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import static com.albertogomez.ewend.constants.Constants.*;
-import static java.lang.Math.min;
 
 public class WorldContactListener implements ContactListener {
     private final Array<PlayerCollisionListener> listeners;
@@ -75,9 +65,8 @@ public class WorldContactListener implements ContactListener {
             case BIT_GAME_OBJECT:
 
                 gameObj = (Entity) bodyB.getUserData();
-                for(final PlayerCollisionListener listener : listeners){
-                    listener.playerCollision(player,gameObj);
-                }
+                ECSEngine.gameObjCmpMapper.get(gameObj).touched=true;
+
                 break;
             default:
                 break;
@@ -138,6 +127,10 @@ public class WorldContactListener implements ContactListener {
         final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
 
         if(defaultPresolver(BIT_PLAYER_ATTACK,BIT_ENEMY,catFixA,catFixB)){
+            contact.setEnabled(false);
+        }
+
+        if(defaultPresolver(BIT_PLAYER,BIT_GAME_OBJECT,catFixA,catFixB)){
             contact.setEnabled(false);
         }
 

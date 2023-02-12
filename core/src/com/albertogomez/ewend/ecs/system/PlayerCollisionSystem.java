@@ -31,10 +31,12 @@ public class PlayerCollisionSystem extends IteratingSystem implements WorldConta
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObject);
 
         final Body playerBody =  ECSEngine.b2dCmpMapper.get(player).body;
-        if(gameObjCmp.type== GameObjectType.SPIKE){
-            //bajar vida
-            playerBody.applyLinearImpulse(0,10,playerBody.getWorldCenter().x,playerBody.getWorldCenter().y,true);
-            gameObject.add(((ECSEngine)getEngine()).createComponent(RemoveComponent.class));
+        switch (gameObjCmp.type){
+            case FIREFLY:
+                break;
+            case LAMP:
+
+                break;
         }
     }
 }

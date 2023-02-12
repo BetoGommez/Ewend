@@ -37,6 +37,8 @@ public class ECSEngine extends PooledEngine {
     public static final ComponentMapper<AttackComponent> attCmpMapper = ComponentMapper.getFor(AttackComponent.class);
     public static final ComponentMapper<LifeComponent> lifeCmpMapper = ComponentMapper.getFor(LifeComponent.class);
 
+
+
     private final RayHandler rayHandler;
     private final Vector2 localPosition;
     private final Vector2 posBeforeRotation;
@@ -63,6 +65,7 @@ public class ECSEngine extends PooledEngine {
         this.addSystem(new LifeSystem(context));
         this.addSystem(new DeadSystem(context));
         this.addSystem(new PlayerMovementSystem(context));
+        this.addSystem(new ObjectAnimationSystem(context));
     }//TODO EL TAMAÑO DE LA HITBOX REAL SE PONDRÁ EN ESTE CREADOR
 
     public Entity createEnemy(final Vector2 spawnLocation, EnemyType type,final float height,final float width){
@@ -188,7 +191,7 @@ public class ECSEngine extends PooledEngine {
         player.add(b2DComponent);
 
         //create player light
-        b2DComponent.lightDistance = 6;
+        b2DComponent.lightDistance = 0;
         b2DComponent.lightFluctuationSpeed = 4;
         b2DComponent.light = new PointLight(rayHandler,64, new Color(1,1,1,0.7f),6,b2DComponent.body.getPosition().x,b2DComponent.body.getPosition().y);
         b2DComponent.lightFluctuationDistance = b2DComponent.light.getDistance()*0.16f;
@@ -237,9 +240,12 @@ public class ECSEngine extends PooledEngine {
         //AnimationComponent
         final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
         animationComponent.aniType = null;
+        animationComponent.aniTime=0.0f;
         animationComponent.width = gameObject.getWidth();
         animationComponent.height= gameObject.getHeight();
         gameObjEntity.add(animationComponent);
+
+
 
         //box2d
         EwendLauncher.resetBodyAndFixtureDefinition();
@@ -263,7 +269,7 @@ public class ECSEngine extends PooledEngine {
         posAfterRotation.set(b2DComponent.body.getWorldPoint(localPosition));
         //adjust position to original
         b2DComponent.body.setTransform(b2DComponent.body.getPosition().add(posBeforeRotation).sub(posAfterRotation),angleRed);
-        b2DComponent.renderPosition.set(b2DComponent.body.getPosition().x-animationComponent.width*0.5f,b2DComponent.body.getPosition().y - b2DComponent.height * 0.5f);
+        b2DComponent.renderPosition.set(b2DComponent.body.getPosition().x-animationComponent.width*0.5f,b2DComponent.body.getPosition().y - animationComponent.height * 0.5f);
 
         FIXTURE_DEF.filter.categoryBits = BIT_GAME_OBJECT;
         FIXTURE_DEF.filter.maskBits = BIT_PLAYER;
