@@ -21,23 +21,14 @@ import static com.albertogomez.ewend.constants.Constants.*;
 import static java.lang.Math.min;
 
 public class WorldContactListener implements ContactListener {
-
-    private short[] maskBits={BIT_GROUND,BIT_GAME_OBJECT,BIT_PLAYER,BIT_ENEMY,BIT_PLAYER_ATTACK,BIT_ENEMY_ATTACK};
     private final Array<PlayerCollisionListener> listeners;
     public WorldContactListener() {
         listeners = new Array<PlayerCollisionListener>();
-
     }
     @Override
     public void beginContact(Contact contact) {
-
-        final Body bodyA = contact.getFixtureA().getBody();
-        final Body bodyB = contact.getFixtureB().getBody();
         final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
         final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
-        int colType = catFixA+catFixB;
-
-
 
         //player collision cases
         if((catFixB & BIT_PLAYER) == BIT_PLAYER){
@@ -48,35 +39,22 @@ public class WorldContactListener implements ContactListener {
             }
         }
 
-        //enemy collion
-
+        //enemy collision
         if((catFixB & BIT_ENEMY) == BIT_ENEMY){
-            Gdx.app.debug("COLISION: ","Player is colliding with a object");
-
             enemyCollions(contact.getFixtureB(),contact.getFixtureA(),contact);
         }else{
             if((catFixA & BIT_ENEMY) == BIT_ENEMY){
-                Gdx.app.debug("COLISION: ","Player is colliding with a object");
-
                 enemyCollions(contact.getFixtureA(),contact.getFixtureB(),contact);
             }
         }
-
-
-
-
-
 
     }
 
     private void playerCollions(Fixture playerFixture,Fixture fixtureB,Contact contact){
         short categoryBitsB= fixtureB.getFilterData().categoryBits;
-        final Body bodyPlayer = playerFixture.getBody();
         final Body bodyB =fixtureB.getBody();
         final Entity player=(Entity) playerFixture.getBody().getUserData();
         final Entity gameObj;
-        final short bitParse;
-
 
         switch (categoryBitsB){
             case BIT_ENEMY:
@@ -88,7 +66,7 @@ public class WorldContactListener implements ContactListener {
             case  BIT_ENEMY_ATTACK:
                 break;
             case  BIT_GROUND:
-                if(checkCollisionGround()&&contact.getWorldManifold().getNormal().angleDeg()<170f){
+                if(contact.getWorldManifold().getNormal().angleDeg()<170f&&contact.getWorldManifold().getNormal().angleDeg()>5f){
                     ECSEngine.playerCmpMapper.get(player).touchingGround=true;
                 }else {
                     return;
@@ -109,13 +87,8 @@ public class WorldContactListener implements ContactListener {
 
     private void enemyCollions(Fixture enemyFixture,Fixture fixtureB,Contact contact){
         short categoryBitsB= fixtureB.getFilterData().categoryBits;
-        final Body bodyPlayer = enemyFixture.getBody();
         final Body bodyB =fixtureB.getBody();
         final Entity enemy=(Entity) enemyFixture.getBody().getUserData();
-        final Entity gameObj;
-        final short bitParse;
-
-
         switch (categoryBitsB){
             case BIT_ENEMY:
 
@@ -133,10 +106,6 @@ public class WorldContactListener implements ContactListener {
 
 
 
-    private boolean checkCollisionGround(){
-        return true;
-    }
-
     @Override
     public void endContact(Contact contact) {
         final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
@@ -144,22 +113,15 @@ public class WorldContactListener implements ContactListener {
         //player collision cases
 
         if((catFixB & BIT_GROUND) == BIT_GROUND||(catFixA & BIT_GROUND) == BIT_GROUND){
-           // Gdx.app.debug("COLISION: ","Player is colliding with a object");
 
         }else{
             return;
         }
         if((catFixB & BIT_PLAYER) == BIT_PLAYER){
-            contact.getFixtureB().getBody().setGravityScale(1);
-            Gdx.app.debug("SALTA",contact.getFixtureA().getUserData()+"");
-
-
+            ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureB().getBody().getUserData()).touchingGround=false;
         }else if((catFixA & BIT_PLAYER) == BIT_PLAYER){
-            Gdx.app.debug("SALTA",contact.getFixtureA().getUserData()+"");
             ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureA().getBody().getUserData()).touchingGround=false;
         }
-           return;
-
 
 
     }

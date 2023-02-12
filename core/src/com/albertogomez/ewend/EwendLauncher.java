@@ -70,7 +70,6 @@ public class EwendLauncher extends Game {
 
 	private World world;
 	private WorldContactListener wcLstnr;
-	private Box2DDebugRenderer box2DDebugRenderer;
 	private ECSEngine ecsEngine;
 
 	private OrthographicCamera gameCamera;
@@ -110,7 +109,7 @@ public class EwendLauncher extends Game {
 		wcLstnr = new WorldContactListener();
 		world.setContactListener(wcLstnr);
 		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0,0,0,0.2f);
+		rayHandler.setAmbientLight(0,0,0,0.5f);
 		Light.setGlobalContactFilter(BIT_PLAYER, (short)1, BIT_GROUND);
 		////
 
@@ -214,16 +213,12 @@ public class EwendLauncher extends Game {
 	public void dispose() {
 		super.dispose();
 		gameRenderer.dispose();
-		box2DDebugRenderer.dispose();
 		rayHandler.dispose();
 		world.dispose();
 		assetManager.dispose();
 		stage.dispose();
 	}
 
-	public Box2DDebugRenderer getBox2DDebugRenderer() {
-		return box2DDebugRenderer;
-	}
 
 	public World getWorld() {
 		return world;

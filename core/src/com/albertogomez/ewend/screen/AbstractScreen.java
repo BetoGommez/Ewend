@@ -49,7 +49,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
     public AbstractScreen(EwendLauncher context) {
         this.context = context;
         this.viewport =context.getScreenViewport();
-        box2DDebugRenderer = context.getBox2DDebugRenderer();
+        box2DDebugRenderer = new Box2DDebugRenderer();
         world = context.getWorld();
         manager = context.getInputManager();
         stage = context.getStage();
