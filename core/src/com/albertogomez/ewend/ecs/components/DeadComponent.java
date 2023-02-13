@@ -11,7 +11,7 @@ public class DeadComponent implements Component, Pool.Poolable {
 
     @Override
     public void reset() {
-
+        
         isDead = false;
     }
 }

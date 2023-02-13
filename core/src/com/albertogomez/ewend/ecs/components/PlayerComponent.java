@@ -12,6 +12,9 @@ public class PlayerComponent implements Component, Pool.Poolable {
     public boolean hasItem;
 
     public boolean touchingGround;
+    private enum PLAYER_STATE {
+        NORMAL,
+        TRANSFORMATION};
     public Vector2 speed=new Vector2();
     @Override
     public void reset() {

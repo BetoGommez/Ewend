@@ -63,7 +63,7 @@ public class AttackSystem extends IteratingSystem implements EventListener {
 
         Body body = world.createBody(BODY_DEF);
 
-        body.setUserData(attackComponent.damage);
+        body.setUserData(attackComponent);
 
 
         FIXTURE_DEF.density=1;

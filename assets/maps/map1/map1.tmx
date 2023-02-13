@@ -335,7 +335,7 @@
   <object id="192" name="SHEEP" gid="2739" x="194" y="652.5" width="46" height="43"/>
  </objectgroup>
  <objectgroup id="26" name="playerLocation">
-  <object id="193" x="637.817" y="639.758">
+  <object id="193" x="319.817" y="620.425">
    <point/>
   </object>
  </objectgroup>

@@ -2,6 +2,7 @@ package com.albertogomez.ewend;
 
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.ai.AIState;
+import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.LifeComponent;
 import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.Entity;
@@ -51,6 +52,7 @@ public class WorldContactListener implements ContactListener {
                 ECSEngine.aiCmoMapper.get((Entity) fixtureB.getBody().getUserData()).state = AIState.ATTACKING;
                 break;
             case  BIT_ENEMY_ATTACK:
+                ECSEngine.lifeCmpMapper.get(player).removeHealth((AttackComponent) fixtureB.getBody().getUserData());
                 break;
             case  BIT_GROUND:
                 if(contact.getWorldManifold().getNormal().angleDeg()<170f&&contact.getWorldManifold().getNormal().angleDeg()>5f){
@@ -124,6 +126,10 @@ public class WorldContactListener implements ContactListener {
         final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
 
         if(defaultPresolver(BIT_PLAYER_ATTACK,BIT_ENEMY,catFixA,catFixB)){
+            contact.setEnabled(false);
+        }
+
+        if(defaultPresolver(BIT_ENEMY_ATTACK,BIT_PLAYER,catFixA,catFixB)){
             contact.setEnabled(false);
         }
 

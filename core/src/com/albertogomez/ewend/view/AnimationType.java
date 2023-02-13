@@ -9,20 +9,13 @@ public enum AnimationType {
     PLAYER_LANDING(PLAYER_SPRITE_PATH,"jump_landing",0.05f,64,64),
     PLAYER_RUNNING(PLAYER_SPRITE_PATH,"run",0.05f,64,64),
     PLAYER_DAMAGED(PLAYER_SPRITE_PATH,"hit",0.05f,64,64),
+
     SHEEP_IDLE(SHEEP_SPRITE_PATH,"idle",0.05f,64,64),
     SHEEP_ATTACK(SHEEP_SPRITE_PATH,"attack",0.25f,64,64),
     SHEEP_RUN(SHEEP_SPRITE_PATH,"walk",0.05f,64,64),
+
     LAMP_EFFECT(LAMP_SPRITE_PATH,"lampon",0.3f,48,64),
     FIREFLY_EFFECT(FIREFLY_EFFECT_PATH,"firefly",0.3f,32,32);
-
-
-
-
-
-
-
-
-
 
     private final String atlasPath;
     private final String atlasKey;

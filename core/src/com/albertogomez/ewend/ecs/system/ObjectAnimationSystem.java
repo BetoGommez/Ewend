@@ -37,9 +37,10 @@ public class ObjectAnimationSystem extends IteratingSystem {
                     animationComponent.width = animationComponent.width * 4;
                     animationComponent.height = animationComponent.height * 3f;
                     animationComponent.aniType = AnimationType.LAMP_EFFECT;
-                    b2DComponent.lightDistance = 5;
-                    b2DComponent.lightFluctuationSpeed = 4;
-                    b2DComponent.lightFluctuationDistance = 2;
+                    b2DComponent.lightDistance = 3;
+                    b2DComponent.lightFluctuationSpeed = 2;
+                    b2DComponent.lightFluctuationDistance = 0.6f;
+
                     b2DComponent.light = new PointLight(rayHandler, 32, new Color(0,0.1f, 0.4f, 1f), 0, b2DComponent.body.getPosition().x, b2DComponent.body.getPosition().y);
                     b2DComponent.light.attachToBody(b2DComponent.body);
 
