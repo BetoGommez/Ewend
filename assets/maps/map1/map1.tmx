@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="196" height="46" tilewidth="16" tileheight="16" infinite="0" nextlayerid="30" nextobjectid="209">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="196" height="46" tilewidth="16" tileheight="16" infinite="0" nextlayerid="31" nextobjectid="215">
  <tileset firstgid="1" source="Terrain.tsx"/>
  <tileset firstgid="721" source="Terrain Probs.tsx"/>
  <tileset firstgid="1671" source="Probs.tsx"/>
  <tileset firstgid="2591" source="Animation.tsx"/>
  <tileset firstgid="2727" source="Lamp.tsx"/>
- <tileset firstgid="2739" source="Firefly.tsx"/>
- <tileset firstgid="2771" source="sheep.tsx"/>
- <tileset firstgid="2772" source="lampoff.tsx"/>
+ <tileset firstgid="2739" source="sheep.tsx"/>
+ <tileset firstgid="2740" source="lampoff.tsx"/>
+ <tileset firstgid="2741" source="Firefly.tsx"/>
  <layer id="10" name="SubBacklapping" width="196" height="46">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -308,29 +308,34 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2684354565,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="11" name="Firefly">
-  <object id="186" x="528" y="224">
-   <point/>
-  </object>
-  <object id="187" x="2416" y="416">
-   <point/>
-  </object>
-  <object id="188" x="1472" y="656">
-   <point/>
-  </object>
- </objectgroup>
+ <objectgroup id="11" name="Firefly"/>
  <objectgroup id="29" name="objects">
-  <object id="208" gid="2772" x="3063.49" y="532" width="11" height="22">
+  <object id="208" gid="2740" x="3063.49" y="532" width="11" height="22">
    <properties>
     <property name="type" value="LAMP"/>
    </properties>
   </object>
+  <object id="212" gid="2741" x="1462" y="668.667" width="32" height="32">
+   <properties>
+    <property name="type" value="FIREFLY"/>
+   </properties>
+  </object>
+  <object id="213" gid="2741" x="523.333" y="235.333" width="32" height="32">
+   <properties>
+    <property name="type" value="FIREFLY"/>
+   </properties>
+  </object>
+  <object id="214" gid="2741" x="2399.33" y="432.667" width="32" height="32">
+   <properties>
+    <property name="type" value="FIREFLY"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="27" name="enemies">
-  <object id="192" name="SHEEP" gid="2771" x="194" y="652.5" width="46" height="43"/>
+  <object id="192" name="SHEEP" gid="2739" x="194" y="652.5" width="46" height="43"/>
  </objectgroup>
  <objectgroup id="26" name="playerLocation">
-  <object id="193" x="3011.24" y="537.909">
+  <object id="193" x="637.817" y="639.758">
    <point/>
   </object>
  </objectgroup>

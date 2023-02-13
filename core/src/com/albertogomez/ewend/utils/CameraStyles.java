@@ -26,8 +26,8 @@ public class CameraStyles {
             position.y = startY;
         }
 
-        if(position.x>startX+height){
-            position.x = startX+height;
+        if(position.x>startX+width){
+            position.x = startX+width;
         }
 
         if(position.y>startY+height){

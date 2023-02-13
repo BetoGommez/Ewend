@@ -6,6 +6,7 @@ import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.ChainShape;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.EnumMap;
 
+import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
 import static com.albertogomez.ewend.constants.Constants.BIT_GROUND;
 
 public class MapManager {
@@ -66,11 +68,12 @@ public class MapManager {
         if(currentMap==null){
             Gdx.app.debug(TAG,"Creating new map of type "+type);
             final TiledMap tiledMap = assetManager.get(type.getFilePath(),TiledMap.class);
-            currentMap = new Map(tiledMap);
+            currentMap = new Map(tiledMap,assetManager);
             mapCache.put(type,currentMap);
         }
 
         //create map entities/bodies
+
         spawnCollisionAreas();
         spawnGameObjects();
         spawnEnemies();
@@ -81,6 +84,12 @@ public class MapManager {
 
 
     }
+
+
+
+
+
+
 
     private void spawnEnemies(){
         for(final EnemyObject enemyObject : currentMap.getEnemyObjects()){

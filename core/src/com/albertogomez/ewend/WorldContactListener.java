@@ -49,9 +49,6 @@ public class WorldContactListener implements ContactListener {
         switch (categoryBitsB){
             case BIT_ENEMY:
                 ECSEngine.aiCmoMapper.get((Entity) fixtureB.getBody().getUserData()).state = AIState.ATTACKING;
-                ECSEngine.lifeCmpMapper.get(player).removeHealth(ECSEngine.attCmpMapper.get((Entity)fixtureB.getBody().getUserData()));
-                ECSEngine.aniCmpMapper.get(player).aniType = AnimationType.PLAYER_DAMAGED;
-
                 break;
             case  BIT_ENEMY_ATTACK:
                 break;
@@ -196,7 +193,7 @@ public class WorldContactListener implements ContactListener {
         float angleDeg = contact.getWorldManifold().getNormal().angleDeg();
 
         if((angleDeg<175&&angleDeg>95||angleDeg<85&&angleDeg>5)&&bodyPlayer.getLinearVelocity().y<5){
-            bodyPlayer.setLinearVelocity(bodyPlayer.getLinearVelocity().x,0);
+           bodyPlayer.setLinearVelocity(bodyPlayer.getLinearVelocity().x*3,0);
 
         }
 

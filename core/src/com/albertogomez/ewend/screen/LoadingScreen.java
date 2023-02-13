@@ -12,10 +12,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Array;
+
+import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
 
 /**
  * Represent the screen when the game is loading
@@ -23,12 +27,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     private final AssetManager assetManager;
+    private final Array<Texture> backgroundLayers ;
+
     private boolean isMusicLoaded;
+
+    
     public LoadingScreen(final EwendLauncher context) {
         super(context);
 
         this.assetManager = context.getAssetManager();
-
+        backgroundLayers = new Array<Texture>();
         //load hud
         assetManager.load("ui/game_ui/game_hud.atlas",TextureAtlas.class);
 
@@ -37,6 +45,13 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         assetManager.load("character/character_effects.atlas", TextureAtlas.class);
         for(final AnimationType animationType : AnimationType.values()){
             assetManager.load(animationType.getAtlasPath(),TextureAtlas.class);
+        }
+
+
+        //load background
+
+        for (int i = 1; i < 5; i++) {
+            assetManager.load(BACKGROUND_PATH+i+".png", Texture.class);
         }
 
 
@@ -115,6 +130,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
     @Override
     public void keyPressed(InputManager inputManager, GameKeys key) {
         if(assetManager.getProgress()>=1){
+
             audioManager.playAudio(AudioType.SELECT);
             context.setScreen(ScreenType.GAME);
         }

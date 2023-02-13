@@ -145,7 +145,10 @@ public class EwendLauncher extends Game {
 		/////
 
 		//Game Renderer
+		if(assetManager.getProgress()>=1){
 		gameRenderer = new GameRenderer(this);
+
+		}
 
 		//preference manager
 		preferenceManager = new PreferenceManager();
@@ -195,6 +198,7 @@ public class EwendLauncher extends Game {
 		}
 
 		//TODO calculate renderPosition from previous position and real body position
+
 		gameRenderer.render(accumulator/FIXED_TIME_STEP);
 		//final float alpha = accumulator/FIXED_TIME_STEP;
 		stage.getViewport().apply();

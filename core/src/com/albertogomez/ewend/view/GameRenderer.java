@@ -18,6 +18,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 
@@ -37,6 +38,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.EnumMap;
 
+import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
 import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 import static com.albertogomez.ewend.map.Map.MAP_HEIGHT;
 import static com.albertogomez.ewend.map.Map.MAP_WIDTH;
@@ -61,6 +63,10 @@ public class GameRenderer implements Disposable, MapListener {
     private final Array<TiledMapTileLayer> tiledMapLayers;
     private IntMap<Animation<Sprite>> mapAnimations;
 
+
+    private Array<Texture> backgroundImages;
+    private int[] backgroundOffsets = {0,0,0,0};
+    private float backgroundMaxScrollingSpeed;
     private final RayHandler rayHandler;
     private final Array<TiledMapTileLayer> overlappingLayers;
 
@@ -68,6 +74,8 @@ public class GameRenderer implements Disposable, MapListener {
         assetManager = context.getAssetManager();
         viewport = context.getScreenViewport();
         gameCamera = context.getGameCamera();
+        gameCamera.zoom=0.5f;
+
         spriteBatch = context.getSpriteBatch();
 
         animationCache = new EnumMap<AnimationType, Animation<Sprite>>(AnimationType.class);
@@ -77,23 +85,27 @@ public class GameRenderer implements Disposable, MapListener {
         mapAnimations = new IntMap<Animation<Sprite>>();
 
         mapRenderer = new OrthogonalTiledMapRenderer(null, UNIT_SCALE, context.getSpriteBatch());
-        context.getMapManager().addMapListener(this);
+
         tiledMapLayers = new Array<TiledMapTileLayer>();
         overlappingLayers = new Array<TiledMapTileLayer>();
 
+
+
+        backgroundMaxScrollingSpeed = 10;
+
+        world = context.getWorld();
+        rayHandler = context.getRayHandler();
+
         profiler = new GLProfiler(Gdx.graphics);
         box2DDebugRenderer = new Box2DDebugRenderer();
-        world = context.getWorld();
-
-
 
         if (profiler.isEnabled()) {
         } else {
             //box2DDebugRenderer = null;
             //world = null;
         }
-        rayHandler = context.getRayHandler();
 
+        context.getMapManager().addMapListener(this);
 
 
 
@@ -108,7 +120,11 @@ public class GameRenderer implements Disposable, MapListener {
         viewport.apply(false);
 
         spriteBatch.begin();
+
+
         if (mapRenderer.getMap() != null) {
+
+            renderBackground();
             AnimatedTiledMapTile.updateAnimationBaseTime();
             mapRenderer.setView(gameCamera);
             for (final TiledMapTileLayer layer : tiledMapLayers) {
@@ -127,9 +143,12 @@ public class GameRenderer implements Disposable, MapListener {
         for (final Entity entity : gameObjectEntities) {
             renderGameObject(entity, alpha);
         }
+        spriteBatch.end();
 
+        rayHandler.updateAndRender();
+        rayHandler.setCombinedMatrix(gameCamera);
 
-
+        spriteBatch.begin();
         if(mapRenderer.getMap()!=null){
             for (TiledMapTileLayer overlapping : overlappingLayers){
                 mapRenderer.renderTileLayer(overlapping);
@@ -138,23 +157,14 @@ public class GameRenderer implements Disposable, MapListener {
         }
         spriteBatch.end();
 
-        rayHandler.updateAndRender();
 
-        rayHandler.setCombinedMatrix(gameCamera);
-
-
+        //camera center
         float startX = gameCamera.viewportWidth/4;
         float startY = gameCamera.viewportHeight/4;
         if(playerB2dComp!=null){
             CameraStyles.lerpToTarget(gameCamera,playerB2dComp.renderPosition);
-            CameraStyles.boundary(gameCamera,startX,startY,MAP_WIDTH /UNIT_SCALE,MAP_HEIGHT / UNIT_SCALE);
+            CameraStyles.boundary(gameCamera,startX,startY,MAP_WIDTH-startX*2,MAP_HEIGHT);
         }
-
-
-        gameCamera.zoom=0.5f;
-
-
-
         gameCamera.update();
 
         if (profiler.isEnabled()) {
@@ -162,7 +172,28 @@ public class GameRenderer implements Disposable, MapListener {
             Gdx.app.debug("RenderInfo", "Drawcalls: " + profiler.getDrawCalls());
             profiler.reset();
         }
-       // box2DDebugRenderer.render(world, viewport.getCamera().combined);
+        box2DDebugRenderer.render(world, viewport.getCamera().combined);
+
+
+    }
+
+    private void renderBackground(){
+
+        if(playerB2dComp!=null){
+            float conversor = backgroundImages.get(0).getWidth()/2;
+            backgroundOffsets[0]= (int) ((playerB2dComp.renderPosition.x)%conversor);
+            backgroundOffsets[1]= (int) ((playerB2dComp.renderPosition.x*3)%conversor);
+            backgroundOffsets[2]= (int) ((playerB2dComp.renderPosition.x*4)%conversor);
+            backgroundOffsets[3]= (int) ((playerB2dComp.renderPosition.x*10)%conversor);
+        }
+
+        for (int i = 0; i < backgroundOffsets.length; i++) {
+            if(backgroundOffsets[i]>backgroundImages.get(i).getWidth()/2){
+                backgroundOffsets[i]= -backgroundOffsets[i];
+            }
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i],0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+backgroundImages.get(i).getWidth()/2,0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
+        }
 
 
     }
@@ -180,15 +211,11 @@ public class GameRenderer implements Disposable, MapListener {
             {
                     playerB2dComp = b2DComponent;
                 frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width*3/2 * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height*4/3, aniComponent.width * b2DComponent.orientation, aniComponent.height);
-
-
             }else{
                 frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * b2DComponent.orientation, aniComponent.height);
-
             }
             frame.draw(spriteBatch);
         }
-
     }
 
     private void renderGameObject(final Entity entity,final float alpha){
@@ -258,6 +285,7 @@ public class GameRenderer implements Disposable, MapListener {
     @Override
     public void mapChange(Map map) {
         mapRenderer.setMap(map.getTiledMap());
+        backgroundImages =  map.getBackgroundImages();
         map.getTiledMap().getLayers().getByType(TiledMapTileLayer.class, tiledMapLayers);
         mapAnimations = map.getMapAnimations();
     }

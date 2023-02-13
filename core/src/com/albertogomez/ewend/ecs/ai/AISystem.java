@@ -2,6 +2,7 @@ package com.albertogomez.ewend.ecs.ai;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
+import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
 import com.albertogomez.ewend.ecs.system.PlayerAnimationSystem;
@@ -18,46 +19,58 @@ import static javax.swing.UIManager.get;
 public class AISystem extends IteratingSystem {
 
     public AISystem(EwendLauncher context) {
-        super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class).get());
+        super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class, AttackComponent.class).get());
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         B2DComponent enemyB2D = ECSEngine.b2dCmpMapper.get(entity);
         Body enemyBody = enemyB2D.body;
-
+        AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
         EnemyComponent enemyComp = ECSEngine.eneObjCmpMapper.get(entity);
         AIComponent aiComp = ECSEngine.aiCmoMapper.get(entity);
         aiComp.milisecAccum += deltaTime;
 
         switch (aiComp.state) {
             case IDLE:
-                    movementTrackerIdle(enemyBody,enemyComp,aiComp);
-                    checkPlayerPos(aiComp,enemyB2D);
+                movementTrackerIdle(enemyBody, enemyComp, aiComp);
+                checkPlayerPos(aiComp, enemyB2D);
                 break;
             case RUNNING:
-                if(getPlayerPos().x>enemyBody.getPosition().x){
-                    aiComp.direction = 1;
+
+
+                if(getPlayerPos().x<enemyBody.getPosition().x+enemyB2D.width*1.5f&&getPlayerPos().x>enemyBody.getPosition().x-enemyB2D.width*1.5f){
+
                 }else{
-                    aiComp.direction = -1;
+                    if (getPlayerPos().x > enemyBody.getPosition().x) {
+                        aiComp.direction = 1;
+                    } else {
+                        aiComp.direction = -1;
+                    }
                 }
-                enemyBody.applyLinearImpulse(enemyComp.speed.x*5*aiComp.direction-enemyBody.getLinearVelocity().x,
-                        enemyBody.getLinearVelocity().y,enemyBody.getWorldCenter().x,enemyBody.getWorldCenter().y,true);
+                enemyBody.applyLinearImpulse(enemyComp.speed.x * 5 * aiComp.direction - enemyBody.getLinearVelocity().x,
+                        enemyBody.getLinearVelocity().y, enemyBody.getWorldCenter().x, enemyBody.getWorldCenter().y, true);
 
                 break;
             case ATTACKING:
-                if(aiComp.attackedState){
-                    aiComp.milisecAccum+=deltaTime;
-                    ECSEngine.aniCmpMapper.get(entity).aniType = SHEEP_ATTACK;
-                }else{
-                    enemyBody.setLinearVelocity(0,0);
-                    aiComp.milisecAccum=0;
-                    aiComp.attackedState = true;
+                if (attackComponent.delayAccum > attackComponent.delay&&attackComponent.attacking==true) {
+                    aiComp.state = AIState.RUNNING;
+                    aiComp.attacked = false;
+                    attackComponent.attacking = false;
+                    enemyBody.setLinearVelocity(0, 0);
 
-                }
-                if(aiComp.milisecAccum>aiComp.attackDelay){
-                    aiComp.state =AIState.RUNNING;
-                    aiComp.attackedState=false;
+                } else {
+                    if (aiComp.attacked==false) {
+                        attackComponent.delayAccum = 0;
+                        aiComp.attacked=true;
+                    }
+                    enemyBody.setLinearVelocity(0, 0);
+                    ECSEngine.aniCmpMapper.get(entity).aniType = SHEEP_ATTACK;
+                    ECSEngine.aniCmpMapper.get(entity).aniTime = attackComponent.delayAccum;
+                    if (attackComponent.delay / 2 < attackComponent.delayAccum) {
+                        attackComponent.attacking = true;
+                    }
+
 
                 }
                 break;
@@ -65,7 +78,7 @@ public class AISystem extends IteratingSystem {
 
     }
 
-    private void movementTrackerIdle(Body enemyBody,EnemyComponent enemyComp,AIComponent aiComp) {
+    private void movementTrackerIdle(Body enemyBody, EnemyComponent enemyComp, AIComponent aiComp) {
         float maxPositionX = aiComp.maxDistanceFactor + aiComp.initialPosition.x;
         float minPositionX = aiComp.initialPosition.x - aiComp.maxDistanceFactor;
         int oldDirection;
@@ -104,14 +117,14 @@ public class AISystem extends IteratingSystem {
 
     }
 
-    private void checkPlayerPos(AIComponent aiComponent, B2DComponent enemy){
+    private void checkPlayerPos(AIComponent aiComponent, B2DComponent enemy) {
         Vector2 posPlayer = getPlayerPos();
-        if(posPlayer!=null){
+        if (posPlayer != null) {
 
-            if((enemy.renderPosition.x-aiComponent.maxDistanceFactor< posPlayer.x
-            || enemy.renderPosition.x*aiComponent.maxDistanceFactor>posPlayer.x)&&
-                    (enemy.renderPosition.y+aiComponent.maxDistanceFactor<posPlayer.y
-                            ||enemy.renderPosition.y-aiComponent.maxDistanceFactor>posPlayer.y)){
+            if ((enemy.renderPosition.x - aiComponent.maxDistanceFactor < posPlayer.x
+                    || enemy.renderPosition.x * aiComponent.maxDistanceFactor > posPlayer.x) &&
+                    (enemy.renderPosition.y + aiComponent.maxDistanceFactor < posPlayer.y
+                            || enemy.renderPosition.y - aiComponent.maxDistanceFactor > posPlayer.y)) {
                 aiComponent.state = AIState.RUNNING;
             }
 
@@ -119,14 +132,14 @@ public class AISystem extends IteratingSystem {
 
     }
 
-    private void isContained(){
+    private void isContained() {
 
     }
 
-    private Vector2 getPlayerPos(){
+    private Vector2 getPlayerPos() {
         B2DComponent playerB2dComp;
 
-        if(PlayerAnimationSystem.playerB2dComp!=null) {
+        if (PlayerAnimationSystem.playerB2dComp != null) {
             playerB2dComp = PlayerAnimationSystem.playerB2dComp;
             return playerB2dComp.renderPosition;
         }

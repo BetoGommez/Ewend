@@ -1,6 +1,8 @@
 package com.albertogomez.ewend.map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +26,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 
+import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
 import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
 
@@ -41,23 +44,36 @@ public class Map {
     private final Array<CollisionArea> collisionAreas;
 
     private final Array<EnemyObject> enemyObjects;
+    private final Array<Texture> backgroundImages;
+    private final AssetManager assetManager;
 
-    public Map(TiledMap tiledMap) {
+
+    public Map(TiledMap tiledMap, AssetManager assetManager) {
         this.tiledMap = tiledMap;
         collisionAreas = new Array<CollisionArea>();
 
         startLocation = new Vector2();
-
+        this.assetManager = assetManager;
         mapAnimations = new IntMap<Animation<Sprite>>();
         gameObjects = new Array<GameObject>();
         enemyObjects = new Array<EnemyObject>();
+        backgroundImages = new Array<Texture>();
+
         parseCollisionLayer();
 
+        createBackgroundImages();
         parsePlayerStartLocation();
         parseMapObjectLayer();
         parseEnemiesInfo();
         MAP_WIDTH =Float.parseFloat(tiledMap.getProperties().get("width").toString());
         MAP_HEIGHT =Float.parseFloat(tiledMap.getProperties().get("height").toString());
+    }
+
+    private void createBackgroundImages(){
+        for (int i = 1; i < 5; i++) {
+            backgroundImages.add(assetManager.<Texture>get(BACKGROUND_PATH+i+".png"));
+
+        }
     }
 
     private void parsePlayerStartLocation(){
@@ -75,6 +91,8 @@ public class Map {
             }
         }
     }
+
+
 
     private void parseEnemiesInfo(){
         final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("enemies");
@@ -264,5 +282,9 @@ public class Map {
 
     public Array<EnemyObject> getEnemyObjects() {
         return enemyObjects;
+    }
+
+    public Array<Texture> getBackgroundImages() {
+        return backgroundImages;
     }
 }

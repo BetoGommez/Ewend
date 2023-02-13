@@ -87,7 +87,7 @@ public class GameUI extends Table implements EventListener{
         style.up = skin.getDrawable(nombre);
         button= new TextButton("",style);
         button.addListener(buttonListener);
-       return button;
+        return button;
     }
 
 

@@ -1,8 +1,6 @@
 package com.albertogomez.ewend.view;
 
-import static com.albertogomez.ewend.constants.Constants.PLAYER_SPRITE_PATH;
-import static com.albertogomez.ewend.constants.Constants.SHEEP_SPRITE_PATH;
-import static com.albertogomez.ewend.constants.Constants.LAMP_SPRITE_PATH;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 public enum AnimationType {
 
@@ -14,7 +12,8 @@ public enum AnimationType {
     SHEEP_IDLE(SHEEP_SPRITE_PATH,"idle",0.05f,64,64),
     SHEEP_ATTACK(SHEEP_SPRITE_PATH,"attack",0.25f,64,64),
     SHEEP_RUN(SHEEP_SPRITE_PATH,"walk",0.05f,64,64),
-    LAMP_EFFECT(LAMP_SPRITE_PATH,"lampon",0.3f,48,64);
+    LAMP_EFFECT(LAMP_SPRITE_PATH,"lampon",0.3f,48,64),
+    FIREFLY_EFFECT(FIREFLY_EFFECT_PATH,"firefly",0.3f,32,32);
 
 
 

@@ -10,8 +10,8 @@ public class AIComponent implements Component, Pool.Poolable {
     public float milisecAccum=0f ;
     public float idleDelay=1f ;
 
-    public float attackDelay = 3f;
-    public boolean attackedState = false;
+
+    public boolean attacked =false;
 
 
     public float maxDistanceFactor = 2f;

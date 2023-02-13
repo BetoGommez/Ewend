@@ -36,16 +36,11 @@ public class AttackSystem extends IteratingSystem implements EventListener {
     protected void processEntity(Entity entity, float deltaTime) {
 
         AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
-        attackComponent.delayAccum+=deltaTime;
-
-        if(attackComponent.attacking&& attackComponent.canAttack()){
-            if(attackComponent.canAttack()){
-                attackComponent.delayAccum=0;
-                attackComponent.attacking=false;
+        attackComponent.delayAccum += deltaTime;
+        if(attackComponent.attacking&&attackComponent.canAttack()){
                 createAttackBox(attackComponent,entity);
-            }
         }
-        if(attackComponent.attackBox!=null&&attackComponent.delayAccum>attackComponent.delay/4){
+        if(attackComponent.attackBox!=null&&attackComponent.delayAccum>attackComponent.delay*2){
             world.destroyBody(attackComponent.attackBox);
             attackComponent.attackBox=null;
         }

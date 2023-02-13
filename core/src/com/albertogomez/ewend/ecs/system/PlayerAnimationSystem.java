@@ -32,7 +32,7 @@ public class PlayerAnimationSystem extends IteratingSystem {
             b2DComponent.orientation = -1;
         }
 
-        if (b2DComponent.body.getLinearVelocity().y<0.1f&&b2DComponent.body.getLinearVelocity().y>-0.1f
+        if (b2DComponent.body.getLinearVelocity().y<0.05f&&b2DComponent.body.getLinearVelocity().y>-0.05f
                 &&(b2DComponent.body.getLinearVelocity().x<0.1f&&b2DComponent.body.getLinearVelocity().x>-0.1f)) {
             //player doesn't move
             animationComponent.aniType = AnimationType.PLAYER_IDLE;
@@ -40,11 +40,11 @@ public class PlayerAnimationSystem extends IteratingSystem {
                 (b2DComponent.body.getLinearVelocity().y<0.5f&&b2DComponent.body.getLinearVelocity().y>-0.3f)&&playerComponent.touchingGround) {
             //player moves and is on earth
             animationComponent.aniType = AnimationType.PLAYER_RUNNING;
-        }else if(b2DComponent.body.getLinearVelocity().y!=0){
-            if (b2DComponent.body.getLinearVelocity().y > 0) {
+        }else if(b2DComponent.body.getLinearVelocity().y!=0&& !playerComponent.touchingGround){
+            if (b2DComponent.body.getLinearVelocity().y > 0.1) {
                 //starts jump
                 animationComponent.aniType = AnimationType.PLAYER_JUMP_START;
-            } else if (b2DComponent.body.getLinearVelocity().y < 0) {
+            } else if (b2DComponent.body.getLinearVelocity().y < -0.1) {
                 //land
                 animationComponent.aniType = AnimationType.PLAYER_LANDING;
             }

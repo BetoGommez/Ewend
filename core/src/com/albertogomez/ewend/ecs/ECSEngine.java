@@ -135,12 +135,14 @@ public class ECSEngine extends PooledEngine {
         lifeComponent.isEnemy=true;
         enemy.add(lifeComponent);
 
-        //damage component
+        //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
         attackComponent.damage=10;
         attackComponent.attacking=false;
         attackComponent.attackHitboxHeight= b2DComponent.height/2;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
+        attackComponent.delay=0.5f;
+        attackComponent.delayAccum=0;
         attackComponent.isPlayer=false;
         enemy.add(attackComponent);
 
@@ -191,7 +193,7 @@ public class ECSEngine extends PooledEngine {
         player.add(b2DComponent);
 
         //create player light
-        b2DComponent.lightDistance = 0;
+        b2DComponent.lightDistance = 5;
         b2DComponent.lightFluctuationSpeed = 4;
         b2DComponent.light = new PointLight(rayHandler,64, new Color(1,1,1,0.7f),6,b2DComponent.body.getPosition().x,b2DComponent.body.getPosition().y);
         b2DComponent.lightFluctuationDistance = b2DComponent.light.getDistance()*0.16f;

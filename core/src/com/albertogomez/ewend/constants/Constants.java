@@ -14,4 +14,6 @@ public class Constants {
     public static final String PLAYER_SPRITE_PATH = "character/character_effects.atlas";
     public static final String SHEEP_SPRITE_PATH = "enemy/sheep.atlas";
     public static final String LAMP_SPRITE_PATH = "object/lamp_effect.atlas";
+    public static final String FIREFLY_EFFECT_PATH = "object/firefly_effect.atlas";
+    public static final String BACKGROUND_PATH = "maps/map1/materials/Background/background_0";
 }
