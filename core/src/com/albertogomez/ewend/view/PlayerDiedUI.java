@@ -3,9 +3,16 @@ package com.albertogomez.ewend.view;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.events.PlayerDied;
+import com.albertogomez.ewend.events.ResetLevel;
 import com.albertogomez.ewend.input.ButtonListener;
 import com.albertogomez.ewend.input.DeadScreenButtonListener;
+import com.albertogomez.ewend.screen.GameScreen;
+import com.albertogomez.ewend.screen.ScreenType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -14,14 +21,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 public class PlayerDiedUI extends Table implements EventListener {
     private final BitmapFont font;
     private final Stage stage;
-    private final EwendLauncher context;
     private final AssetManager assetManager;
-    private final TextureAtlas hudAtlas;
+    private  TextureAtlas hudAtlas;
 
     private Array<TextButton> buttons;
     private Skin skin;
@@ -35,16 +42,15 @@ public class PlayerDiedUI extends Table implements EventListener {
     public PlayerDiedUI(EwendLauncher context) {
         super(context.getSkin());
         setFillParent(true);
-        this.context = context;
         stage = context.getStage();
         skin = context.getSkin();
         assetManager = context.getAssetManager();
         hudAtlas = assetManager.get("ui/game_ui/game_hud.atlas", TextureAtlas.class);
         font = new BitmapFont();
-
         buttons = new Array<TextButton>();
-        buttonListener = new DeadScreenButtonListener();
+        buttonListener = new DeadScreenButtonListener(context);
         createButtons();
+        this.setColor(1,1,1,0.1f);
 
 
     }
@@ -53,7 +59,6 @@ public class PlayerDiedUI extends Table implements EventListener {
         style = new TextButton.TextButtonStyle();
         style.font = font;
         stage.addListener(this);
-
         buttonSize = EwendLauncher.HEIGHT / 4;
 
         buttons.add(createButton("right"));
@@ -79,16 +84,13 @@ public class PlayerDiedUI extends Table implements EventListener {
     }
 
 
+
     @Override
     public boolean handle(Event event) {
-        /*if(event instanceof PlayerDied){
+        if(event instanceof ResetLevel){
+            stage.removeListener(this);
             stage.getRoot().removeActor(this);
-            TextButton boton = createButton("left");
-            boton.setName("hola");
-            add(boton);
-            context.stopGame();
-
-        }*/
+        }
         //TODO VOLVER A JUGAR O AL MENU
 
         return false;

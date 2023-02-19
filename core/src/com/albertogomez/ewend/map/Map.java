@@ -1,5 +1,6 @@
 package com.albertogomez.ewend.map;
 
+import com.albertogomez.ewend.PreferenceManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -40,7 +41,7 @@ public class Map {
 
     private final Array<GameObject> gameObjects;
     private final IntMap<Animation<Sprite>> mapAnimations;
-
+    private final Array<Integer> fireflyTakenIndexes;
     private final Array<CollisionArea> collisionAreas;
 
     private final Array<EnemyObject> enemyObjects;
@@ -57,10 +58,11 @@ public class Map {
         mapAnimations = new IntMap<Animation<Sprite>>();
         gameObjects = new Array<GameObject>();
         enemyObjects = new Array<EnemyObject>();
+        fireflyTakenIndexes = new Array<Integer>();
         backgroundImages = new Array<Texture>();
 
         parseCollisionLayer();
-
+        parseFireflyIndexes();
         createBackgroundImages();
         parsePlayerStartLocation();
         parseMapObjectLayer();
@@ -68,6 +70,20 @@ public class Map {
         MAP_WIDTH =Float.parseFloat(tiledMap.getProperties().get("width").toString());
         MAP_HEIGHT =Float.parseFloat(tiledMap.getProperties().get("height").toString());
     }
+
+
+
+    private void parseFireflyIndexes(){
+        String indexString = Gdx.app.getPreferences("ewendLauncher").getString("TAKEN_FIREFLYS");
+        String[] indexes = indexString.split(",");
+        for (int i = 0; i < indexes.length; i++) {
+            if(!indexes[i].equals("")){
+                fireflyTakenIndexes.add(Integer.parseInt(indexes[i]));
+            }
+        }
+    }
+
+
 
     private void createBackgroundImages(){
         for (int i = 1; i < 5; i++) {
@@ -77,7 +93,7 @@ public class Map {
     }
 
     private void parsePlayerStartLocation(){
-        final MapLayer startLocationLayer = tiledMap.getLayers().get("playerLocation");
+        final MapLayer startLocationLayer = tiledMap.getLayers().get("PlayerLocation");
         if(startLocationLayer==null){
             Gdx.app.debug(TAG,"There wasnt found any starter location");
             return;
@@ -95,7 +111,7 @@ public class Map {
 
 
     private void parseEnemiesInfo(){
-        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("enemies");
+        final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("Enemies");
         String name;
         if (gameEnemiesLayer==null){
             Gdx.app.debug("Map","There is no enemies in this layer");
@@ -121,7 +137,7 @@ public class Map {
 
             final float width = tiledMapObjProperties.get("width",Float.class)*UNIT_SCALE;
             final float height = tiledMapObjProperties.get("height",Float.class)*UNIT_SCALE;
-            enemyObjects.add(new EnemyObject(name, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),64*UNIT_SCALE/3,64*UNIT_SCALE/3));
+            enemyObjects.add(new EnemyObject(name, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),width,height));
         }
 
     }
@@ -189,7 +205,8 @@ public class Map {
     }
 
     private void parseMapObjectLayer(){
-        final MapLayer gameObjectsLayer = tiledMap.getLayers().get("objects");
+        final MapLayer gameObjectsLayer = tiledMap.getLayers().get("Objects");
+        String indexProperty = -1+"";
         if (gameObjectsLayer==null){
             Gdx.app.debug("Map","There is no gameobjects in this layer");
             return;
@@ -216,18 +233,25 @@ public class Map {
                 continue;
             }
 
+            if(tiledMapObjProperties.containsKey("index")){
+                indexProperty = tiledMapObjProperties.get("index", String.class);
+            }else if(tileProperties.containsKey("index")){
+                indexProperty = tileProperties.get("index",String.class);
+            }
+
             final int animationIndex = tiledMapObj.getTile().getId();
             if(!createAnimation(animationIndex,tiledMapObj.getTile())){
                 Gdx.app.debug("Map","Could not create animation for: "+tiledMapObj.getProperties().get("id", Integer.class));
                 continue;
 
-            }
 
+            }
 
 
             final float width = tiledMapObjProperties.get("width",Float.class)*UNIT_SCALE;
             final float height = tiledMapObjProperties.get("height",Float.class)*UNIT_SCALE;
-            gameObjects.add(new GameObject(gameObjType, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),width,height,tiledMapObj.getRotation(),animationIndex));
+            gameObjects.add(new GameObject(gameObjType, new Vector2(tiledMapObj.getX()*UNIT_SCALE,tiledMapObj.getY()*UNIT_SCALE),width,height,tiledMapObj.getRotation(),animationIndex,Integer.parseInt(indexProperty)));
+
         }
 
 
@@ -266,6 +290,10 @@ public class Map {
 
     public Vector2 getStartLocation() {
         return startLocation;
+    }
+
+    public Array<Integer> getFireflyIndexes() {
+        return fireflyTakenIndexes;
     }
 
     public TiledMap getTiledMap() {

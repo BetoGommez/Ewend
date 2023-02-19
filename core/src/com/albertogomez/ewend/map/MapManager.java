@@ -19,7 +19,6 @@ import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
 import static com.albertogomez.ewend.constants.Constants.BIT_GROUND;
 
 public class MapManager {
-    public static final String TAG = MapManager.class.getSimpleName();
     private final World world;
     private final Array<Body> bodies;
 
@@ -47,14 +46,13 @@ public class MapManager {
         this.context = context;
     }
 
+
+
     public void addMapListener(final MapListener listener){
         listeners.add(listener);
     }
 
     public void setMap(final MapType type){
-        if(currentMapType==type){
-            return;
-        }
 
         if(currentMap!=null){
             world.getBodies(bodies);
@@ -63,10 +61,8 @@ public class MapManager {
         }
 
         //set new map
-        Gdx.app.debug(TAG,"Changing to map "+type);
         currentMap = mapCache.get(type);
         if(currentMap==null){
-            Gdx.app.debug(TAG,"Creating new map of type "+type);
             final TiledMap tiledMap = assetManager.get(type.getFilePath(),TiledMap.class);
             currentMap = new Map(tiledMap,assetManager);
             mapCache.put(type,currentMap);
@@ -75,21 +71,19 @@ public class MapManager {
         //create map entities/bodies
 
         spawnCollisionAreas();
-        spawnGameObjects();
+        spawnGameObjects(currentMap.getFireflyIndexes());
         spawnEnemies();
+        spawnPlayer();
 
         for(final MapListener listener: listeners){
             listener.mapChange(currentMap);
         }
-
+        currentMapType = type;
 
     }
-
-
-
-
-
-
+    private void spawnPlayer(){
+        context.getEcsEngine().createPlayer(currentMap.getStartLocation(),0.75f,0.75f);
+    }
 
     private void spawnEnemies(){
         for(final EnemyObject enemyObject : currentMap.getEnemyObjects()){
@@ -97,9 +91,15 @@ public class MapManager {
         }
     }
 
-    private void spawnGameObjects(){
+    private void spawnGameObjects(Array<Integer> fireflyIndexes){
         for(final GameObject gameObject : currentMap.getGameObjects()){
-            ecsEngine.createGameObject(gameObject);
+            if(gameObject.getType()==GameObjectType.FIREFLY){
+                if (!fireflyIndexes.contains(gameObject.getIndexProperty(),true)){
+                    ecsEngine.createGameObject(gameObject);
+                }
+            }else{
+                ecsEngine.createGameObject(gameObject);
+            }
         }
     }
 
@@ -120,6 +120,7 @@ public class MapManager {
             if("GROUND".equals(body.getUserData())){
                 world.destroyBody(body);
             }
+
         }
     }
 

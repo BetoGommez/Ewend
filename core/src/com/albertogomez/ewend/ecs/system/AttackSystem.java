@@ -37,19 +37,22 @@ public class AttackSystem extends IteratingSystem implements EventListener {
 
         AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
         attackComponent.delayAccum += deltaTime;
-        if(attackComponent.attacking&&attackComponent.canAttack()){
+        if(attackComponent.attacking&&attackComponent.delayAccum>attackComponent.delay){
                 createAttackBox(attackComponent,entity);
+                attackComponent.delayAccum=0;
         }
-        if(attackComponent.attackBox!=null&&attackComponent.delayAccum>attackComponent.delay*2){
+        if(attackComponent.attackBox!=null&&attackComponent.delayAccum>attackComponent.delay/2){
             world.destroyBody(attackComponent.attackBox);
             attackComponent.attackBox=null;
         }
+        attackComponent.attacking=false;
     }
 
     private void createAttackBox(AttackComponent attackComponent,Entity entity){
         B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         Body entityBody = b2DComponent.body;
         EwendLauncher.resetBodyAndFixtureDefinition();
+        b2DComponent.body.setLinearVelocity(0,b2DComponent.body.getLinearVelocity().y);
         float positionX = 0;
         if(b2DComponent.orientation==1){
             positionX = entityBody.getPosition().x;
@@ -71,7 +74,7 @@ public class AttackSystem extends IteratingSystem implements EventListener {
         FIXTURE_DEF.restitution=0;
 
         FIXTURE_DEF.friction=0;
-        if(attackComponent.isPlayer){
+        if(ECSEngine.playerCmpMapper.get(entity)!=null){
             FIXTURE_DEF.filter.categoryBits = BIT_PLAYER_ATTACK;
             FIXTURE_DEF.filter.maskBits = BIT_ENEMY;
         }else{

@@ -54,7 +54,7 @@ public class ButtonListener extends ClickListener {
                 buttonActor = (Button)event.getListenerActor();
             }
             if(buttonActor!=null){
-                inputManager.keyDown(GameKeys.valueOf(buttonActor.getName()).getKeyCode()[0]);
+               inputManager.keyDown(GameKeys.valueOf(buttonActor.getName()).getKeyCode()[0]);
             }
         }
 

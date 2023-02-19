@@ -9,6 +9,8 @@ import com.albertogomez.ewend.ecs.components.*;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
 import com.albertogomez.ewend.ecs.system.*;
+import com.albertogomez.ewend.events.EnemyDied;
+import com.albertogomez.ewend.events.PlayerDied;
 import com.albertogomez.ewend.map.GameObject;
 import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.ComponentMapper;
@@ -20,13 +22,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import static com.albertogomez.ewend.EwendLauncher.BODY_DEF;
 import static com.albertogomez.ewend.EwendLauncher.FIXTURE_DEF;
 import static com.albertogomez.ewend.constants.Constants.*;
 
-public class ECSEngine extends PooledEngine {
+public class ECSEngine extends PooledEngine implements EventListener {
 
     public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
     public static final ComponentMapper<B2DComponent> b2dCmpMapper = ComponentMapper.getFor(B2DComponent.class);
@@ -36,6 +40,7 @@ public class ECSEngine extends PooledEngine {
     public static final ComponentMapper<AIComponent> aiCmoMapper = ComponentMapper.getFor(AIComponent.class);
     public static final ComponentMapper<AttackComponent> attCmpMapper = ComponentMapper.getFor(AttackComponent.class);
     public static final ComponentMapper<LifeComponent> lifeCmpMapper = ComponentMapper.getFor(LifeComponent.class);
+    public static final ComponentMapper<DeadComponent> deadCmpMapper = ComponentMapper.getFor(DeadComponent.class);
 
 
 
@@ -44,29 +49,38 @@ public class ECSEngine extends PooledEngine {
     private final Vector2 posBeforeRotation;
     private final Vector2 posAfterRotation;
 
+    private final EwendLauncher context;
     private final World world;
 
     public ECSEngine(final EwendLauncher context) {
         super();
         world = context.getWorld();
-
+        this.context = context;
+        context.getStage().getRoot().addListener(this);
         rayHandler = context.getRayHandler();
         localPosition = new Vector2();
         posBeforeRotation = new Vector2();
         posAfterRotation = new Vector2();
+        addSystems();
 
+    }
+
+    public void addSystems(){
         this.addSystem(new AnimationSystem(context));
         this.addSystem(new PlayerAnimationSystem(context));
         this.addSystem(new LightSystem());
-        this.addSystem(new PlayerCollisionSystem(context));
         this.addSystem(new EnemyAnimationSystem(context));
         this.addSystem(new AISystem(context));
         this.addSystem(new AttackSystem(context));
         this.addSystem(new LifeSystem(context));
         this.addSystem(new DeadSystem(context));
         this.addSystem(new PlayerMovementSystem(context));
+        this.addSystem(new PlayerCollisionSystem(context));
         this.addSystem(new ObjectAnimationSystem(context));
-    }//TODO EL TAMAÑO DE LA HITBOX REAL SE PONDRÁ EN ESTE CREADOR
+        this.addSystem(new DespawnObjectSystem());
+    }
+
+
 
     public Entity createEnemy(final Vector2 spawnLocation, EnemyType type,final float height,final float width){
         final Entity enemy = this.createEntity();
@@ -88,8 +102,8 @@ public class ECSEngine extends PooledEngine {
         b2DComponent.body = world.createBody(BODY_DEF);
         b2DComponent.body.setUserData(enemy);
 
-        b2DComponent.width = width;
-        b2DComponent.height = height;
+        b2DComponent.width = width*0.5f;
+        b2DComponent.height = height*0.5f;
         b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
 
 
@@ -101,7 +115,7 @@ public class ECSEngine extends PooledEngine {
         FIXTURE_DEF.filter.categoryBits = BIT_ENEMY;
         FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER|BIT_PLAYER_ATTACK);
         final PolygonShape pShape = new PolygonShape();
-        pShape.setAsBox(height,width);
+        pShape.setAsBox(b2DComponent.height, b2DComponent.width);
         FIXTURE_DEF.shape = pShape;
         b2DComponent.body.createFixture(FIXTURE_DEF);
         pShape.dispose();
@@ -117,8 +131,8 @@ public class ECSEngine extends PooledEngine {
         //animation component
         final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
         animationComponent.aniType = type.defaultAnimation;
-        animationComponent.width = 70 * UNIT_SCALE;
-        animationComponent.height = 70 * UNIT_SCALE;
+        animationComponent.width = width ;
+        animationComponent.height = height ;
         enemy.add(animationComponent);
 
         //ai component
@@ -129,21 +143,21 @@ public class ECSEngine extends PooledEngine {
         enemy.add(aiComponent);
 
         //life component
-        final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
-        lifeComponent.health=100f;
-        lifeComponent.charge=0f;
+
+        final LifeComponent lifeComponent = new LifeComponent(context.getStage());
+        lifeComponent.health=1f;
+        lifeComponent.mana=50f;
         lifeComponent.isEnemy=true;
         enemy.add(lifeComponent);
 
         //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
-        attackComponent.damage=100;
+        attackComponent.damage=5;
         attackComponent.attacking=false;
-        attackComponent.attackHitboxHeight= b2DComponent.height/2;
+        attackComponent.attackHitboxHeight= b2DComponent.height;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
         attackComponent.delay=0.5f;
         attackComponent.delayAccum=0;
-        attackComponent.isPlayer=false;
         enemy.add(attackComponent);
 
         this.addEntity(enemy);
@@ -206,22 +220,20 @@ public class ECSEngine extends PooledEngine {
         animationComponent.height = 55 * UNIT_SCALE;
         player.add(animationComponent);
         //life component
-        final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
+        final LifeComponent lifeComponent = new LifeComponent(context.getStage());
         lifeComponent.health=100f;
-        lifeComponent.charge=0f;
+        lifeComponent.mana=0f;
         lifeComponent.isEnemy=false;
         player.add(lifeComponent);
 
-        //dead component
-        final DeadComponent deadComponent = this.createComponent(DeadComponent.class);
-        deadComponent.isDead = false;
-        //damage component
+        //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
         attackComponent.damage=30f;
         attackComponent.attacking=false;
+        attackComponent.delay=1f;
+        attackComponent.delayAccum=1f;
         attackComponent.attackHitboxHeight= b2DComponent.height/2;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
-        attackComponent.isPlayer=true;
         player.add(attackComponent);
 
 
@@ -237,6 +249,9 @@ public class ECSEngine extends PooledEngine {
         final GameObjectComponent gameObjectComponent  = this.createComponent(GameObjectComponent.class);
         gameObjectComponent.animationIndex = gameObject.getAnimationIndex();
         gameObjectComponent.type = gameObject.getType();
+        if(gameObject.getIndexProperty()!=-1){
+            gameObjectComponent.index = gameObject.getIndexProperty();
+        }
         gameObjEntity.add(gameObjectComponent);
 
         //AnimationComponent
@@ -285,6 +300,13 @@ public class ECSEngine extends PooledEngine {
         this.addEntity(gameObjEntity);
     }
 
+    @Override
+    public boolean handle(Event event) {
+        if(event instanceof PlayerDied){
+            this.removeSystem(getSystem(PlayerMovementSystem.class));
+        } else if (event instanceof EnemyDied) {
 
-
+        }
+        return false;
+    }
 }

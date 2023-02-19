@@ -11,7 +11,6 @@ public class AttackComponent implements Component, Pool.Poolable {
 
     public float delay=1f;
     public float delayAccum=0f;
-    public boolean isPlayer;
 
     public Body attackBox;
     public float attackHitboxWidth;
@@ -21,13 +20,13 @@ public class AttackComponent implements Component, Pool.Poolable {
     public void reset() {
         damage=0;
         attacking=false;
-        isPlayer=false;
         attackHitboxHeight=0;
         attackHitboxWidth=0;
     }
 
     public boolean canAttack(){
         if(delayAccum>delay){
+            delayAccum=0;
             return true;
         }
         return false;

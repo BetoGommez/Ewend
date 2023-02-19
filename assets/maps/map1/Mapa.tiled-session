@@ -63,11 +63,11 @@
             "expandedGroupLayers": [
                 8
             ],
-            "scale": 1.5,
-            "selectedLayer": 21,
+            "scale": 8,
+            "selectedLayer": 15,
             "viewCenter": {
-                "x": 826.6666666666665,
-                "y": 314.66666666666663
+                "x": 2368.0625,
+                "y": 119
             }
         }
     },

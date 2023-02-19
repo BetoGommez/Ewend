@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
  * Has the different type of screens with enum making reference to each class (Ex: GAME=GameScreen.class).
  */
 public enum ScreenType {
+    MENU(MenuScreen.class),
     GAME(GameScreen.class),
     LOADING(LoadingScreen.class);
 

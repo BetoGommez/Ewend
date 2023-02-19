@@ -38,6 +38,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         jump = false;
         dash = false;
         attack = false;
+
         xFactor = 0;
         dashDelay = 0;
         dashMultiplier = 5;
@@ -48,26 +49,25 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
+        if(attack){
+            attackComponent.attacking=true;
+            attack=false;
+        }
+        if(!(attackComponent.delayAccum<0.4)){
+            jumpMovement(b2DComponent, playerComponent);
 
+            if (dash) {
+                dashMovement(b2DComponent, playerComponent, deltaTime);
+            } else {
+                horizontalMovement(b2DComponent, playerComponent);
+            }
+
+        }else{
+
+        }
 
         if (dashDelay < 0) {
             dashDelay += deltaTime;
-        }
-
-
-        jumpMovement(b2DComponent, playerComponent);
-
-        if (dash) {
-            dashMovement(b2DComponent, playerComponent, deltaTime);
-        } else {
-            horizontalMovement(b2DComponent, playerComponent);
-        }
-
-        if(attack){
-            if(attackComponent.canAttack()){
-                attackComponent.attacking=true;
-            }
-            attack=false;
         }
     }
 

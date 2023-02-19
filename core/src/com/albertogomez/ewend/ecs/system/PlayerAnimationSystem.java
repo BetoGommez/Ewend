@@ -3,6 +3,7 @@ package com.albertogomez.ewend.ecs.system;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AnimationComponent;
+import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.PlayerComponent;
 import com.albertogomez.ewend.view.AnimationType;
@@ -16,7 +17,7 @@ public class PlayerAnimationSystem extends IteratingSystem {
     public static B2DComponent playerB2dComp;
     public PlayerAnimationSystem(final EwendLauncher context) {
 
-        super(Family.all(AnimationComponent.class, PlayerComponent.class, B2DComponent.class).get());
+        super(Family.all(AnimationComponent.class, PlayerComponent.class, B2DComponent.class, AttackComponent.class).get());
     }
 
     @Override
@@ -24,6 +25,7 @@ public class PlayerAnimationSystem extends IteratingSystem {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent animationComponent = ECSEngine.aniCmpMapper.get(entity);
         final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
+        final AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
         playerB2dComp = b2DComponent;
         //orientation calc
         if (b2DComponent.body.getLinearVelocity().x > 0) {
@@ -32,7 +34,10 @@ public class PlayerAnimationSystem extends IteratingSystem {
             b2DComponent.orientation = -1;
         }
 
-        if (b2DComponent.body.getLinearVelocity().y<0.05f&&b2DComponent.body.getLinearVelocity().y>-0.05f
+        if(attackComponent.delayAccum<0.4){
+            animationComponent.aniTime = attackComponent.delayAccum;
+            animationComponent.aniType=AnimationType.PLAYER_ATTACK;
+        } else if (b2DComponent.body.getLinearVelocity().y<0.05f&&b2DComponent.body.getLinearVelocity().y>-0.05f
                 &&(b2DComponent.body.getLinearVelocity().x<0.1f&&b2DComponent.body.getLinearVelocity().x>-0.1f)) {
             //player doesn't move
             animationComponent.aniType = AnimationType.PLAYER_IDLE;

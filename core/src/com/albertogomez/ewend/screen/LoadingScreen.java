@@ -27,7 +27,6 @@ import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
 public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     private final AssetManager assetManager;
-    private final Array<Texture> backgroundLayers ;
 
     private boolean isMusicLoaded;
 
@@ -36,10 +35,9 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         super(context);
 
         this.assetManager = context.getAssetManager();
-        backgroundLayers = new Array<Texture>();
         //load hud
         assetManager.load("ui/game_ui/game_hud.atlas",TextureAtlas.class);
-
+        assetManager.load("ui/game_ui/life_and_mana_bar.atlas",TextureAtlas.class);
 
         //load characters and effects
         assetManager.load("character/character_effects.atlas", TextureAtlas.class);

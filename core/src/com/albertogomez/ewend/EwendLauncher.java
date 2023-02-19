@@ -6,16 +6,14 @@ import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.MapManager;
+import com.albertogomez.ewend.screen.GameScreen;
 import com.albertogomez.ewend.screen.ScreenType;
 import com.albertogomez.ewend.view.GameRenderer;
 import com.albertogomez.ewend.view.GameState;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Colors;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -82,7 +80,7 @@ public class EwendLauncher extends Game {
     private InputManager inputManager;
     private AudioManager audioManager;
     private RayHandler rayHandler;
-    private GameRenderer gameRenderer;
+    public GameRenderer gameRenderer;
 
     private PreferenceManager preferenceManager;
 
@@ -102,8 +100,7 @@ public class EwendLauncher extends Game {
         Box2D.init();
         accumulator = 0;
         world = new World(new Vector2(0, -9.81f * 1.4f), true);
-        wcLstnr = new WorldContactListener();
-        world.setContactListener(wcLstnr);
+
         rayHandler = new RayHandler(world);
         rayHandler.setAmbientLight(0, 0, 0, 0.5f);
         Light.setGlobalContactFilter(BIT_PLAYER, (short) 1, BIT_GROUND);
@@ -118,9 +115,18 @@ public class EwendLauncher extends Game {
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 
         initializeSkin();
-        stage = new Stage(new FitViewport(WIDTH, HEIGHT), spriteBatch);
+        stage = new Stage(new ExtendViewport(WIDTH,HEIGHT), spriteBatch);
         ////////
 
+        //WorldContactListener
+            wcLstnr = new WorldContactListener(stage);
+            world.setContactListener(wcLstnr);
+        //
+
+        //Setup game viewport
+        gameCamera = new OrthographicCamera();
+        viewport = new ExtendViewport(WIDTH * UNIT_SCALE, HEIGHT * UNIT_SCALE, gameCamera);
+        //
 
         //audio
         audioManager = new AudioManager(this);
@@ -132,13 +138,13 @@ public class EwendLauncher extends Game {
         /////
 
 
-        //Setup game viewport
-        gameCamera = new OrthographicCamera();
-        viewport = new ExtendViewport(WIDTH * UNIT_SCALE, HEIGHT * UNIT_SCALE, gameCamera);
-        //
 
         //Ashley
         ecsEngine = new ECSEngine(this);
+        //
+
+        //preference manager
+        preferenceManager = new PreferenceManager();
         //
 
         //MapManager
@@ -151,8 +157,6 @@ public class EwendLauncher extends Game {
 
         }
 
-        //preference manager
-        preferenceManager = new PreferenceManager();
 
         //Set first screen
         gameState = GameState.RUNNING;
@@ -161,12 +165,34 @@ public class EwendLauncher extends Game {
         //
     }
 
-    /**
-     * Sets the screen of the Game
-     *
-     * @param screenType Wich screen to add and set
-     * @Process If the screen type to be set doesn't exist, it creates one and saves it in cache
-     */
+
+    @Override
+    public void render() {
+        super.render();
+
+        final float deltaTime = Math.min(0.25f, Gdx.graphics.getRawDeltaTime());
+
+            accumulator += deltaTime;
+            while (accumulator >= FIXED_TIME_STEP) {
+                //TODO save the previous postion of body
+                world.step(FIXED_TIME_STEP, 12, 2);
+                accumulator -= FIXED_TIME_STEP;
+            }
+
+            ecsEngine.update(deltaTime);
+            if(gameRenderer!=null){
+
+            gameRenderer.render(accumulator / FIXED_TIME_STEP);
+            }
+
+           // stage.getViewport().update(getScreenViewport().getScreenWidth(), getScreenViewport().getScreenHeight());
+
+            stage.act(deltaTime);
+            stage.draw();
+
+        //TODO calculate renderPosition from previous position and real body position
+    }
+
     public void setScreen(final ScreenType screenType) {
         final Screen screen = screenCache.get(screenType);
         if (screen == null) {
@@ -185,76 +211,6 @@ public class EwendLauncher extends Game {
         }
     }
 
-    @Override
-    public void render() {
-        super.render();
-
-        final float deltaTime = Math.min(0.25f, Gdx.graphics.getRawDeltaTime());
-
-
-        accumulator += deltaTime;
-        while (accumulator >= FIXED_TIME_STEP) {
-            //TODO save the previous postion of body
-            world.step(FIXED_TIME_STEP, 12, 2);
-            accumulator -= FIXED_TIME_STEP;
-        }
-
-        if (gameState == GameState.RUNNING) {
-            ecsEngine.update(deltaTime);
-        }
-
-        gameRenderer.render(accumulator / FIXED_TIME_STEP);
-        stage.getViewport().apply();
-        stage.act(deltaTime);
-        stage.draw();
-        //TODO calculate renderPosition from previous position and real body position
-
-    }
-
-    public void stopGame() {
-        gameState = GameState.DEAD_SCREEN;
-
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        gameRenderer.dispose();
-        rayHandler.dispose();
-        world.dispose();
-        assetManager.dispose();
-        stage.dispose();
-    }
-
-
-    public World getWorld() {
-        return world;
-    }
-
-    /**
-     * Returns the viewport
-     *
-     * @return Viewport object
-     */
-    public ExtendViewport getScreenViewport() {
-        return viewport;
-    }
-
-    public AssetManager getAssetManager() {
-        return assetManager;
-    }
-
-    public OrthographicCamera getGameCamera() {
-        return gameCamera;
-    }
-
-    public SpriteBatch getSpriteBatch() {
-        return spriteBatch;
-    }
-
-    public WorldContactListener getWcLstnr() {
-        return wcLstnr;
-    }
 
     private void initializeSkin() {
         //Setup markup colors
@@ -285,10 +241,43 @@ public class EwendLauncher extends Game {
         skin = assetManager.get("ui/hud.json", Skin.class);
 
         i18NBundle = assetManager.get("ui/strings");
-
-
     }
 
+
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        gameRenderer.dispose();
+        rayHandler.dispose();
+        world.dispose();
+        assetManager.dispose();
+        stage.dispose();
+    }
+
+
+    public World getWorld() {
+        return world;
+    }
+    public ExtendViewport getScreenViewport() {
+        return viewport;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+
+    public OrthographicCamera getGameCamera() {
+        return gameCamera;
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
+    }
+
+    public WorldContactListener getWcLstnr() {
+        return wcLstnr;
+    }
 
     public ECSEngine getEcsEngine() {
         return ecsEngine;
@@ -325,6 +314,8 @@ public class EwendLauncher extends Game {
     public PreferenceManager getPreferenceManager() {
         return preferenceManager;
     }
+
+
 
     public static void resetBodyAndFixtureDefinition() {
 

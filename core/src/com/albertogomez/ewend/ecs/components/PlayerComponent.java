@@ -2,6 +2,7 @@ package com.albertogomez.ewend.ecs.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 import java.awt.event.ComponentListener;
@@ -10,7 +11,7 @@ public class PlayerComponent implements Component, Pool.Poolable {
 
     //te sirve de ejemplo de condicion que cumple el personaje
     public boolean hasItem;
-
+    public Array<Integer> takenFireflys = new Array<Integer>();
     public boolean touchingGround;
     private enum PLAYER_STATE {
         NORMAL,

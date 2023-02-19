@@ -4,17 +4,22 @@ import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.ai.AIState;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.LifeComponent;
+import com.albertogomez.ewend.ecs.components.PlayerComponent;
+import com.albertogomez.ewend.events.PlayerHealthChange;
 import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
 import static com.albertogomez.ewend.constants.Constants.*;
 
 public class WorldContactListener implements ContactListener {
     private final Array<PlayerCollisionListener> listeners;
-    public WorldContactListener() {
+    private final Stage stage;
+    public WorldContactListener(Stage stage) {
         listeners = new Array<PlayerCollisionListener>();
+        this.stage = stage;
     }
     @Override
     public void beginContact(Contact contact) {
@@ -50,9 +55,12 @@ public class WorldContactListener implements ContactListener {
         switch (categoryBitsB){
             case BIT_ENEMY:
                 ECSEngine.aiCmoMapper.get((Entity) fixtureB.getBody().getUserData()).state = AIState.ATTACKING;
+                ECSEngine.attCmpMapper.get((Entity) fixtureB.getBody().getUserData()).delayAccum=0;
                 break;
             case  BIT_ENEMY_ATTACK:
-                ECSEngine.lifeCmpMapper.get(player).removeHealth((AttackComponent) fixtureB.getBody().getUserData());
+                final LifeComponent lifeComponent = ECSEngine.lifeCmpMapper.get(player);
+                lifeComponent.removeHealth((AttackComponent) fixtureB.getBody().getUserData());
+                stage.getRoot().fire(new PlayerHealthChange(lifeComponent.health));
                 break;
             case  BIT_GROUND:
                 if(contact.getWorldManifold().getNormal().angleDeg()<170f&&contact.getWorldManifold().getNormal().angleDeg()>5f){
@@ -65,7 +73,9 @@ public class WorldContactListener implements ContactListener {
 
                 gameObj = (Entity) bodyB.getUserData();
                 ECSEngine.gameObjCmpMapper.get(gameObj).touched=true;
-
+                for(PlayerCollisionListener listener : listeners){
+                    listener.playerCollision(player,gameObj);
+                }
                 break;
             default:
                 break;
@@ -84,7 +94,7 @@ public class WorldContactListener implements ContactListener {
             case BIT_PLAYER_ATTACK:
 
                 LifeComponent enemyLifeComp = ECSEngine.lifeCmpMapper.get(enemy);
-                enemyLifeComp.health-=(float)bodyB.getUserData();
+                enemyLifeComp.removeHealth((AttackComponent) fixtureB.getBody().getUserData());
                 break;
             default:
                 break;
@@ -98,6 +108,7 @@ public class WorldContactListener implements ContactListener {
     public void endContact(Contact contact) {
         final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
         final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+        PlayerComponent playerComponent = null;
         //player collision cases
 
         if((catFixB & BIT_GROUND) == BIT_GROUND||(catFixA & BIT_GROUND) == BIT_GROUND){
@@ -106,9 +117,15 @@ public class WorldContactListener implements ContactListener {
             return;
         }
         if((catFixB & BIT_PLAYER) == BIT_PLAYER){
-            ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureB().getBody().getUserData()).touchingGround=false;
+            playerComponent = ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureB().getBody().getUserData());
+            if(playerComponent!=null){
+                playerComponent.touchingGround=false;
+            }
         }else if((catFixA & BIT_PLAYER) == BIT_PLAYER){
-            ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureA().getBody().getUserData()).touchingGround=false;
+            playerComponent = ECSEngine.playerCmpMapper.get((Entity) contact.getFixtureA().getBody().getUserData());
+            if(playerComponent!=null){
+                playerComponent.touchingGround=false;
+            }
         }
 
 

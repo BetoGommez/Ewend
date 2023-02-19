@@ -6,8 +6,11 @@ import com.badlogic.gdx.utils.Pool;
 public class DeadComponent implements Component, Pool.Poolable {
 
     public boolean isDead;
+    public float deadDelay=2;
 
-
+    public DeadComponent(float deadDelay) {
+        this.deadDelay = deadDelay;
+    }
 
     @Override
     public void reset() {

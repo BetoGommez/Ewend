@@ -63,10 +63,8 @@ public class GameRenderer implements Disposable, MapListener {
     private final Array<TiledMapTileLayer> tiledMapLayers;
     private IntMap<Animation<Sprite>> mapAnimations;
 
-
     private Array<Texture> backgroundImages;
     private int[] backgroundOffsets = {0,0,0,0};
-    private float backgroundMaxScrollingSpeed;
     private final RayHandler rayHandler;
     private final Array<TiledMapTileLayer> overlappingLayers;
 
@@ -89,10 +87,6 @@ public class GameRenderer implements Disposable, MapListener {
         tiledMapLayers = new Array<TiledMapTileLayer>();
         overlappingLayers = new Array<TiledMapTileLayer>();
 
-
-
-        backgroundMaxScrollingSpeed = 10;
-
         world = context.getWorld();
         rayHandler = context.getRayHandler();
 
@@ -104,11 +98,7 @@ public class GameRenderer implements Disposable, MapListener {
             //box2DDebugRenderer = null;
             //world = null;
         }
-
         context.getMapManager().addMapListener(this);
-
-
-
         //profiler.reset();
     }
 
@@ -116,14 +106,10 @@ public class GameRenderer implements Disposable, MapListener {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-
         viewport.apply(false);
-
         spriteBatch.begin();
 
-
         if (mapRenderer.getMap() != null) {
-
             renderBackground();
             AnimatedTiledMapTile.updateAnimationBaseTime();
             mapRenderer.setView(gameCamera);
@@ -193,15 +179,14 @@ public class GameRenderer implements Disposable, MapListener {
             }
            spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i],0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
            spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+backgroundImages.get(i).getWidth()/2,0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+(backgroundImages.get(i).getWidth()/2)*2,0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
         }
-
 
     }
 
     private void renderEntity(Entity entity, float alpha) {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
-
 
         if (aniComponent.aniType != null) {
             final Animation<Sprite> animation = getAnimation(aniComponent.aniType);
@@ -212,7 +197,7 @@ public class GameRenderer implements Disposable, MapListener {
                     playerB2dComp = b2DComponent;
                 frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width*3/2 * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height*4/3, aniComponent.width * b2DComponent.orientation, aniComponent.height);
             }else{
-                frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * b2DComponent.orientation, aniComponent.height);
+                frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * -b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * -b2DComponent.orientation, aniComponent.height);
             }
             frame.draw(spriteBatch);
         }
@@ -226,10 +211,8 @@ public class GameRenderer implements Disposable, MapListener {
         if (gameObjectComponent.animationIndex != -1) {
             if(aniComponent.aniType!=null){
                 animation = getAnimation(aniComponent.aniType);
-
             }else{
                 animation = mapAnimations.get(gameObjectComponent.animationIndex);
-
             }
             final Sprite frame = animation.getKeyFrame(aniComponent.aniTime);
             frame.setBounds(b2DComponent.renderPosition.x, b2DComponent.renderPosition.y , aniComponent.width , aniComponent.height);
@@ -242,12 +225,9 @@ public class GameRenderer implements Disposable, MapListener {
         Animation<Sprite> animation = animationCache.get(aniType);
         if (animation == null) {
             //create animation
-            Animation.PlayMode animationMode = Animation.PlayMode.LOOP;
+            Animation.PlayMode animationMode = aniType.getPlayMode();
             Gdx.app.debug("GameRenderer", "Creating new animation of type " + aniType);
             final Array<TextureAtlas.AtlasRegion> atlasRegion = assetManager.get(aniType.getAtlasPath(), TextureAtlas.class).findRegions(aniType.getAtlasKey());
-            if(aniType == AnimationType.LAMP_EFFECT){
-                animationMode = Animation.PlayMode.NORMAL;
-            }
             animation = new Animation<Sprite>(aniType.getFrameTime(), getKeyFrame(atlasRegion,aniType.getWidth(), aniType.getHeight()), animationMode);
             animationCache.put(aniType, animation);
         }
@@ -290,15 +270,4 @@ public class GameRenderer implements Disposable, MapListener {
         mapAnimations = map.getMapAnimations();
     }
 
-       /* private Array<? extends Sprite> getKeyFrames(final TextureRegion[] textureRegion){
-        final Array<Sprite> keyFrames = new Array<Sprite>();
-
-        for(final TextureRegion region : textureRegion){
-            final Sprite sprite = new Sprite(region);
-            sprite.setOriginCenter();
-            keyFrames.add(sprite);
-        }
-        return keyFrames;
-    }
-*/
 }

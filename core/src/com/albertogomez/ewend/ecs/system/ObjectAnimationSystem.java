@@ -52,7 +52,10 @@ public class ObjectAnimationSystem extends IteratingSystem {
                     b2DComponent.renderPosition = new Vector2(b2DComponent.renderPosition.x , b2DComponent.renderPosition.y);
                     animationComponent.aniType = AnimationType.FIREFLY_EFFECT;
                     b2DComponent.light = new PointLight(rayHandler, 32, new Color(0,0.1f, 0.4f, 1f), 0, b2DComponent.body.getPosition().x, b2DComponent.body.getPosition().y);
+                    b2DComponent.lightDistance = 3;
+                    b2DComponent.lightFluctuationDistance = 2;
                 }
+               
                 break;
         }
     }

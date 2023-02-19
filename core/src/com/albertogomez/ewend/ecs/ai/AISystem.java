@@ -7,19 +7,25 @@ import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
 import com.albertogomez.ewend.ecs.system.PlayerAnimationSystem;
 import com.albertogomez.ewend.ecs.system.PlayerCollisionSystem;
+import com.albertogomez.ewend.events.PlayerDied;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import static com.albertogomez.ewend.view.AnimationType.SHEEP_ATTACK;
 import static javax.swing.UIManager.get;
 
-public class AISystem extends IteratingSystem {
+public class AISystem extends IteratingSystem implements EventListener {
 
+    private boolean playerIsDead=false;
     public AISystem(EwendLauncher context) {
         super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class, AttackComponent.class).get());
+        context.getStage().getRoot().addListener(this);
     }
 
     @Override
@@ -30,6 +36,10 @@ public class AISystem extends IteratingSystem {
         EnemyComponent enemyComp = ECSEngine.eneObjCmpMapper.get(entity);
         AIComponent aiComp = ECSEngine.aiCmoMapper.get(entity);
         aiComp.milisecAccum += deltaTime;
+
+        if(playerIsDead){
+            aiComp.state = AIState.IDLE;
+        }
 
         switch (aiComp.state) {
             case IDLE:
@@ -49,26 +59,21 @@ public class AISystem extends IteratingSystem {
                     }
                 }
                 enemyBody.applyLinearImpulse(enemyComp.speed.x * 5 * aiComp.direction - enemyBody.getLinearVelocity().x,
-                        enemyBody.getLinearVelocity().y, enemyBody.getWorldCenter().x, enemyBody.getWorldCenter().y, true);
-
+                        0, enemyBody.getWorldCenter().x, enemyBody.getWorldCenter().y, true);
                 break;
             case ATTACKING:
-                if (attackComponent.delayAccum > attackComponent.delay&&attackComponent.attacking==true) {
+
+                if (attackComponent.delayAccum > attackComponent.delay*1.3&& aiComp.attacked==true) {
                     aiComp.state = AIState.RUNNING;
-                    aiComp.attacked = false;
-                    attackComponent.attacking = false;
+                    aiComp.attacked=false;
                     enemyBody.setLinearVelocity(0, 0);
 
                 } else {
-                    if (aiComp.attacked==false) {
-                        attackComponent.delayAccum = 0;
-                        aiComp.attacked=true;
-                    }
+
                     enemyBody.setLinearVelocity(0, 0);
-                    ECSEngine.aniCmpMapper.get(entity).aniType = SHEEP_ATTACK;
-                    ECSEngine.aniCmpMapper.get(entity).aniTime = attackComponent.delayAccum;
-                    if (attackComponent.delay / 2 < attackComponent.delayAccum) {
+                    if (attackComponent.delay  < attackComponent.delayAccum&&aiComp.attacked==false) {
                         attackComponent.attacking = true;
+                        aiComp.attacked=true;
                     }
 
 
@@ -119,22 +124,21 @@ public class AISystem extends IteratingSystem {
 
     private void checkPlayerPos(AIComponent aiComponent, B2DComponent enemy) {
         Vector2 posPlayer = getPlayerPos();
+        float distanceVision = aiComponent.maxDistanceFactor*8;
         if (posPlayer != null) {
-
-            if ((enemy.renderPosition.x - aiComponent.maxDistanceFactor < posPlayer.x
-                    || enemy.renderPosition.x * aiComponent.maxDistanceFactor > posPlayer.x) &&
-                    (enemy.renderPosition.y + aiComponent.maxDistanceFactor < posPlayer.y
-                            || enemy.renderPosition.y - aiComponent.maxDistanceFactor > posPlayer.y)) {
+            if ((enemy.renderPosition.x - distanceVision < posPlayer.x
+                    && enemy.renderPosition.x + distanceVision > posPlayer.x) &&
+                    (enemy.renderPosition.y + distanceVision > posPlayer.y
+                            && enemy.renderPosition.y - distanceVision < posPlayer.y)) {
                 aiComponent.state = AIState.RUNNING;
+                Gdx.input.vibrate(new long[]{200,800},-1);
             }
 
         }
 
     }
 
-    private void isContained() {
 
-    }
 
     private Vector2 getPlayerPos() {
         B2DComponent playerB2dComp;
@@ -145,5 +149,13 @@ public class AISystem extends IteratingSystem {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean handle(Event event) {
+        if(event instanceof PlayerDied){
+            playerIsDead = true;
+        }
+        return false;
     }
 }
