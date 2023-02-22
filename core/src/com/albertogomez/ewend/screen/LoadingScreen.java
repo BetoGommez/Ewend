@@ -26,38 +26,30 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     private boolean isMusicLoaded;
 
-    
+
     public LoadingScreen(final EwendLauncher context) {
         super(context);
 
         this.assetManager = context.getAssetManager();
-        //load hud
-        assetManager.load("ui/game_ui/game_hud.atlas",TextureAtlas.class);
-        assetManager.load("ui/game_ui/life_and_mana_bar.atlas",TextureAtlas.class);
+
 
         //load characters and effects
         assetManager.load(PLAYER_SPRITE_PATH, TextureAtlas.class);
-        for(final AnimationType animationType : AnimationType.values()){
-            assetManager.load(animationType.getAtlasPath(),TextureAtlas.class);
+        for (final AnimationType animationType : AnimationType.values()) {
+            assetManager.load(animationType.getAtlasPath(), TextureAtlas.class);
         }
 
 
         //load background
 
         for (int i = 1; i < 5; i++) {
-            assetManager.load(BACKGROUND_PATH+i+".png", Texture.class);
+            assetManager.load(BACKGROUND_PATH + i + ".png", Texture.class);
         }
 
 
         //load maps
-        for(final MapType mapType : MapType.values()){
-            assetManager.load(mapType.getFilePath(),TiledMap.class);
-        }
-
-        //load audio
-        isMusicLoaded=false;
-        for(final AudioType audioType: AudioType.values()){
-            assetManager.load(audioType.getFilePath(), audioType.isMusic()? Music.class: Sound.class);
+        for (final MapType mapType : MapType.values()) {
+            assetManager.load(mapType.getFilePath(), TiledMap.class);
         }
 
 
@@ -82,12 +74,8 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);*/
 
         assetManager.update();
-
-        if(!isMusicLoaded&& assetManager.isLoaded(AudioType.LEVEL.getFilePath())){
-            isMusicLoaded=true;
-            audioManager.playAudio(AudioType.LEVEL);
-        }
-        screenUI.setProgress(assetManager.getProgress());
+        audioManager.playAudio(AudioType.LEVEL);
+        screenUI.setProgress(assetManager.getProgress(),delta);
 
     }
 
@@ -103,7 +91,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
     }
 
 
-
     @Override
     public void pause() {
 
@@ -115,7 +102,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
     }
 
 
-
     @Override
     public void dispose() {
 
@@ -123,7 +109,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     @Override
     public void keyPressed(InputManager inputManager, GameKeys key) {
-        if(assetManager.getProgress()>=1){
+        if (assetManager.getProgress() >= 1) {
 
             audioManager.playAudio(AudioType.SELECT);
             context.setScreen(ScreenType.GAME);

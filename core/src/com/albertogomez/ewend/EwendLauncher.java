@@ -14,6 +14,7 @@ import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -24,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -154,7 +156,7 @@ public class EwendLauncher extends Game {
         }
 
         screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
-        this.setScreen(ScreenType.LOADING);
+        this.setScreen(ScreenType.MENU);
         //
     }
 
@@ -213,11 +215,11 @@ public class EwendLauncher extends Game {
 
         //ttf bitmap
         final ObjectMap<String, Object> resources = new ObjectMap<String, Object>();
-        final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/customfont.ttf"));
+        final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ui/silkscreen_regular.ttf"));
         final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParameter.minFilter = Texture.TextureFilter.Linear;
         fontParameter.magFilter = Texture.TextureFilter.Linear;
-        final int[] sizeToChange = {16, 20, 26, 32};
+        final int[] sizeToChange = {16, 20, 26, 32,48,64};
         for (int size : sizeToChange) {
             fontParameter.size = size;
             final BitmapFont bitmapFont = fontGenerator.generateFont(fontParameter);
@@ -227,11 +229,14 @@ public class EwendLauncher extends Game {
         fontGenerator.dispose();
         //load skin
 
-        final SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("ui/hud.atlas", resources);
-        assetManager.load("ui/hud.json", Skin.class, skinParameter);
+        final SkinLoader.SkinParameter skinParameter = new SkinLoader.SkinParameter("ui/game_hud.atlas", resources);
+        assetManager.load("ui/game_hud.json", Skin.class, skinParameter);
         assetManager.load("ui/strings", I18NBundle.class);
+        assetManager.load("ui/background.jpg", Texture.class);
+        assetManager.load("ui/game_hud.atlas", TextureAtlas.class);
+
         assetManager.finishLoading();
-        skin = assetManager.get("ui/hud.json", Skin.class);
+        skin = assetManager.get("ui/game_hud.json", Skin.class);
 
         i18NBundle = assetManager.get("ui/strings");
     }

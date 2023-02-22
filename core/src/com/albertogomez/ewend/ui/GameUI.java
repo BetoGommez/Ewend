@@ -20,11 +20,11 @@ public class GameUI extends Table implements EventListener{
     private final BitmapFont font;
     private final Stage stage;
     private final EwendLauncher context;
-    private final AssetManager assetManager;
-    private final TextureAtlas hudAtlas;
+
+
 
     private Array<TextButton> buttons;
-    private Skin skin;
+    private final Skin skin;
     private TextButton.TextButtonStyle style;
     private TextButton button;
 
@@ -42,9 +42,6 @@ public class GameUI extends Table implements EventListener{
         this.context=context;
         stage= context.getStage();
         skin= context.getSkin();
-        assetManager = context.getAssetManager();
-        hudAtlas = assetManager.get("ui/game_ui/game_hud.atlas", TextureAtlas.class);
-        skin.addRegions(assetManager.<TextureAtlas>get("ui/game_ui/life_and_mana_bar.atlas"));
 
         font = new BitmapFont();
 
@@ -61,42 +58,31 @@ public class GameUI extends Table implements EventListener{
         stage.addListener(this);
 
         buttonSize = EwendLauncher.HEIGHT/5;
-        ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
-        style.background = skin.getDrawable("mana_layout");
-        style.knobBefore = skin.getDrawable("mana_knob");
-
-        manaBar = new ProgressBar(0,1,0.01f,false,style);
-        ProgressBar.ProgressBarStyle styleHealth = new ProgressBar.ProgressBarStyle();
-        styleHealth.background = skin.getDrawable("health_layout");
-        styleHealth.knobBefore = skin.getDrawable("health_knob");
-
-        // cada 3 seg
-        // after = frame x+1
-
-        healthBar = new ProgressBar(0,1,0.01f,false,styleHealth);
+        manaBar = new ProgressBar(0,1,0.01f,false,skin,"mana");
+        healthBar = new ProgressBar(0,1,0.01f,false,skin,"health");
         healthBar.setValue(100);
         manaBar.setValue(0);
 
         //button creation
-        buttons.add(createButton("left"));
+        buttons.add(createButton("Left"));
         buttons.get(0).setName("LEFT");
 
-        buttons.add(createButton("right"));
+        buttons.add(createButton("Right"));
         buttons.get(1).setName("RIGHT");
 
-        buttons.add(createButton("left"));
+        buttons.add(createButton("Purify"));
         buttons.get(2).setName("DASH");
 
-        buttons.add(createButton("right"));
+        buttons.add(createButton("Jump"));
         buttons.get(3).setName("JUMP");
 
-        buttons.add(createButton("left"));
+        buttons.add(createButton("Attack"));
         buttons.get(4).setName("ATTACK");
         //
 
-        add(healthBar).width(styleHealth.background.getMinWidth()).top().left().pad(5).colspan(3);
+        add(healthBar).top().left().pad(5).colspan(3);
         row();
-        add(manaBar).width(skin.getDrawable("mana_layout").getMinWidth()).top().left().pad(5).expandY().colspan(3);
+        add(manaBar).top().left().pad(5).expandY().colspan(3);
         row();
         add(buttons.get(0)).size(buttonSize,buttonSize).left().bottom();
         add(buttons.get(1)).size(buttonSize,buttonSize).left().bottom();//.bottom().left().expand();

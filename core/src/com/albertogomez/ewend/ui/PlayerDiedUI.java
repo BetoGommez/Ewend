@@ -47,7 +47,6 @@ public class PlayerDiedUI extends Table implements EventListener {
         stage = context.getStage();
         skin = context.getSkin();
         assetManager = context.getAssetManager();
-        hudAtlas = assetManager.get("ui/game_ui/game_hud.atlas", TextureAtlas.class);
         font = new BitmapFont();
         buttons = new Array<TextButton>();
         buttonListener = new DeadScreenButtonListener(context);
