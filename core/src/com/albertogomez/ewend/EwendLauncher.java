@@ -6,10 +6,8 @@ import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.MapManager;
-import com.albertogomez.ewend.screen.GameScreen;
 import com.albertogomez.ewend.screen.ScreenType;
 import com.albertogomez.ewend.view.GameRenderer;
-import com.albertogomez.ewend.view.GameState;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.SkinLoader;
@@ -32,8 +30,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.sun.org.apache.xalan.internal.xsltc.DOM;
 
 import java.util.EnumMap;
 
@@ -84,7 +80,7 @@ public class EwendLauncher extends Game {
 
     private PreferenceManager preferenceManager;
 
-    private GameState gameState;
+
 
 
     public static float HEIGHT;
@@ -157,9 +153,6 @@ public class EwendLauncher extends Game {
 
         }
 
-
-        //Set first screen
-        gameState = GameState.RUNNING;
         screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
         this.setScreen(ScreenType.LOADING);
         //

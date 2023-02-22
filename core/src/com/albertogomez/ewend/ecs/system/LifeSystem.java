@@ -21,13 +21,11 @@ public class LifeSystem extends IteratingSystem implements EventListener {
 
 
 
-    private final EwendLauncher context;
     private float manaAdd;
 
     public LifeSystem(EwendLauncher context) {
         super(Family.all(B2DComponent.class, LifeComponent.class).get());
 
-        this.context = context;
         context.getStage().getRoot().addListener(this);
 
     }

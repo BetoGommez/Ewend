@@ -1,4 +1,4 @@
-package com.albertogomez.ewend.ecs.system;
+package com.albertogomez.ewend.ecs.system.object;
 
 import com.albertogomez.ewend.ecs.components.DespawnObjectComponent;
 import com.badlogic.ashley.core.Entity;

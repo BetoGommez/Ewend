@@ -1,11 +1,10 @@
-package com.albertogomez.ewend.ecs.system;
+package com.albertogomez.ewend.ecs.system.player;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.WorldContactListener;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.*;
-import com.albertogomez.ewend.events.FireflyTaken;
-import com.albertogomez.ewend.map.GameObjectType;
+import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -15,7 +14,7 @@ public class PlayerCollisionSystem extends IteratingSystem implements WorldConta
 
     EwendLauncher context;
     public PlayerCollisionSystem(EwendLauncher context) {
-        super(Family.all(RemoveComponent.class).get());
+        super(Family.all(PlayerComponent.class).get());
         context.getWcLstnr().addPlayerCollisionListener(this);
         this.context= context;
     }
@@ -33,7 +32,6 @@ public class PlayerCollisionSystem extends IteratingSystem implements WorldConta
         switch (gameObjCmp.type){
             case FIREFLY:
                 playerComponent.takenFireflys.add(ECSEngine.gameObjCmpMapper.get(gameObject).index);
-                context.getStage().getRoot().fire(new FireflyTaken(playerComponent));
                 gameObject.add(new DespawnObjectComponent());
 
                 break;

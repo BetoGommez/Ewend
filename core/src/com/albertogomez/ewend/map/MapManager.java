@@ -3,10 +3,9 @@ package com.albertogomez.ewend.map;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
+import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.ChainShape;
@@ -15,8 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.EnumMap;
 
-import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
-import static com.albertogomez.ewend.constants.Constants.BIT_GROUND;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 public class MapManager {
     private final World world;
@@ -82,7 +80,7 @@ public class MapManager {
 
     }
     private void spawnPlayer(){
-        context.getEcsEngine().createPlayer(currentMap.getStartLocation(),0.75f,0.75f);
+        context.getEcsEngine().createPlayer(currentMap.getStartLocation(), AnimationType.PLAYER_IDLE.getHeight()*UNIT_SCALE/4.5f,AnimationType.PLAYER_IDLE.getWidth()*UNIT_SCALE/4.5f);
     }
 
     private void spawnEnemies(){
@@ -117,7 +115,7 @@ public class MapManager {
 
     private void destroyCollisionAreas(){
         for(final Body body : bodies){
-            if("GROUND".equals(body.getUserData())){
+            if("Destroyable".equals(body.getUserData())){
                 world.destroyBody(body);
             }
 
@@ -130,9 +128,8 @@ public class MapManager {
             EwendLauncher.BODY_DEF.position.set(collisionArea.getX(), collisionArea.getY());
             EwendLauncher.BODY_DEF.fixedRotation = true;
             final Body body = world.createBody(EwendLauncher.BODY_DEF);
-
-            body.setUserData("GROUND");
-            EwendLauncher.FIXTURE_DEF.filter.categoryBits = BIT_GROUND;
+            body.setUserData("Destroyable");
+            EwendLauncher.FIXTURE_DEF.filter.categoryBits = collisionArea.getMask();
             EwendLauncher.FIXTURE_DEF.filter.maskBits = -1;
             final ChainShape chainShape = new ChainShape();
             chainShape.createChain(collisionArea.getVertices());

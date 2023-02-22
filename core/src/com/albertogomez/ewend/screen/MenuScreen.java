@@ -3,7 +3,7 @@ package com.albertogomez.ewend.screen;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
-import com.albertogomez.ewend.view.MenuUI;
+import com.albertogomez.ewend.ui.MenuUI;
 
 public class MenuScreen extends AbstractScreen<MenuUI> {
 

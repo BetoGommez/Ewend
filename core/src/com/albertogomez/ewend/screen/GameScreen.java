@@ -3,23 +3,14 @@ package com.albertogomez.ewend.screen;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.PreferenceManager;
 import com.albertogomez.ewend.ecs.ECSEngine;
-import com.albertogomez.ewend.events.MessageEvent;
 import com.albertogomez.ewend.events.ResetLevel;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.*;
-import com.albertogomez.ewend.view.GameRenderer;
-import com.albertogomez.ewend.view.GameUI;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.albertogomez.ewend.ui.GameUI;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-
-import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
 /**
  * Screen of the gameplay

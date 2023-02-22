@@ -1,4 +1,4 @@
-package com.albertogomez.ewend.view;
+package com.albertogomez.ewend.ui;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.input.GameKeys;

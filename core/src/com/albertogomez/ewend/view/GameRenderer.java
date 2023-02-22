@@ -158,7 +158,7 @@ public class GameRenderer implements Disposable, MapListener {
             Gdx.app.debug("RenderInfo", "Drawcalls: " + profiler.getDrawCalls());
             profiler.reset();
         }
-        box2DDebugRenderer.render(world, viewport.getCamera().combined);
+     box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
 
     }
@@ -195,7 +195,7 @@ public class GameRenderer implements Disposable, MapListener {
             if(ECSEngine.playerCmpMapper.get(entity)!=null)
             {
                     playerB2dComp = b2DComponent;
-                frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width*3/2 * b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height*4/3, aniComponent.width * b2DComponent.orientation, aniComponent.height);
+                frame.setBounds(b2DComponent.renderPosition.x - aniComponent.width/2 * b2DComponent.orientation, b2DComponent.renderPosition.y - aniComponent.height/2, aniComponent.width * b2DComponent.orientation, aniComponent.height);
             }else{
                 frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * -b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * -b2DComponent.orientation, aniComponent.height);
             }

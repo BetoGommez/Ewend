@@ -1,9 +1,9 @@
-package com.albertogomez.ewend.view;
+package com.albertogomez.ewend.ui;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.events.*;
 import com.albertogomez.ewend.input.ButtonListener;
-import com.albertogomez.ewend.screen.ScreenType;
+import com.albertogomez.ewend.ui.PlayerDiedUI;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 public class GameUI extends Table implements EventListener{
@@ -46,6 +44,8 @@ public class GameUI extends Table implements EventListener{
         skin= context.getSkin();
         assetManager = context.getAssetManager();
         hudAtlas = assetManager.get("ui/game_ui/game_hud.atlas", TextureAtlas.class);
+        skin.addRegions(assetManager.<TextureAtlas>get("ui/game_ui/life_and_mana_bar.atlas"));
+
         font = new BitmapFont();
 
         buttons = new Array<TextButton>();
@@ -62,9 +62,7 @@ public class GameUI extends Table implements EventListener{
 
         buttonSize = EwendLauncher.HEIGHT/5;
         ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
-        skin.addRegions(assetManager.<TextureAtlas>get("ui/game_ui/life_and_mana_bar.atlas"));
         style.background = skin.getDrawable("mana_layout");
-
         style.knobBefore = skin.getDrawable("mana_knob");
 
         manaBar = new ProgressBar(0,1,0.01f,false,style);
@@ -76,12 +74,8 @@ public class GameUI extends Table implements EventListener{
         // after = frame x+1
 
         healthBar = new ProgressBar(0,1,0.01f,false,styleHealth);
-        healthBar.setValue(50);
+        healthBar.setValue(100);
         manaBar.setValue(0);
-        healthBar.setRound(true);
-        healthBar.setBounds(100f,0,healthBar.getWidth(),healthBar.getHeight());
-        healthBar.setOriginX(10f);
-
 
         //button creation
         buttons.add(createButton("left"));
@@ -113,6 +107,8 @@ public class GameUI extends Table implements EventListener{
 
 
 
+
+
     private TextButton createButton(String nombre){
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
 
@@ -127,12 +123,13 @@ public class GameUI extends Table implements EventListener{
     @Override
     public boolean handle(Event event) {
         if(event instanceof PlayerDied){
+            context.getPreferenceManager().saveTakenFireflys(((PlayerDied)event).playerComponent.takenFireflys);
             stage.addActor(new PlayerDiedUI(context));
             stage.getRoot().removeActor(this);
         }else if(event instanceof ResetLevel){
             stage.getRoot().addActor(this);
-        }else if(event instanceof FireflyTaken){
-            context.getPreferenceManager().saveTakenFireflys(((FireflyTaken)event).playerComponent.takenFireflys);
+            healthBar.setValue(1f);
+            manaBar.setValue(0f);
         }else if(event instanceof PlayerManaAdded){
             manaBar.setValue(((PlayerManaAdded)event).mana/100f);
         }else if(event instanceof PlayerHealthChange){

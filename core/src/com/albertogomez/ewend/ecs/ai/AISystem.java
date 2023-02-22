@@ -5,8 +5,7 @@ import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
-import com.albertogomez.ewend.ecs.system.PlayerAnimationSystem;
-import com.albertogomez.ewend.ecs.system.PlayerCollisionSystem;
+import com.albertogomez.ewend.ecs.system.player.PlayerAnimationSystem;
 import com.albertogomez.ewend.events.PlayerDied;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -17,12 +16,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
-import static com.albertogomez.ewend.view.AnimationType.SHEEP_ATTACK;
 import static javax.swing.UIManager.get;
 
 public class AISystem extends IteratingSystem implements EventListener {
 
-    private boolean playerIsDead=false;
+    private boolean playerIsDead = false;
+
     public AISystem(EwendLauncher context) {
         super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class, AttackComponent.class).get());
         context.getStage().getRoot().addListener(this);
@@ -37,21 +36,22 @@ public class AISystem extends IteratingSystem implements EventListener {
         AIComponent aiComp = ECSEngine.aiCmoMapper.get(entity);
         aiComp.milisecAccum += deltaTime;
 
-        if(playerIsDead){
+        if (playerIsDead) {
             aiComp.state = AIState.IDLE;
         }
 
         switch (aiComp.state) {
             case IDLE:
                 movementTrackerIdle(enemyBody, enemyComp, aiComp);
-                checkPlayerPos(aiComp, enemyB2D);
+                if(checkPlayerPos(aiComp, enemyB2D,6)){
+                    aiComp.state = AIState.RUNNING;
+                }
+                enemyBody.setGravityScale(0.1f);
                 break;
             case RUNNING:
+                if (getPlayerPos().x < enemyBody.getPosition().x + enemyB2D.width * 1.5f && getPlayerPos().x > enemyBody.getPosition().x - enemyB2D.width * 1.5f) {
 
-
-                if(getPlayerPos().x<enemyBody.getPosition().x+enemyB2D.width*1.5f&&getPlayerPos().x>enemyBody.getPosition().x-enemyB2D.width*1.5f){
-
-                }else{
+                } else {
                     if (getPlayerPos().x > enemyBody.getPosition().x) {
                         aiComp.direction = 1;
                     } else {
@@ -60,27 +60,33 @@ public class AISystem extends IteratingSystem implements EventListener {
                 }
                 enemyBody.applyLinearImpulse(enemyComp.speed.x * 5 * aiComp.direction - enemyBody.getLinearVelocity().x,
                         0, enemyBody.getWorldCenter().x, enemyBody.getWorldCenter().y, true);
+                if(!checkPlayerPos(aiComp,enemyB2D,10)){
+                    aiComp.state = AIState.IDLE;
+                }
+                enemyBody.setGravityScale(1f);
                 break;
             case ATTACKING:
-
-                if (attackComponent.delayAccum > attackComponent.delay*1.3&& aiComp.attacked==true) {
+                if (attackComponent.delayAccum > attackComponent.delay * 1.3 && aiComp.attacked == true) {
                     aiComp.state = AIState.RUNNING;
-                    aiComp.attacked=false;
+                    aiComp.attacked = false;
                     enemyBody.setLinearVelocity(0, 0);
 
                 } else {
 
                     enemyBody.setLinearVelocity(0, 0);
-                    if (attackComponent.delay  < attackComponent.delayAccum&&aiComp.attacked==false) {
+                    if (attackComponent.delay < attackComponent.delayAccum && aiComp.attacked == false) {
                         attackComponent.attacking = true;
-                        aiComp.attacked=true;
+                        aiComp.attacked = true;
                     }
-
-
+                }
+                break;
+            case HITTED:
+                aiComp.milisecAccum+=deltaTime;
+                if(aiComp.milisecAccum> aiComp.knockTime){
+                    aiComp.state=AIState.RUNNING;
                 }
                 break;
         }
-
     }
 
     private void movementTrackerIdle(Body enemyBody, EnemyComponent enemyComp, AIComponent aiComp) {
@@ -122,22 +128,23 @@ public class AISystem extends IteratingSystem implements EventListener {
 
     }
 
-    private void checkPlayerPos(AIComponent aiComponent, B2DComponent enemy) {
+    private boolean checkPlayerPos(AIComponent aiComponent, B2DComponent enemy,float distance) {
         Vector2 posPlayer = getPlayerPos();
-        float distanceVision = aiComponent.maxDistanceFactor*8;
+        float distanceVision = aiComponent.maxDistanceFactor * distance;
         if (posPlayer != null) {
             if ((enemy.renderPosition.x - distanceVision < posPlayer.x
                     && enemy.renderPosition.x + distanceVision > posPlayer.x) &&
                     (enemy.renderPosition.y + distanceVision > posPlayer.y
                             && enemy.renderPosition.y - distanceVision < posPlayer.y)) {
-                aiComponent.state = AIState.RUNNING;
-                Gdx.input.vibrate(new long[]{200,800},-1);
+
+                Gdx.input.vibrate(new long[]{200, 800}, -1);
+                return true;
             }
 
         }
+        return false;
 
     }
-
 
 
     private Vector2 getPlayerPos() {
@@ -153,7 +160,7 @@ public class AISystem extends IteratingSystem implements EventListener {
 
     @Override
     public boolean handle(Event event) {
-        if(event instanceof PlayerDied){
+        if (event instanceof PlayerDied) {
             playerIsDead = true;
         }
         return false;

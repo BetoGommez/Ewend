@@ -27,8 +27,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 
-import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
-import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
+import static com.albertogomez.ewend.constants.Constants.*;
 
 
 public class Map {
@@ -61,7 +60,8 @@ public class Map {
         fireflyTakenIndexes = new Array<Integer>();
         backgroundImages = new Array<Texture>();
 
-        parseCollisionLayer();
+        parseCollisionLayer("Ground");
+        parseCollisionLayer("Bounds");
         parseFireflyIndexes();
         createBackgroundImages();
         parsePlayerStartLocation();
@@ -142,9 +142,17 @@ public class Map {
 
     }
 
-    private void parseCollisionLayer(){
+
+
+    private void parseCollisionLayer(String layer){
         //TODO CUANDO CAMBIES DE MAPA COJES DE AQUÍ LAS CAPAS DE COLISIONES
-        final MapLayer objetos = tiledMap.getLayers().get("Ground");
+        final MapLayer objetos = tiledMap.getLayers().get(layer);
+        short MASK;
+        if(layer.equals("Ground")){
+            MASK = BIT_GROUND;
+        }else{
+            MASK = BIT_BOUND;
+        }
         if(objetos==null){
             Gdx.app.debug(TAG,"The collision layer:  wasn't found");
             return;
@@ -185,17 +193,17 @@ public class Map {
                     rectVertices[9] = 0;
 
 
-                    collisionAreas.add(new CollisionArea(rectangle.x,rectangle.y,rectVertices));
+                    collisionAreas.add(new CollisionArea(rectangle.x,rectangle.y,rectVertices,MASK));
 
             } else if (mapObject instanceof PolylineMapObject) {
 
                 final PolylineMapObject polylineMapObject = (PolylineMapObject) mapObject;
                 final Polyline polyline = polylineMapObject.getPolyline();
-                collisionAreas.add(new CollisionArea(polyline.getX(),polyline.getY(), polyline.getVertices()));
+                collisionAreas.add(new CollisionArea(polyline.getX(),polyline.getY(), polyline.getVertices(),MASK));
             }else if (mapObject instanceof PolygonMapObject){
                 final PolygonMapObject polygonMapObject = (PolygonMapObject) mapObject;
                 final Polygon polygon = polygonMapObject.getPolygon();
-                collisionAreas.add(new CollisionArea(polygon.getX(),polygon.getY(),polygon.getVertices()));
+                collisionAreas.add(new CollisionArea(polygon.getX(),polygon.getY(),polygon.getVertices(),MASK));
             }
             else{
                 Gdx.app.debug(TAG,"MapObject: "+mapObject+ " is not supported for the collision layer!");

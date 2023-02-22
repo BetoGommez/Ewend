@@ -1,4 +1,4 @@
-package com.albertogomez.ewend.ecs.system;
+package com.albertogomez.ewend.ecs.system.object;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;

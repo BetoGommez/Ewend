@@ -1,20 +1,41 @@
 
 game_hud.png
-size: 1024, 512
+size: 2048, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-left
+Attack
   rotate: false
-  xy: 484, 2
-  size: 480, 480
-  orig: 480, 480
+  xy: 2, 4
+  size: 250, 250
+  orig: 250, 250
   offset: 0, 0
   index: -1
-right
+Jump
   rotate: false
-  xy: 2, 2
-  size: 480, 480
-  orig: 480, 480
+  xy: 254, 4
+  size: 250, 250
+  orig: 250, 250
+  offset: 0, 0
+  index: -1
+Left
+  rotate: false
+  xy: 506, 4
+  size: 250, 250
+  orig: 250, 250
+  offset: 0, 0
+  index: -1
+Purify
+  rotate: false
+  xy: 758, 4
+  size: 250, 250
+  orig: 250, 250
+  offset: 0, 0
+  index: -1
+Right
+  rotate: false
+  xy: 1010, 4
+  size: 250, 250
+  orig: 250, 250
   offset: 0, 0
   index: -1

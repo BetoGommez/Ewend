@@ -1,4 +1,4 @@
-package com.albertogomez.ewend.view;
+package com.albertogomez.ewend.ui;
 
 
 import com.albertogomez.ewend.EwendLauncher;
@@ -17,10 +17,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
@@ -49,10 +51,9 @@ public class PlayerDiedUI extends Table implements EventListener {
         font = new BitmapFont();
         buttons = new Array<TextButton>();
         buttonListener = new DeadScreenButtonListener(context);
+
         createButtons();
         this.setColor(1,1,1,0.1f);
-
-
     }
 
     private void createButtons() {
@@ -73,11 +74,11 @@ public class PlayerDiedUI extends Table implements EventListener {
     }
 
 
-    private TextButton createButton(String nombre) {
+    private TextButton createButton(String drawableName) {
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
 
         style.font = font;
-        style.up = skin.getDrawable(nombre);
+        style.up = skin.getDrawable(drawableName);
         button = new TextButton("", style);
         button.addListener(buttonListener);
         return button;

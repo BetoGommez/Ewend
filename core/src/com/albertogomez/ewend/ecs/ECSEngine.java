@@ -8,7 +8,14 @@ import com.albertogomez.ewend.ecs.ai.AISystem;
 import com.albertogomez.ewend.ecs.components.*;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyComponent;
 import com.albertogomez.ewend.ecs.components.enemy.EnemyType;
+import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
 import com.albertogomez.ewend.ecs.system.*;
+import com.albertogomez.ewend.ecs.system.enemy.EnemyAnimationSystem;
+import com.albertogomez.ewend.ecs.system.object.DespawnObjectSystem;
+import com.albertogomez.ewend.ecs.system.object.ObjectAnimationSystem;
+import com.albertogomez.ewend.ecs.system.player.PlayerAnimationSystem;
+import com.albertogomez.ewend.ecs.system.player.PlayerCollisionSystem;
+import com.albertogomez.ewend.ecs.system.player.PlayerMovementSystem;
 import com.albertogomez.ewend.events.EnemyDied;
 import com.albertogomez.ewend.events.PlayerDied;
 import com.albertogomez.ewend.map.GameObject;
@@ -24,7 +31,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import static com.albertogomez.ewend.EwendLauncher.BODY_DEF;
 import static com.albertogomez.ewend.EwendLauncher.FIXTURE_DEF;
@@ -113,7 +119,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
         FIXTURE_DEF.friction=0;
         FIXTURE_DEF.filter.categoryBits = BIT_ENEMY;
-        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER|BIT_PLAYER_ATTACK);
+        FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_PLAYER|BIT_PLAYER_ATTACK|BIT_BOUND);
         final PolygonShape pShape = new PolygonShape();
         pShape.setAsBox(b2DComponent.height, b2DComponent.width);
         FIXTURE_DEF.shape = pShape;
@@ -145,17 +151,17 @@ public class ECSEngine extends PooledEngine implements EventListener {
         //life component
 
         final LifeComponent lifeComponent = new LifeComponent(context.getStage());
-        lifeComponent.health=1f;
+        lifeComponent.health=100f;
         lifeComponent.mana=50f;
         lifeComponent.isEnemy=true;
         enemy.add(lifeComponent);
 
         //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
-        attackComponent.damage=5;
+        attackComponent.damage=50;
         attackComponent.attacking=false;
         attackComponent.attackHitboxHeight= b2DComponent.height;
-        attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
+        attackComponent.attackHitboxWidth=b2DComponent.width*2f;
         attackComponent.delay=0.5f;
         attackComponent.delayAccum=0;
         enemy.add(attackComponent);
@@ -170,11 +176,10 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
         //player component
         final  PlayerComponent playerComponent = this.createComponent(PlayerComponent.class);
-        playerComponent.speed.set(4,15);
+        playerComponent.speed.set(4,16);
+        playerComponent.knockedTime=0.7f;
         player.add(playerComponent);
-        ///remove component
-        final RemoveComponent removeComponent = this.createComponent(RemoveComponent.class);
-        player.add(removeComponent);
+
 
         //box2d
         EwendLauncher.resetBodyAndFixtureDefinition();
@@ -200,7 +205,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
         FIXTURE_DEF.filter.categoryBits = BIT_PLAYER;
         FIXTURE_DEF.filter.maskBits = (BIT_GROUND|BIT_GAME_OBJECT|BIT_ENEMY|BIT_ENEMY_ATTACK);
         final PolygonShape pShape = new PolygonShape();
-        pShape.setAsBox(0.5f,0.9f);
+        pShape.setAsBox(b2DComponent.width/2.1f, b2DComponent.height);
         FIXTURE_DEF.shape = pShape;
         b2DComponent.body.createFixture(FIXTURE_DEF);
         pShape.dispose();
@@ -216,8 +221,8 @@ public class ECSEngine extends PooledEngine implements EventListener {
         //animation component
         final AnimationComponent animationComponent = this.createComponent(AnimationComponent.class);
         animationComponent.aniType = AnimationType.PLAYER_IDLE;
-        animationComponent.width = 55 * UNIT_SCALE;
-        animationComponent.height = 55 * UNIT_SCALE;
+        animationComponent.width = b2DComponent.width*2;
+        animationComponent.height = b2DComponent.height*2;
         player.add(animationComponent);
         //life component
         final LifeComponent lifeComponent = new LifeComponent(context.getStage());
@@ -228,10 +233,11 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
         //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
-        attackComponent.damage=30f;
         attackComponent.attacking=false;
-        attackComponent.delay=1f;
+        attackComponent.damage=30f;
+        attackComponent.delay=1.5f;
         attackComponent.delayAccum=1f;
+
         attackComponent.attackHitboxHeight= b2DComponent.height/2;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
         player.add(attackComponent);
@@ -304,8 +310,9 @@ public class ECSEngine extends PooledEngine implements EventListener {
     public boolean handle(Event event) {
         if(event instanceof PlayerDied){
             this.removeSystem(getSystem(PlayerMovementSystem.class));
-        } else if (event instanceof EnemyDied) {
 
+        } else if (event instanceof EnemyDied) {
+            //TODO CREATE A GAMEOBJECT THAT IS A JAR OF MANA
         }
         return false;
     }

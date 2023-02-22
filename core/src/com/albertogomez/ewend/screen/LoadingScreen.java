@@ -6,20 +6,16 @@ import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.MapType;
 import com.albertogomez.ewend.view.AnimationType;
-import com.albertogomez.ewend.view.LoadingUI;
-import com.badlogic.gdx.Gdx;
+import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Array;
 
 import static com.albertogomez.ewend.constants.Constants.BACKGROUND_PATH;
+import static com.albertogomez.ewend.constants.Constants.PLAYER_SPRITE_PATH;
 
 /**
  * Represent the screen when the game is loading
@@ -40,7 +36,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         assetManager.load("ui/game_ui/life_and_mana_bar.atlas",TextureAtlas.class);
 
         //load characters and effects
-        assetManager.load("character/character_effects.atlas", TextureAtlas.class);
+        assetManager.load(PLAYER_SPRITE_PATH, TextureAtlas.class);
         for(final AnimationType animationType : AnimationType.values()){
             assetManager.load(animationType.getAtlasPath(),TextureAtlas.class);
         }

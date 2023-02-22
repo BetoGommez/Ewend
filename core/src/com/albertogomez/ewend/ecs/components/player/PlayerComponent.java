@@ -1,4 +1,4 @@
-package com.albertogomez.ewend.ecs.components;
+package com.albertogomez.ewend.ecs.components.player;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -9,14 +9,13 @@ import java.awt.event.ComponentListener;
 
 public class PlayerComponent implements Component, Pool.Poolable {
 
-    //te sirve de ejemplo de condicion que cumple el personaje
+    public PlayerState playerState = PlayerState.IDLE;
+    public Vector2 speed=new Vector2();
+    public boolean touchingGround;
+    public float knockedTime;
+    public float milisecAccum;
     public boolean hasItem;
     public Array<Integer> takenFireflys = new Array<Integer>();
-    public boolean touchingGround;
-    private enum PLAYER_STATE {
-        NORMAL,
-        TRANSFORMATION};
-    public Vector2 speed=new Vector2();
     @Override
     public void reset() {
         hasItem=false;

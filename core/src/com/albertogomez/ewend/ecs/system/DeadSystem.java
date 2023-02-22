@@ -6,6 +6,9 @@ import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
 import com.albertogomez.ewend.ecs.components.DeadComponent;
 import com.albertogomez.ewend.ecs.components.LifeComponent;
+import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
+import com.albertogomez.ewend.ecs.components.player.PlayerState;
+import com.albertogomez.ewend.ecs.system.player.PlayerMovementSystem;
 import com.albertogomez.ewend.events.EnemyDied;
 import com.albertogomez.ewend.events.PlayerDied;
 import com.albertogomez.ewend.view.AnimationType;
@@ -27,13 +30,15 @@ public class DeadSystem extends IteratingSystem implements EventListener {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        DeadComponent deadComponent = ECSEngine.deadCmpMapper.get(entity);
-        AnimationComponent animationComponent = ECSEngine.aniCmpMapper.get(entity);
         LifeComponent lifeComponent = ECSEngine.lifeCmpMapper.get(entity);
-
-        if (ECSEngine.playerCmpMapper.get(entity) != null) {
-            animationComponent.aniType = AnimationType.PLAYER_DEAD;
-            context.getStage().getRoot().fire(new PlayerDied("none"));
+        PlayerComponent playerComponent=null;
+        if (( playerComponent=ECSEngine.playerCmpMapper.get(entity)) != null ) {
+            if(playerComponent.playerState!=PlayerState.DEAD){
+                ECSEngine.aniCmpMapper.get(entity).aniTime=0;
+                ECSEngine.b2dCmpMapper.get(entity).body.setLinearVelocity(0,0);
+                context.getStage().getRoot().fire(new PlayerDied(playerComponent));
+                playerComponent.playerState = PlayerState.DEAD;
+            }
         } else {
             context.getStage().getRoot().fire(new EnemyDied(lifeComponent.mana));
             entity.removeAll();

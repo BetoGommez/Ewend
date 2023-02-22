@@ -5,9 +5,7 @@ import com.albertogomez.ewend.view.AnimationType;
 import static com.albertogomez.ewend.view.AnimationType.SHEEP_IDLE;
 
 public enum EnemyType {
-    SHEEP(SHEEP_IDLE,1.3f,1.6f),
-    LAMA(null,0,0),
-    RAM(null,0,0);
+    SHEEP(SHEEP_IDLE,0,0);
 
     public AnimationType defaultAnimation;
     public float fixedSizeX;

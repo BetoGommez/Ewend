@@ -1,34 +1,29 @@
-package com.albertogomez.ewend.ecs.system;
+package com.albertogomez.ewend.ecs.system.player;
 
 import com.albertogomez.ewend.EwendLauncher;
-import com.albertogomez.ewend.WorldContactListener;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
-import com.albertogomez.ewend.ecs.components.LifeComponent;
-import com.albertogomez.ewend.ecs.components.PlayerComponent;
+import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
+import com.albertogomez.ewend.ecs.components.player.PlayerState;
 import com.albertogomez.ewend.input.GameKeyInputListener;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.InputManager;
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.World;
+
+import static com.albertogomez.ewend.constants.Constants.DASH_DELAY;
 
 
 public class PlayerMovementSystem extends IteratingSystem implements GameKeyInputListener {
-    private float dashDelay;
+    private float dashAccum;
     private boolean dash;
     private boolean attack;
-
     private int jumpCount;
     private boolean jump;
     private int xFactor;
-    private int dashMultiplier;
-
+    private final int dashMultiplier;
 
 
     public PlayerMovementSystem(final EwendLauncher context) {
@@ -40,7 +35,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         attack = false;
 
         xFactor = 0;
-        dashDelay = 0;
+        dashAccum = DASH_DELAY;
         dashMultiplier = 5;
     }
 
@@ -49,82 +44,101 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(entity);
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
-        if(attack){
-            attackComponent.attacking=true;
-            attack=false;
-        }
-        if(!(attackComponent.delayAccum<0.4)){
-            jumpMovement(b2DComponent, playerComponent);
-
-            if (dash) {
-                dashMovement(b2DComponent, playerComponent, deltaTime);
-            } else {
-                horizontalMovement(b2DComponent, playerComponent);
+        playerComponent.milisecAccum+=deltaTime;
+        if(playerComponent.playerState==PlayerState.DAMAGED) {
+            if(playerComponent.milisecAccum> playerComponent.knockedTime){
+                playerComponent.playerState=PlayerState.IDLE;
             }
-
         }else{
-
+            if (attackComponent.delayAccum > attackComponent.delay/2) {
+                playerComponent.playerState=PlayerState.IDLE;
+                if (dash&&dashAccum>=DASH_DELAY) {
+                    dashMovement(b2DComponent, playerComponent, deltaTime);
+                } else {
+                    dash=false;
+                    horizontalMovement(b2DComponent, playerComponent);
+                    jumpMovement(b2DComponent, playerComponent);
+                }
+            }else{
+                b2DComponent.body.setLinearVelocity(0,0);
+            }
+            if (attack&&attackComponent.delayAccum>attackComponent.delay) {
+                attackComponent.attacking = true;
+                playerComponent.playerState= PlayerState.ATTACKING;
+            }
+            attack = false;
         }
 
-        if (dashDelay < 0) {
-            dashDelay += deltaTime;
+        if (dashAccum < DASH_DELAY) {
+            dashAccum += deltaTime;
         }
     }
 
 
     private void jumpMovement(B2DComponent b2DComponent, PlayerComponent playerComponent) {
         float speedY = b2DComponent.body.getLinearVelocity().y;
-        if (jump&& speedY>-10) {
-            playerComponent.touchingGround=false;
+        if (jump && speedY > -10) {
+            playerComponent.touchingGround = false;
             jump = false;
             jumpCount++;
             b2DComponent.body.applyLinearImpulse(
-                    (b2DComponent.body.getLinearVelocity().x)* b2DComponent.orientation,
+                    (b2DComponent.body.getLinearVelocity().x) * b2DComponent.orientation,
                     ((playerComponent.speed.y - speedY)),
                     b2DComponent.body.getWorldCenter().x, b2DComponent.body.getWorldCenter().y, true
             );
-        }
-        if(playerComponent.touchingGround){
-            jumpCount=0;
-        }
 
+        }
+        setJumpingAnimation(speedY,playerComponent);
+        if (playerComponent.touchingGround) {
+            jumpCount = 0;
+        }
+    }
 
+    private void setJumpingAnimation(float speedY,PlayerComponent playerComponent){
+        if(speedY!=0){
+            if(jumpCount>1){
+                playerComponent.playerState = PlayerState.DOUBLE_JUMP;
+            }else{
+                playerComponent.playerState=PlayerState.JUMPING;
+            }
+        }
     }
 
     private void horizontalMovement(B2DComponent b2DComponent, PlayerComponent playerComponent) {
         //X MOVEMENT
         if (xFactor != 0) {
+            playerComponent.playerState=PlayerState.RUNNING;
             b2DComponent.body.applyLinearImpulse(
                     (playerComponent.speed.x * xFactor - b2DComponent.body.getLinearVelocity().x),
-                    (0),
+                    0,
                     b2DComponent.body.getWorldCenter().x, b2DComponent.body.getWorldCenter().y, true
             );
+            b2DComponent.orientation=xFactor;
         } else {
             b2DComponent.body.setLinearVelocity(0, b2DComponent.body.getLinearVelocity().y);
+
         }
     }
 
     private void dashMovement(B2DComponent b2DComponent, PlayerComponent playerComponent, float deltaTime) {
-        dashDelay += deltaTime;
-        if(playerComponent.touchingGround==false){
-            if(jumpCount<2){
+        dashAccum += deltaTime;
+        if (!playerComponent.touchingGround) {
+            if (jumpCount < 3) {
                 jumpCount++;
+                if (xFactor == 0) {
+                    b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier, 0);
+                } else {
+                    b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier * xFactor, 0);
+                }
             }
-            if(xFactor==0){
-                b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier , 0);
-            }else{
-                b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier * xFactor, 0);
-
-            }
+            playerComponent.playerState=PlayerState.DASHING;
+        }
+        if (dashAccum > 0.2+DASH_DELAY) {
+            dash = false;
+            dashAccum = 0f;
+            b2DComponent.body.setLinearVelocity(0, 0);
         }
 
-
-
-            if (dashDelay > 0.2) {//Time that lasts the dash
-                dash = false;
-                dashDelay = -0.5f;
-                b2DComponent.body.setLinearVelocity(0, 0);
-            }
     }
 
 
@@ -132,28 +146,25 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
     public void keyPressed(InputManager inputManager, GameKeys key) {
         switch (key) {
             case JUMP:
-                if(jumpCount<2){
-
+                if (jumpCount < 2) {
                     jump = true;
-
                 }
                 break;
             case LEFT:
                 xFactor = -1;
                 break;
             case RIGHT:
-
                 xFactor = 1;
                 break;
             case ATTACK:
-                attack=true;
+                attack = true;
                 //ATTACK
                 break;
             case LOAD:
                 //LOAD LIFE
                 break;
             case DASH:
-                if (!dash && dashDelay >= 0) {
+                if (!dash && dashAccum >= 0) {
                     dash = true;
                 }
                 break;
@@ -173,9 +184,6 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
             case RIGHT:
                 xFactor = inputManager.isKeyPressed(GameKeys.LEFT) ? -1 : 0;
                 break;
-            case ATTACK:
-                //ATTACK
-                break;
             case LOAD:
                 //LOAD LIFE
                 break;
@@ -184,18 +192,5 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         }
         return true;
     }
-
-
-
-    public void setJump(boolean jump) {
-        this.jump = jump;
-    }
-
-    public void setxFactor(int xFactor) {
-
-        //if with direction button type
-        this.xFactor = xFactor;
-    }
-
 
 }

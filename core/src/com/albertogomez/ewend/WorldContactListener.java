@@ -1,12 +1,13 @@
 package com.albertogomez.ewend;
 
 import com.albertogomez.ewend.ecs.ECSEngine;
+import com.albertogomez.ewend.ecs.ai.AIComponent;
 import com.albertogomez.ewend.ecs.ai.AIState;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.LifeComponent;
-import com.albertogomez.ewend.ecs.components.PlayerComponent;
+import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
+import com.albertogomez.ewend.ecs.components.player.PlayerState;
 import com.albertogomez.ewend.events.PlayerHealthChange;
-import com.albertogomez.ewend.view.AnimationType;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -49,8 +50,10 @@ public class WorldContactListener implements ContactListener {
     private void playerCollions(Fixture playerFixture,Fixture fixtureB,Contact contact){
         short categoryBitsB= fixtureB.getFilterData().categoryBits;
         final Body bodyB =fixtureB.getBody();
+        final Body playerBody = playerFixture.getBody();
         final Entity player=(Entity) playerFixture.getBody().getUserData();
         final Entity gameObj;
+        final PlayerComponent playerComponent = ECSEngine.playerCmpMapper.get(player);
 
         switch (categoryBitsB){
             case BIT_ENEMY:
@@ -58,19 +61,20 @@ public class WorldContactListener implements ContactListener {
                 ECSEngine.attCmpMapper.get((Entity) fixtureB.getBody().getUserData()).delayAccum=0;
                 break;
             case  BIT_ENEMY_ATTACK:
+                playerComponent.playerState = PlayerState.DAMAGED;
+                playerComponent.milisecAccum=0;
+                applyHit(8,8,bodyB,playerBody);
+
                 final LifeComponent lifeComponent = ECSEngine.lifeCmpMapper.get(player);
                 lifeComponent.removeHealth((AttackComponent) fixtureB.getBody().getUserData());
                 stage.getRoot().fire(new PlayerHealthChange(lifeComponent.health));
                 break;
             case  BIT_GROUND:
                 if(contact.getWorldManifold().getNormal().angleDeg()<170f&&contact.getWorldManifold().getNormal().angleDeg()>5f){
-                    ECSEngine.playerCmpMapper.get(player).touchingGround=true;
-                }else {
-                    return;
+                    playerComponent.touchingGround=true;
                 }
                 break;
             case BIT_GAME_OBJECT:
-
                 gameObj = (Entity) bodyB.getUserData();
                 ECSEngine.gameObjCmpMapper.get(gameObj).touched=true;
                 for(PlayerCollisionListener listener : listeners){
@@ -87,19 +91,30 @@ public class WorldContactListener implements ContactListener {
         short categoryBitsB= fixtureB.getFilterData().categoryBits;
         final Body bodyB =fixtureB.getBody();
         final Entity enemy=(Entity) enemyFixture.getBody().getUserData();
+        final AIComponent aiComponent = ECSEngine.aiCmoMapper.get(enemy);
         switch (categoryBitsB){
-            case BIT_ENEMY:
-
-                break;
             case BIT_PLAYER_ATTACK:
-
                 LifeComponent enemyLifeComp = ECSEngine.lifeCmpMapper.get(enemy);
                 enemyLifeComp.removeHealth((AttackComponent) fixtureB.getBody().getUserData());
+                aiComponent.state=AIState.HITTED;
+                aiComponent.milisecAccum = 0;
+                applyHit(12,12,bodyB,enemyFixture.getBody());
+                break;
+            case BIT_BOUND:
+                aiComponent.state = AIState.IDLE;
                 break;
             default:
                 break;
         }
 
+    }
+
+    private void applyHit(float forceY, float forceX,Body bodyHitter,Body bodyReceiver){
+        float hitDirection = 1;
+        if(bodyReceiver.getPosition().x<bodyHitter.getPosition().x){
+            hitDirection=-1;
+        }
+        bodyReceiver.applyLinearImpulse(forceX*hitDirection,forceY,bodyReceiver.getWorldCenter().x,bodyReceiver.getWorldCenter().y,true);
     }
 
 
@@ -158,10 +173,42 @@ public class WorldContactListener implements ContactListener {
             contact.setEnabled(false);
         }
 
+    }
 
 
 
-        //ATAQUE
+
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+        final Entity player;
+        final Entity enemyEntity;
+        final Body bodyA = contact.getFixtureA().getBody();
+        final Body bodyB = contact.getFixtureB().getBody();
+        final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
+        final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
+        Body bodyPlayer;
+
+        if((catFixB & BIT_GROUND) != BIT_GROUND&&(catFixA & BIT_GROUND) != BIT_GROUND){
+            return;
+        }
+        if((catFixB & BIT_PLAYER) == BIT_PLAYER){
+
+            bodyPlayer = contact.getFixtureB().getBody();
+
+        }else if((catFixA & BIT_PLAYER) == BIT_PLAYER){
+            bodyPlayer = contact.getFixtureA().getBody();
+        }else{
+            return;
+        }
+        float angleDeg = contact.getWorldManifold().getNormal().angleDeg();
+
+        if((angleDeg<175&&angleDeg>95||angleDeg<85&&angleDeg>5)&&bodyPlayer.getLinearVelocity().y<5){
+            player = (Entity)bodyPlayer.getUserData();
+            bodyPlayer.setLinearVelocity(ECSEngine.playerCmpMapper.get((Entity) bodyPlayer.getUserData()).speed.x*3*ECSEngine.b2dCmpMapper.get((Entity)bodyPlayer.getUserData()).orientation,0);
+
+        }
 
 
     }
@@ -181,49 +228,6 @@ public class WorldContactListener implements ContactListener {
             return false;
         }
         return true;
-    }
-
-
-
-    @Override
-    public void postSolve(Contact contact, ContactImpulse impulse) {
-
-        final Entity player;
-        final Entity enemyEntity;
-        final Body bodyA = contact.getFixtureA().getBody();
-        final Body bodyB = contact.getFixtureB().getBody();
-        final int catFixA = contact.getFixtureA().getFilterData().categoryBits;
-        final int catFixB = contact.getFixtureB().getFilterData().categoryBits;
-        Body bodyPlayer;
-
-
-
-        if((catFixB & BIT_GROUND) == BIT_GROUND||(catFixA & BIT_GROUND) == BIT_GROUND){
-            // Gdx.app.debug("COLISION: ","Player is colliding with a object");
-
-        }else{
-            return;
-        }
-        if((catFixB & BIT_PLAYER) == BIT_PLAYER){
-
-            bodyPlayer = contact.getFixtureB().getBody();
-
-        }else if((catFixA & BIT_PLAYER) == BIT_PLAYER){
-            bodyPlayer = contact.getFixtureA().getBody();
-        }else{
-            return;
-        }
-        float angleDeg = contact.getWorldManifold().getNormal().angleDeg();
-
-        if((angleDeg<175&&angleDeg>95||angleDeg<85&&angleDeg>5)&&bodyPlayer.getLinearVelocity().y<5){
-           bodyPlayer.setLinearVelocity(bodyPlayer.getLinearVelocity().x*3,0);
-
-        }
-
-
-        contact.setTangentSpeed(0);
-
-
     }
 
     public void addPlayerCollisionListener(final PlayerCollisionListener listener){
