@@ -94,6 +94,14 @@ public class MenuUI extends Table {
             }
         });
         buttonsBaseMenu.add(createBasicButton("menu", "exit"));
+        buttonsBaseMenu.get(3).addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.exit();
+                return true;
+            }
+        });
+
         add(buttonsBaseMenu.get(0)).padTop(80).padRight(50).right().expand().height(buttonsBaseMenu.get(0).getHeight() * 2).width(buttonsBaseMenu.get(0).getWidth() * 2).top().row();
         add(buttonsBaseMenu.get(1)).padRight(50).right().top().row();
         add(buttonsBaseMenu.get(2)).padRight(50).right().top().row();

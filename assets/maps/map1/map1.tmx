@@ -6,9 +6,8 @@
  <tileset firstgid="2591" source="Animation.tsx"/>
  <tileset firstgid="2727" source="Lamp.tsx"/>
  <tileset firstgid="2739" source="Firefly.tsx"/>
- <tileset firstgid="2771" source="../map1funcional/lampoff.tsx"/>
- <tileset firstgid="2772" source="../map1funcional/Firefly.tsx"/>
- <tileset firstgid="2773" source="sheep.tsx"/>
+ <tileset firstgid="2740" source="lampoff.tsx"/>
+ <tileset firstgid="2741" source="sheep.tsx"/>
  <layer id="10" name="Sublapping-2" width="196" height="46" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -379,24 +378,24 @@
   <object id="243" x="2489.33" y="620" width="5.33333" height="12"/>
  </objectgroup>
  <objectgroup id="26" name="Objects">
-  <object id="196" gid="2771" x="3062.9" y="532.091" width="11" height="22">
+  <object id="196" gid="2740" x="3062.9" y="532.091" width="11" height="22">
    <properties>
     <property name="type" value="LAMP"/>
    </properties>
   </object>
-  <object id="197" gid="2772" x="1452.42" y="676.667" width="32" height="32">
+  <object id="197" gid="2739" x="1452.42" y="676.667" width="32" height="32">
    <properties>
     <property name="index" value="2"/>
     <property name="type" value="FIREFLY"/>
    </properties>
   </object>
-  <object id="198" gid="2772" x="511.088" y="239.333" width="32" height="32">
+  <object id="198" gid="2739" x="511.088" y="239.333" width="32" height="32">
    <properties>
     <property name="index" value="1"/>
     <property name="type" value="FIREFLY"/>
    </properties>
   </object>
-  <object id="199" gid="2772" x="2401.75" y="436.667" width="32" height="32">
+  <object id="199" gid="2739" x="2401.75" y="436.667" width="32" height="32">
    <properties>
     <property name="index" value="3"/>
     <property name="type" value="FIREFLY"/>
@@ -404,22 +403,22 @@
   </object>
  </objectgroup>
  <objectgroup id="28" name="PlayerLocation">
-  <object id="200" x="651.187" y="144.59">
+  <object id="200" x="411.187" y="672.59">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="27" name="Enemies">
-  <object id="205" name="SHEEP" gid="2773" x="576" y="176" width="27.141" height="29.4028"/>
-  <object id="209" name="SHEEP" gid="2773" x="673.93" y="668.632" width="27.141" height="29.4028"/>
-  <object id="222" name="SHEEP" gid="2773" x="978.929" y="474.299" width="27.141" height="29.4028"/>
-  <object id="223" name="SHEEP" gid="2773" x="1434.43" y="349.799" width="27.141" height="29.4028"/>
-  <object id="224" name="SHEEP" gid="2773" x="1183.43" y="237.299" width="27.141" height="29.4028"/>
-  <object id="225" name="SHEEP" gid="2773" x="1921.43" y="650.299" width="27.141" height="29.4028"/>
-  <object id="226" name="SHEEP" gid="2773" x="1781.43" y="651.799" width="27.141" height="29.4028"/>
-  <object id="227" name="SHEEP" gid="2773" x="1870.43" y="333.299" width="27.141" height="29.4028"/>
-  <object id="228" name="SHEEP" gid="2773" x="2189.43" y="301.799" width="27.141" height="29.4028"/>
-  <object id="229" name="SHEEP" gid="2773" x="2367.43" y="301.299" width="27.141" height="29.4028"/>
-  <object id="230" name="SHEEP" gid="2773" x="2350.93" y="636.299" width="27.141" height="29.4028"/>
+  <object id="205" name="SHEEP" gid="2741" x="576" y="176" width="27.141" height="29.4028"/>
+  <object id="209" name="SHEEP" gid="2741" x="673.93" y="668.632" width="27.141" height="29.4028"/>
+  <object id="222" name="SHEEP" gid="2741" x="978.929" y="474.299" width="27.141" height="29.4028"/>
+  <object id="223" name="SHEEP" gid="2741" x="1434.43" y="349.799" width="27.141" height="29.4028"/>
+  <object id="224" name="SHEEP" gid="2741" x="1183.43" y="237.299" width="27.141" height="29.4028"/>
+  <object id="225" name="SHEEP" gid="2741" x="1921.43" y="650.299" width="27.141" height="29.4028"/>
+  <object id="226" name="SHEEP" gid="2741" x="1781.43" y="651.799" width="27.141" height="29.4028"/>
+  <object id="227" name="SHEEP" gid="2741" x="1870.43" y="333.299" width="27.141" height="29.4028"/>
+  <object id="228" name="SHEEP" gid="2741" x="2189.43" y="301.799" width="27.141" height="29.4028"/>
+  <object id="229" name="SHEEP" gid="2741" x="2367.43" y="301.299" width="27.141" height="29.4028"/>
+  <object id="230" name="SHEEP" gid="2741" x="2350.93" y="636.299" width="27.141" height="29.4028"/>
  </objectgroup>
  <objectgroup id="12" name="Lamp" locked="1"/>
  <layer id="6" name="Overlapping1" width="196" height="46" locked="1">

@@ -115,9 +115,12 @@ public class EwendLauncher extends Game {
         initializeSkin();
         stage = new Stage(new ExtendViewport(WIDTH,HEIGHT), spriteBatch);
         ////////
+        //audio
+        audioManager = new AudioManager(this);
+        ////////
 
         //WorldContactListener
-            wcLstnr = new WorldContactListener(stage);
+            wcLstnr = new WorldContactListener(this);
             world.setContactListener(wcLstnr);
         //
 
@@ -126,9 +129,6 @@ public class EwendLauncher extends Game {
         viewport = new ExtendViewport(WIDTH * UNIT_SCALE*0.15f, HEIGHT * UNIT_SCALE*0.15f, gameCamera);
         //
 
-        //audio
-        audioManager = new AudioManager(this);
-        ////////
 
         //input
         inputManager = new InputManager();

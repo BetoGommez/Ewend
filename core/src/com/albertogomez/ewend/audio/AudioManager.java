@@ -10,6 +10,8 @@ public class AudioManager {
     private Music currentMusic;
     private final AssetManager assetManager;
 
+    private AudioType currentSound;
+
     public AudioManager(EwendLauncher context){
         this.assetManager = context.getAssetManager();
         currentMusic = null;
@@ -33,7 +35,11 @@ public class AudioManager {
             currentMusic.play();
         }else{
             //play sound
-            assetManager.get(type.getFilePath(), Sound.class).play(type.getVolume());
+            if(currentSound!=type){
+                assetManager.get(type.getFilePath(), Sound.class).play(type.getVolume());
+
+            }
+            currentSound = type;
         }
     }
 

@@ -1,6 +1,8 @@
 package com.albertogomez.ewend.ecs.system.player;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.audio.AudioManager;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
@@ -24,12 +26,13 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
     private boolean jump;
     private int xFactor;
     private final int dashMultiplier;
+    private final AudioManager audioManager;
 
 
     public PlayerMovementSystem(final EwendLauncher context) {
         super(Family.all(PlayerComponent.class, B2DComponent.class, AttackComponent.class).get());
         context.getInputManager().addInputListener(this);
-
+        audioManager = context.getAudioManager();
         jump = false;
         dash = false;
         attack = false;
@@ -65,6 +68,8 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
             if (attack&&attackComponent.delayAccum>attackComponent.delay) {
                 attackComponent.attacking = true;
                 playerComponent.playerState= PlayerState.ATTACKING;
+                audioManager.playAudio(AudioType.EWEND_HIT);
+
             }
             attack = false;
         }
@@ -86,7 +91,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
                     ((playerComponent.speed.y - speedY)),
                     b2DComponent.body.getWorldCenter().x, b2DComponent.body.getWorldCenter().y, true
             );
-
+            audioManager.playAudio(AudioType.EWEND_JUMP);
         }
         setJumpingAnimation(speedY,playerComponent);
         if (playerComponent.touchingGround) {
@@ -113,6 +118,9 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
                     0,
                     b2DComponent.body.getWorldCenter().x, b2DComponent.body.getWorldCenter().y, true
             );
+            if(playerComponent.touchingGround){
+                audioManager.playAudio(AudioType.EWEND_RUN);
+            }
             b2DComponent.orientation=xFactor;
         } else {
             b2DComponent.body.setLinearVelocity(0, b2DComponent.body.getLinearVelocity().y);
@@ -130,6 +138,7 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
                 } else {
                     b2DComponent.body.setLinearVelocity(playerComponent.speed.x * dashMultiplier * xFactor, 0);
                 }
+                audioManager.playAudio(AudioType.EWEND_DASH);
             }
             playerComponent.playerState=PlayerState.DASHING;
         }

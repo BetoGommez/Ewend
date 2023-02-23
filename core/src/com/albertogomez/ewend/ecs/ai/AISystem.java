@@ -1,6 +1,8 @@
 package com.albertogomez.ewend.ecs.ai;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.audio.AudioManager;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
@@ -21,10 +23,12 @@ import static javax.swing.UIManager.get;
 public class AISystem extends IteratingSystem implements EventListener {
 
     private boolean playerIsDead = false;
+    private final AudioManager audioManager;
 
     public AISystem(EwendLauncher context) {
         super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class, AttackComponent.class).get());
         context.getStage().getRoot().addListener(this);
+        audioManager = context.getAudioManager();
     }
 
     @Override
@@ -47,6 +51,7 @@ public class AISystem extends IteratingSystem implements EventListener {
                     aiComp.state = AIState.TRANSFORM;
                     aiComp.milisecAccum=0;
                     enemyBody.setGravityScale(1f);
+                    audioManager.playAudio(AudioType.SHEEP_DETECTION);
                     Gdx.input.vibrate(800);
                 }
 

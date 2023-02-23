@@ -2,6 +2,7 @@ package com.albertogomez.ewend.ecs.system.player;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.WorldContactListener;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.*;
 import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class PlayerCollisionSystem extends IteratingSystem implements WorldContactListener.PlayerCollisionListener {
 
-    EwendLauncher context;
+    private final EwendLauncher context;
     public PlayerCollisionSystem(EwendLauncher context) {
         super(Family.all(PlayerComponent.class).get());
         context.getWcLstnr().addPlayerCollisionListener(this);
@@ -33,7 +34,10 @@ public class PlayerCollisionSystem extends IteratingSystem implements WorldConta
             case FIREFLY:
                 playerComponent.takenFireflys.add(ECSEngine.gameObjCmpMapper.get(gameObject).index);
                 gameObject.add(new DespawnObjectComponent());
-
+                context.getAudioManager().playAudio(AudioType.FIREFLY_TOUCH);
+                break;
+            case LAMP:
+                context.getAudioManager().playAudio(AudioType.LAMP_TOUCH);
                 break;
         }
     }

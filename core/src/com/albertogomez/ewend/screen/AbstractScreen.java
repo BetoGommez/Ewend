@@ -3,6 +3,7 @@ package com.albertogomez.ewend.screen;
 import box2dLight.RayHandler;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioManager;
+import com.albertogomez.ewend.input.ButtonListener;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.input.GameKeyInputListener;
 import com.albertogomez.ewend.input.InputManager;
@@ -35,7 +36,6 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
     protected final Box2DDebugRenderer box2DDebugRenderer;
 
     protected final Stage stage;
-
     protected final T screenUI;
     protected final RayHandler rayHandler;
     protected final InputManager manager;
@@ -56,6 +56,7 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
         screenUI = getScreenUI(context);
         rayHandler = context.getRayHandler();
         audioManager = context.getAudioManager();
+
     }
 
     /**

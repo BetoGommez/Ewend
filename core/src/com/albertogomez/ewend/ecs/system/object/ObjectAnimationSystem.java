@@ -55,7 +55,6 @@ public class ObjectAnimationSystem extends IteratingSystem {
                     b2DComponent.lightDistance = 3;
                     b2DComponent.lightFluctuationDistance = 2;
                 }
-               
                 break;
         }
     }

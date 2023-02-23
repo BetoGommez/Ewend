@@ -4,6 +4,7 @@ import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.events.PlayerManaAdded;
 import com.albertogomez.ewend.input.ButtonListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +25,7 @@ public class GameUIOverlay extends Table implements EventListener {
     private final EwendLauncher context;
     private TextButton.TextButtonStyle style;
     private final TextureAtlas hudAtlas;
+    private final ButtonListener buttonListener;
     private final TextButton furyBarLayout;
     private TextButton.TextButtonStyle furyBarLayoutStyle;
     private TextureRegionDrawable[] furyBarImages;
@@ -35,6 +37,7 @@ public class GameUIOverlay extends Table implements EventListener {
         this.context = context;
         stage = context.getStage();
         stage.addListener(this);
+        this.buttonListener = new ButtonListener(context.getInputManager());
         assetManager = context.getAssetManager();
         style = new TextButton.TextButtonStyle();
         font = new BitmapFont();
@@ -44,7 +47,18 @@ public class GameUIOverlay extends Table implements EventListener {
         loadFuryBarImages();
         furyBarLayout = new TextButton("", furyBarLayoutStyle);
 
-        this.add(furyBarLayout).expand().top().left().pad(30);
+        //attack button
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        Skin skin = context.getSkin();
+        style.font = font;
+        style.up = skin.getDrawable("Purify");
+        TextButton button= new TextButton("",style);
+
+        button.setName("ATTACK");
+        button.addListener(buttonListener);
+        //button.setColor(Color.BROWN);
+        this.add(furyBarLayout).expand().top().left().pad(30).row();
+        this.add(button).width(EwendLauncher.HEIGHT/5).height(EwendLauncher.HEIGHT/5).padBottom(260).padRight(260).right();
     }
 
     private void loadFuryBarImages(){
@@ -64,7 +78,7 @@ public class GameUIOverlay extends Table implements EventListener {
             } else {
                 furyBarLayoutStyle.up = furyBarImages[0];
             }
-            furyBarLayout.setStyle(style);
+            furyBarLayout.setStyle(furyBarLayoutStyle);
         }
         return false;
     }

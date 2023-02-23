@@ -6,196 +6,182 @@ filter: Nearest, Nearest
 repeat: none
 Attack
   rotate: false
-  xy: 994, 714
+  xy: 742, 640
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 Dash
   rotate: false
-  xy: 844, 462
+  xy: 742, 2
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 Fury
   rotate: false
-  xy: 120, 580
+  xy: 2, 24
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 3
 Fury
   rotate: false
-  xy: 120, 194
+  xy: 120, 24
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 8
 Fury
   rotate: false
-  xy: 238, 328
+  xy: 238, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 5
 Fury
   rotate: false
-  xy: 356, 328
+  xy: 356, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 10
 Fury
   rotate: false
-  xy: 474, 328
+  xy: 474, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 2
 Fury
   rotate: false
-  xy: 1246, 580
+  xy: 592, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 7
 Fury
   rotate: false
-  xy: 1364, 580
+  xy: 710, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 4
 Fury
   rotate: false
-  xy: 1482, 580
+  xy: 828, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 9
 Fury
   rotate: false
-  xy: 1600, 580
+  xy: 946, 254
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 1
 Fury
   rotate: false
-  xy: 1836, 580
+  xy: 1241, 630
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: 6
 Furybar_empty
   rotate: false
-  xy: 1718, 580
+  xy: 1123, 630
   size: 116, 384
   orig: 116, 384
   offset: 0, 0
   index: -1
 Furybar_layout
   rotate: false
-  xy: 2, 484
+  xy: 2, 410
   size: 116, 480
   orig: 116, 480
   offset: 0, 0
   index: 2
 Furybar_layout
   rotate: false
-  xy: 2, 2
+  xy: 120, 410
   size: 116, 480
   orig: 116, 480
   offset: 0, 0
   index: 1
-Furybar_layout
+Healthbar
   rotate: false
-  xy: 1096, 592
-  size: 29, 120
-  orig: 29, 120
+  xy: 2, 954
+  size: 775, 60
+  orig: 775, 60
   offset: 0, 0
   index: -1
-Heart_layout
+Healthbar_layout
   rotate: false
-  xy: 120, 100
-  size: 96, 92
-  orig: 96, 92
-  offset: 0, 0
-  index: -1
-Heeart_bar
-  rotate: false
-  xy: 592, 368
-  size: 96, 92
-  orig: 96, 92
-  offset: 0, 0
-  index: -1
-Heart_bar
-  rotate: false
-  xy: 592, 368
-  size: 96, 92
-  orig: 96, 92
+  xy: 2, 892
+  size: 775, 60
+  orig: 775, 60
   offset: 0, 0
   index: -1
 Jump
   rotate: false
-  xy: 490, 714
+  xy: 490, 640
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 Left
   rotate: false
-  xy: 592, 462
+  xy: 490, 2
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 Purify
   rotate: false
-  xy: 238, 714
+  xy: 238, 640
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 Right
   rotate: false
-  xy: 742, 714
+  xy: 238, 2
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 lamp
   rotate: false
-  xy: 1954, 900
+  xy: 994, 188
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: 2
 lamp
   rotate: false
-  xy: 120, 34
+  xy: 1359, 950
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: 4
 lamp
   rotate: false
-  xy: 690, 396
+  xy: 994, 122
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: 1
 lamp
   rotate: false
-  xy: 690, 396
+  xy: 994, 122
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: 3
 title
   rotate: false
-  xy: 238, 238
+  xy: 779, 926
   size: 342, 88
   orig: 342, 88
   offset: 0, 0

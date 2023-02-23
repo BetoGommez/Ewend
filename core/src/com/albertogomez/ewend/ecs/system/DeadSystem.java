@@ -1,6 +1,7 @@
 package com.albertogomez.ewend.ecs.system;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
@@ -36,10 +37,12 @@ public class DeadSystem extends IteratingSystem implements EventListener {
             if(playerComponent.playerState!=PlayerState.DEAD){
                 ECSEngine.aniCmpMapper.get(entity).aniTime=0;
                 ECSEngine.b2dCmpMapper.get(entity).body.setLinearVelocity(0,0);
+                context.getAudioManager().playAudio(AudioType.EWEND_DEAD);
                 context.getStage().getRoot().fire(new PlayerDied(playerComponent));
                 playerComponent.playerState = PlayerState.DEAD;
             }
         } else {
+            context.getAudioManager().playAudio(AudioType.SHEEP_DEAD);
             context.getStage().getRoot().fire(new EnemyDied(lifeComponent.mana));
             entity.removeAll();
 

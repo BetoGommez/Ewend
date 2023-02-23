@@ -37,19 +37,19 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
             assetManager.load(animationType.getAtlasPath(), TextureAtlas.class);
         }
 
-
+        assetManager.update();
         //load background
 
         for (int i = 1; i < 5; i++) {
             assetManager.load(BACKGROUND_PATH + i + ".png", Texture.class);
         }
 
-
+        assetManager.update();
         //load maps
         for (final MapType mapType : MapType.values()) {
             assetManager.load(mapType.getFilePath(), TiledMap.class);
         }
-
+        assetManager.update();
 
     }
 

@@ -29,14 +29,15 @@ public class GameUI extends Table implements EventListener{
     private TextButton.TextButtonStyle style;
     private TextButton button;
 
-    private ProgressBar furyBar;
-
-    private float animationAccum;
-    private final ButtonListener buttonListener;
 
     private float buttonSize;
-    private final ProgressBar.ProgressBarStyle furyBarStyle;
+    private float animationAccum;
 
+
+    private final ProgressBar.ProgressBarStyle furyBarStyle;
+    private ProgressBar furyBar;
+    private final ProgressBar healthBar;
+    private final ButtonListener buttonListener;
     private final TextureAtlas hudAtlas;
     private final Array<TextureRegionDrawable> animation;
 
@@ -56,7 +57,7 @@ public class GameUI extends Table implements EventListener{
         font = new BitmapFont();
         hudAtlas = assetManager.get("ui/game_hud.atlas",TextureAtlas.class);
         buttons = new Array<TextButton>();
-        buttonListener = new ButtonListener(context.getInputManager());
+        this.buttonListener = new ButtonListener(context.getInputManager());
         buttonSize = EwendLauncher.HEIGHT/5;
 
         if(animation.size==0){
@@ -68,6 +69,13 @@ public class GameUI extends Table implements EventListener{
             }
         }
         furyBarStyle = new ProgressBar.ProgressBarStyle();
+
+        //health bar
+        ProgressBar.ProgressBarStyle healthBarStyle = new ProgressBar.ProgressBarStyle();
+        healthBarStyle.background =new TextureRegionDrawable(hudAtlas.findRegions("Healthbar_layout").get(0).split(775,60)[0][0]);
+        healthBarStyle.knobBefore =new TextureRegionDrawable(hudAtlas.findRegions("Healthbar").get(0).split(775,60)[0][0]);
+        healthBar = new ProgressBar(0,1,0.1f,false,healthBarStyle);
+
         createButtons();
     }
 
@@ -82,6 +90,11 @@ public class GameUI extends Table implements EventListener{
         furyBar.setValue(0);
         furyBar.setAnimateDuration(2f);
 
+        healthBar.setValue(1f);
+        healthBar.setAnimateDuration(2f);
+
+
+
         //button creation
         buttons.add(createButton("Left"));
         buttons.get(0).setName("LEFT");
@@ -89,30 +102,33 @@ public class GameUI extends Table implements EventListener{
         buttons.add(createButton("Right"));
         buttons.get(1).setName("RIGHT");
 
-        buttons.add(createButton("Purify"));
-        buttons.get(2).setName("DASH");
-
-        buttons.add(createButton("Jump"));
-        buttons.get(3).setName("JUMP");
-
         buttons.add(createButton("Attack"));
-        buttons.get(4).setName("ATTACK");
+        buttons.get(2).setName("Attack");
 
         buttons.add(createButton("Dash"));
-        buttons.get(5).setName("DASH");
+        buttons.get(3).setName("DASH");
+
+        buttons.add(createButton("Jump"));
+        buttons.get(4).setName("JUMP");
         //
 
 
-        add(furyBar).height(384).top().left().padLeft(86).padTop(120).expandY().colspan(3);
-        this.addActor(button);
-        row();
+        add(furyBar).height(384).top().left().padLeft(86).padTop(120);
+        add(healthBar).width(775).top().left().padTop(60).expand().colspan(4);
 
-        add(buttons.get(0)).size(buttonSize,buttonSize).left().bottom();
-        add(buttons.get(1)).size(buttonSize,buttonSize).left().bottom();
-        add(buttons.get(2)).size(buttonSize,buttonSize).bottom().right().expand();
-        add(buttons.get(3)).size(buttonSize,buttonSize).bottom().right();
-        add(buttons.get(4)).size(buttonSize,buttonSize).bottom().right();
-        add(buttons.get(5)).size(buttonSize,buttonSize).bottom().right();
+        row();
+        this.add();
+        this.add();
+        this.add().expandX();
+
+
+        add(buttons.get(2)).size(buttonSize,buttonSize).bottom().right().row();
+
+        add(buttons.get(0)).size(buttonSize*1.5f,buttonSize*1.5f).left().bottom();
+        add(buttons.get(1)).size(buttonSize*1.5f,buttonSize*1.5f).left().bottom();
+
+        add(buttons.get(3)).size(buttonSize,buttonSize).bottom().right().expandX();
+        add(buttons.get(4)).pad(5f).size(buttonSize*1.5f,buttonSize*1.5f).bottom().right();
     }
 
 
@@ -132,6 +148,7 @@ public class GameUI extends Table implements EventListener{
         style.up = skin.getDrawable(imageKey);
         button= new TextButton("",style);
         button.addListener(buttonListener);
+        button.setColor(1,1,1,0.7f);
         return button;
     }
 
@@ -144,12 +161,12 @@ public class GameUI extends Table implements EventListener{
             stage.getRoot().removeActor(this);
         }else if(event instanceof ResetLevel){
             stage.getRoot().addActor(this);
-            //healthBar.setValue(1f);
+            healthBar.setValue(1f);
             furyBar.setValue(0f);
         }else if(event instanceof PlayerManaAdded){
             furyBar.setValue(((PlayerManaAdded)event).mana/100f);
         }else if(event instanceof PlayerHealthChange){
-            //healthBar.setValue(((PlayerHealthChange)event).health/100f);
+            healthBar.setValue(((PlayerHealthChange)event).health/100f);
         }
         return false;
     }

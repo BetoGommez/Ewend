@@ -1,5 +1,7 @@
 package com.albertogomez.ewend;
 
+import com.albertogomez.ewend.audio.AudioManager;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.ai.AIComponent;
 import com.albertogomez.ewend.ecs.ai.AIState;
@@ -17,10 +19,12 @@ import static com.albertogomez.ewend.constants.Constants.*;
 
 public class WorldContactListener implements ContactListener {
     private final Array<PlayerCollisionListener> listeners;
+    private final AudioManager audioManager;
     private final Stage stage;
-    public WorldContactListener(Stage stage) {
+    public WorldContactListener(EwendLauncher context) {
         listeners = new Array<PlayerCollisionListener>();
-        this.stage = stage;
+        this.stage = context.getStage();
+        audioManager = context.getAudioManager();
     }
     @Override
     public void beginContact(Contact contact) {
@@ -68,6 +72,8 @@ public class WorldContactListener implements ContactListener {
                 final LifeComponent lifeComponent = ECSEngine.lifeCmpMapper.get(player);
                 lifeComponent.removeHealth((AttackComponent) fixtureB.getBody().getUserData());
                 stage.getRoot().fire(new PlayerHealthChange(lifeComponent.health));
+
+                audioManager.playAudio(AudioType.EWEND_DAMAGED);
                 break;
             case  BIT_GROUND:
                 if(contact.getWorldManifold().getNormal().angleDeg()<170f&&contact.getWorldManifold().getNormal().angleDeg()>5f){
@@ -99,7 +105,7 @@ public class WorldContactListener implements ContactListener {
                 aiComponent.state=AIState.HITTED;
                 applyHit(12,12,bodyB,enemyFixture.getBody());
                 aiComponent.milisecAccum=0;
-
+                audioManager.playAudio(AudioType.SHEEP_DAMAGED);
                 break;
             case BIT_BOUND:
                 aiComponent.state = AIState.IDLE;
@@ -119,8 +125,6 @@ public class WorldContactListener implements ContactListener {
         }
         bodyReceiver.applyLinearImpulse(forceX*hitDirection,forceY,bodyReceiver.getWorldCenter().x,bodyReceiver.getWorldCenter().y,true);
     }
-
-
 
     @Override
     public void endContact(Contact contact) {
@@ -149,7 +153,6 @@ public class WorldContactListener implements ContactListener {
 
     }
 
-
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
 
@@ -177,10 +180,6 @@ public class WorldContactListener implements ContactListener {
         }
 
     }
-
-
-
-
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
