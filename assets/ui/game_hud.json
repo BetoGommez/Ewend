@@ -1,0 +1,51 @@
+{
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    "normal": {
+      "font": "font_20"
+    },
+    "big": {
+      "font": "font_26"
+    },
+    "small": {
+      "font": "font_16"
+    },
+    "huge": {
+      "font": "font_32"
+    },
+    "mid_huge": {
+      "font": "font_48"
+    },
+    "menu":{
+      "font": "font_64"
+    }
+  },
+  "com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+    "moveRight": {
+      "up": "Right"
+    },
+    "moveLeft": {
+      "up": "Left"
+    },
+    "left": {
+      "up": "Jump"
+    },
+    "dash": {
+      "up": "Dash"
+    },
+    "purify": {
+      "up": "Purify"
+    },
+    "attack": {
+      "up": "Attack"
+    },
+    "title": {
+      "up": "title"
+    }
+  },
+
+  "com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle": {
+    "fury": {
+      "background": "Furybar_empty"
+    }
+  }
+}
