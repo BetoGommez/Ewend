@@ -45,9 +45,9 @@ public class MenuScreen extends AbstractScreen<MenuUI> {
     @Override
     public void render(float delta) {
         assetManager.update();
-        if(!isMusicLoaded&& assetManager.isLoaded(AudioType.LEVEL.getFilePath())) {
+        if(!isMusicLoaded&& assetManager.isLoaded(AudioType.MENU_MUSIC.getFilePath())) {
             isMusicLoaded = true;
-            audioManager.playAudio(AudioType.LEVEL);
+            audioManager.playAudio(AudioType.MENU_MUSIC);
         }
     }
 

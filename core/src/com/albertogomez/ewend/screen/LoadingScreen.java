@@ -8,8 +8,6 @@ import com.albertogomez.ewend.map.MapType;
 import com.albertogomez.ewend.view.AnimationType;
 import com.albertogomez.ewend.ui.LoadingUI;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -74,7 +72,6 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);*/
 
         assetManager.update();
-        audioManager.playAudio(AudioType.LEVEL);
         screenUI.setProgress(assetManager.getProgress(),delta);
 
     }
@@ -111,7 +108,7 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
     public void keyPressed(InputManager inputManager, GameKeys key) {
         if (assetManager.getProgress() >= 1) {
 
-            audioManager.playAudio(AudioType.SELECT);
+            audioManager.playAudio(AudioType.MENU_BUTTON);
             context.setScreen(ScreenType.GAME);
         }
     }

@@ -4,5 +4,6 @@ public enum AIState {
     IDLE,
     RUNNING,
     HITTED,
+    TRANSFORM,
     ATTACKING;
 }

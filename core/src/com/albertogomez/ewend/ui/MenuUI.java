@@ -1,6 +1,7 @@
 package com.albertogomez.ewend.ui;
 
 import com.albertogomez.ewend.EwendLauncher;
+import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.input.GameKeys;
 import com.albertogomez.ewend.screen.ScreenType;
 import com.badlogic.gdx.Gdx;
@@ -37,7 +38,7 @@ public class MenuUI extends Table {
     private TextButton.TextButtonStyle style;
     private final MenuUI menuUI = this;
 
-    public MenuUI(EwendLauncher context) {
+    public MenuUI(final EwendLauncher context) {
         super(context.getSkin());
         this.context = context;
         i18NBundle = context.getI18NBundle();
@@ -57,7 +58,13 @@ public class MenuUI extends Table {
         stage.addActor(background);
 
         showBaseMenu();
-
+        this.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                context.getAudioManager().playAudio(AudioType.MENU_BUTTON);
+                return true;
+            }
+        });
     }
 
     private void showBaseMenu() {
@@ -67,7 +74,6 @@ public class MenuUI extends Table {
         style.up = skin.getDrawable("title");
         TextButton logo = new TextButton("", style);
         buttonsBaseMenu.add(logo);
-
         buttonsBaseMenu.add(createBasicButton("menu", "start"));
         buttonsBaseMenu.get(1).addListener(new InputListener() {
             @Override

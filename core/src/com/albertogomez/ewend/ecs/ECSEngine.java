@@ -107,7 +107,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
         b2DComponent.body = world.createBody(BODY_DEF);
         b2DComponent.body.setUserData(enemy);
-
+        b2DComponent.body.setGravityScale(0.1f);
         b2DComponent.width = width*0.5f;
         b2DComponent.height = height*0.5f;
         b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
@@ -144,6 +144,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
         //ai component
         final AIComponent aiComponent = this.createComponent(AIComponent.class);
         aiComponent.idleDelay =3;
+        aiComponent.milisecAccum=0.2f;
         aiComponent.maxDistanceFactor = 0.9f;
         aiComponent.initialPosition = spawnLocation;
         enemy.add(aiComponent);

@@ -61,11 +61,11 @@ public class PlayerDiedUI extends Table implements EventListener {
         stage.addListener(this);
         buttonSize = EwendLauncher.HEIGHT / 4;
 
-        buttons.add(createButton("right"));
+        buttons.add(createButton("Right"));
         buttons.get(0).setName("JUMP");
         add(buttons.get(0)).size(buttonSize, buttonSize).bottom().right();
 
-        buttons.add(createButton("left"));
+        buttons.add(createButton("Left"));
         buttons.get(1).setName("ATTACK");
         add(buttons.get(1)).size(buttonSize, buttonSize).bottom().right();
 

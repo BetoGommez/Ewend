@@ -123,7 +123,7 @@ public class EwendLauncher extends Game {
 
         //Setup game viewport
         gameCamera = new OrthographicCamera();
-        viewport = new ExtendViewport(WIDTH * UNIT_SCALE, HEIGHT * UNIT_SCALE, gameCamera);
+        viewport = new ExtendViewport(WIDTH * UNIT_SCALE*0.15f, HEIGHT * UNIT_SCALE*0.15f, gameCamera);
         //
 
         //audio
@@ -170,7 +170,7 @@ public class EwendLauncher extends Game {
             accumulator += deltaTime;
             while (accumulator >= FIXED_TIME_STEP) {
                 //TODO save the previous postion of body
-                world.step(FIXED_TIME_STEP, 12, 2);
+                world.step(FIXED_TIME_STEP, 8, 8);
                 accumulator -= FIXED_TIME_STEP;
             }
 
@@ -179,8 +179,6 @@ public class EwendLauncher extends Game {
 
             gameRenderer.render(accumulator / FIXED_TIME_STEP);
             }
-
-           // stage.getViewport().update(getScreenViewport().getScreenWidth(), getScreenViewport().getScreenHeight());
 
             stage.act(deltaTime);
             stage.draw();

@@ -97,11 +97,14 @@ public class WorldContactListener implements ContactListener {
                 LifeComponent enemyLifeComp = ECSEngine.lifeCmpMapper.get(enemy);
                 enemyLifeComp.removeHealth((AttackComponent) fixtureB.getBody().getUserData());
                 aiComponent.state=AIState.HITTED;
-                aiComponent.milisecAccum = 0;
                 applyHit(12,12,bodyB,enemyFixture.getBody());
+                aiComponent.milisecAccum=0;
+
                 break;
             case BIT_BOUND:
                 aiComponent.state = AIState.IDLE;
+                enemyFixture.getBody().setGravityScale(0.1f);
+                aiComponent.milisecAccum=0;
                 break;
             default:
                 break;

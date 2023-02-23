@@ -43,36 +43,42 @@ public class AISystem extends IteratingSystem implements EventListener {
         switch (aiComp.state) {
             case IDLE:
                 movementTrackerIdle(enemyBody, enemyComp, aiComp);
-                if(checkPlayerPos(aiComp, enemyB2D,6)){
-                    aiComp.state = AIState.RUNNING;
+                if(aiComp.milisecAccum>1&&checkPlayerPos(aiComp, enemyB2D,6)){
+                    aiComp.state = AIState.TRANSFORM;
+                    aiComp.milisecAccum=0;
+                    enemyBody.setGravityScale(1f);
+                    Gdx.input.vibrate(800);
                 }
-                enemyBody.setGravityScale(0.1f);
+
+                break;
+            case TRANSFORM:
+                enemyBody.setLinearVelocity(0,0);
+                if(aiComp.milisecAccum>0.6f){
+                    aiComp.state=AIState.RUNNING;
+                }
                 break;
             case RUNNING:
-                if (getPlayerPos().x < enemyBody.getPosition().x + enemyB2D.width * 1.5f && getPlayerPos().x > enemyBody.getPosition().x - enemyB2D.width * 1.5f) {
+                float enemyPos = enemyB2D.renderPosition.x;
+                float playerPos = getPlayerPos().x;
 
+                if (playerPos > enemyPos) {
+                    aiComp.direction = 1;
                 } else {
-                    if (getPlayerPos().x > enemyBody.getPosition().x) {
-                        aiComp.direction = 1;
-                    } else {
-                        aiComp.direction = -1;
-                    }
+                    aiComp.direction = -1;
                 }
+
                 enemyBody.applyLinearImpulse(enemyComp.speed.x * 5 * aiComp.direction - enemyBody.getLinearVelocity().x,
                         0, enemyBody.getWorldCenter().x, enemyBody.getWorldCenter().y, true);
                 if(!checkPlayerPos(aiComp,enemyB2D,10)){
                     aiComp.state = AIState.IDLE;
                 }
-                enemyBody.setGravityScale(1f);
+
                 break;
             case ATTACKING:
                 if (attackComponent.delayAccum > attackComponent.delay * 1.3 && aiComp.attacked == true) {
                     aiComp.state = AIState.RUNNING;
                     aiComp.attacked = false;
-                    enemyBody.setLinearVelocity(0, 0);
-
                 } else {
-
                     enemyBody.setLinearVelocity(0, 0);
                     if (attackComponent.delay < attackComponent.delayAccum && aiComp.attacked == false) {
                         attackComponent.attacking = true;
@@ -92,6 +98,7 @@ public class AISystem extends IteratingSystem implements EventListener {
     private void movementTrackerIdle(Body enemyBody, EnemyComponent enemyComp, AIComponent aiComp) {
         float maxPositionX = aiComp.maxDistanceFactor + aiComp.initialPosition.x;
         float minPositionX = aiComp.initialPosition.x - aiComp.maxDistanceFactor;
+        float position =enemyBody.getPosition().x;
         int oldDirection;
         if (aiComp.idleDelay < aiComp.milisecAccum) {
             oldDirection = aiComp.direction;
@@ -118,9 +125,9 @@ public class AISystem extends IteratingSystem implements EventListener {
             }
         }
 
-        if (enemyBody.getPosition().x > maxPositionX) {
+        if (position > maxPositionX) {
             aiComp.direction = -1;
-        } else if (minPositionX > enemyBody.getPosition().x) {
+        } else if (minPositionX > position) {
             aiComp.direction = 1;
         }
         enemyBody.applyLinearImpulse(enemyComp.speed.x * aiComp.direction - enemyBody.getLinearVelocity().x, 0,
@@ -136,8 +143,6 @@ public class AISystem extends IteratingSystem implements EventListener {
                     && enemy.renderPosition.x + distanceVision > posPlayer.x) &&
                     (enemy.renderPosition.y + distanceVision > posPlayer.y
                             && enemy.renderPosition.y - distanceVision < posPlayer.y)) {
-
-                Gdx.input.vibrate(new long[]{200, 800}, -1);
                 return true;
             }
 

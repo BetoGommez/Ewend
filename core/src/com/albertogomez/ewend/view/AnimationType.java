@@ -24,6 +24,7 @@ public enum AnimationType {
     SHEEP_WALK(SHEEP_SPRITE_PATH,"Walk",0.10f,Animation.PlayMode.LOOP,60,65),
     SHEEP_RUN(SHEEP_SPRITE_PATH,"Run",0.15f,Animation.PlayMode.LOOP,60,65),
     SHEEP_DAMAGED(SHEEP_SPRITE_PATH,"Damaged",1,Animation.PlayMode.NORMAL,60,65),
+    SHEEP_TRANSFORM(SHEEP_SPRITE_PATH,"Transform",0.2f,Animation.PlayMode.NORMAL,60,65),
 
     //OBJECTS
     LAMP_EFFECT(LAMP_SPRITE_PATH,"lampon",0.3f, Animation.PlayMode.NORMAL,48,64),

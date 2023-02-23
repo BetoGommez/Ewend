@@ -172,14 +172,14 @@ Run
   orig: 60, 65
   offset: 0, 0
   index: 4
-Walk
+Transform
   rotate: false
   xy: 1474, 2
   size: 60, 65
   orig: 60, 65
   offset: 0, 0
   index: 1
-Walk
+Transform
   rotate: false
   xy: 1541, 2
   size: 60, 65
@@ -192,10 +192,24 @@ Walk
   size: 60, 65
   orig: 60, 65
   offset: 0, 0
-  index: 3
+  index: 1
 Walk
   rotate: false
   xy: 1675, 2
+  size: 60, 65
+  orig: 60, 65
+  offset: 0, 0
+  index: 2
+Walk
+  rotate: false
+  xy: 1742, 2
+  size: 60, 65
+  orig: 60, 65
+  offset: 0, 0
+  index: 3
+Walk
+  rotate: false
+  xy: 1809, 2
   size: 60, 65
   orig: 60, 65
   offset: 0, 0

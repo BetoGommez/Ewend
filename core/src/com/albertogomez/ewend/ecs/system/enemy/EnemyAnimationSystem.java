@@ -38,6 +38,10 @@ public class EnemyAnimationSystem extends IteratingSystem {
                 animationComponent.aniType = SHEEP_DAMAGED;
                 b2DComponent.orientation = -b2DComponent.orientation;
                 break;
+            case TRANSFORM:
+                animationComponent.aniTime= aiComponent.milisecAccum;
+                animationComponent.aniType= SHEEP_TRANSFORM;
+                break;
             case ATTACKING:
                 final AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
                 if (attackComponent.delay / 2 > attackComponent.delayAccum && !aiComponent.attacked) {

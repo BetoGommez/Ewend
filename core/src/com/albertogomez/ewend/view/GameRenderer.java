@@ -72,7 +72,8 @@ public class GameRenderer implements Disposable, MapListener {
         assetManager = context.getAssetManager();
         viewport = context.getScreenViewport();
         gameCamera = context.getGameCamera();
-        gameCamera.zoom=0.5f;
+
+
 
         spriteBatch = context.getSpriteBatch();
 
@@ -92,6 +93,8 @@ public class GameRenderer implements Disposable, MapListener {
 
         profiler = new GLProfiler(Gdx.graphics);
         box2DDebugRenderer = new Box2DDebugRenderer();
+
+        //profiler.enable();
 
         if (profiler.isEnabled()) {
         } else {
@@ -145,11 +148,11 @@ public class GameRenderer implements Disposable, MapListener {
 
 
         //camera center
-        float startX = gameCamera.viewportWidth/4;
-        float startY = gameCamera.viewportHeight/4;
+        float startX = MAP_WIDTH/15;
+        float startY = MAP_HEIGHT/6;
         if(playerB2dComp!=null){
             CameraStyles.lerpToTarget(gameCamera,playerB2dComp.renderPosition);
-            CameraStyles.boundary(gameCamera,startX,startY,MAP_WIDTH-startX*2,MAP_HEIGHT);
+            CameraStyles.boundary(gameCamera,startX,startY,MAP_WIDTH-startX*1.9f,MAP_HEIGHT);
         }
         gameCamera.update();
 
@@ -158,7 +161,7 @@ public class GameRenderer implements Disposable, MapListener {
             Gdx.app.debug("RenderInfo", "Drawcalls: " + profiler.getDrawCalls());
             profiler.reset();
         }
-     box2DDebugRenderer.render(world, viewport.getCamera().combined);
+     //box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
 
     }
@@ -166,7 +169,7 @@ public class GameRenderer implements Disposable, MapListener {
     private void renderBackground(){
 
         if(playerB2dComp!=null){
-            float conversor = backgroundImages.get(0).getWidth()/2;
+            float conversor = backgroundImages.get(0).getWidth()*1.5f;
             backgroundOffsets[0]= (int) ((playerB2dComp.renderPosition.x)%conversor);
             backgroundOffsets[1]= (int) ((playerB2dComp.renderPosition.x*3)%conversor);
             backgroundOffsets[2]= (int) ((playerB2dComp.renderPosition.x*4)%conversor);
@@ -174,12 +177,11 @@ public class GameRenderer implements Disposable, MapListener {
         }
 
         for (int i = 0; i < backgroundOffsets.length; i++) {
-            if(backgroundOffsets[i]>backgroundImages.get(i).getWidth()/2){
+            if(backgroundOffsets[i]>backgroundImages.get(i).getWidth()*1.5f){
                 backgroundOffsets[i]= -backgroundOffsets[i];
             }
-           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i],0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
-           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+backgroundImages.get(i).getWidth()/2,0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
-           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+(backgroundImages.get(i).getWidth()/2)*2,0,backgroundImages.get(i).getWidth()/2,backgroundImages.get(i).getHeight());
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i],0,backgroundImages.get(i).getWidth()*1.5f,backgroundImages.get(i).getHeight()*2);
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+backgroundImages.get(i).getWidth()*1.5f,0,backgroundImages.get(i).getWidth()*1.5f,backgroundImages.get(i).getHeight()*2);
         }
 
     }

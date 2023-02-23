@@ -67,12 +67,12 @@ public class PreferenceManager implements Json.Serializable{
                     }
                 }
             }
-            newSave = fireflyIndexes.toString(",");
-            for (int i = 0; i < alreadySaved.length; i++) {
-                newSave+= ","+alreadySaved[i];
+            if(fireflyIndexes.size!=0){
+                newSave = fireflyIndexes.toString(",");
             }
-
-
+            for (int i = 0; i < alreadySaved.length; i++) {
+                newSave+= alreadySaved[i]+",";
+            }
             preferences.putString(key,newSave);
 
         }else{
