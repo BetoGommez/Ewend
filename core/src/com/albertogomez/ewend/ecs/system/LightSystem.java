@@ -7,11 +7,24 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 
+/**
+ * Handles the entity light working
+ * @author Alberto Gómez
+ */
 public class LightSystem extends IteratingSystem {
+
+    /**
+     * Constructor that indicates which entities to process
+     */
     public LightSystem(){
         super(Family.all(B2DComponent.class).get());
     }
 
+    /**
+     * Does the light animation process
+     * @param entity The current Entity being processed
+     * @param deltaTime The delta time between the last and current frame
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);

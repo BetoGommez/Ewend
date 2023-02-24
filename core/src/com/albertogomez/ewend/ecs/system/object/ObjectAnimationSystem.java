@@ -14,15 +14,31 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Handles the object animation on activation
+ * @author Alberto Gómez
+ */
 public class ObjectAnimationSystem extends IteratingSystem {
+    /**
+     * Handles the entity lights
+     */
     final RayHandler rayHandler;
 
+    /**
+     * Constructor that indicates which entities to process
+     * @param context
+     */
     public ObjectAnimationSystem(EwendLauncher context) {
         super(Family.all(GameObjectComponent.class, AnimationComponent.class, B2DComponent.class).get());
         rayHandler = context.getRayHandler();
 
     }
 
+    /**
+     * Adds the gameobject light depending on if it has been touched or not
+     * @param entity The current Entity being processed
+     * @param deltaTime The delta time between the last and current frame
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         final GameObjectComponent gameObjectComponent = ECSEngine.gameObjCmpMapper.get(entity);

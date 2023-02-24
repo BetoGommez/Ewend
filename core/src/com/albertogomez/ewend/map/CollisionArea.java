@@ -3,17 +3,36 @@ package com.albertogomez.ewend.map;
 
 import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
+/**
+ * Collision area values storing
+ * @author Alberto Gómez
+ */
 public class CollisionArea {
-    //esta es la posicion inicial x
+    /**
+     * Initial position x
+     */
     private final float x;
-    //esta es la posicion inicial y
+    /**
+     * Initial position y
+     */
     private final float y;
 
-    //determina el numnero de puntas que tinen la colision sobre toodo si es mano alzada
+    /**
+     * All area vertices points
+     */
     private final float[] vertices;
+    /**
+     * Collsion mask
+     */
     private final short Mask;
 
-
+    /**
+     * Creates the collision area depending on values
+     * @param x Initial position x
+     * @param y Initial position y
+     * @param vertices All area vertices points
+     * @param Mask Collsion mask
+     */
     public CollisionArea(float x,float y, float[] vertices,short Mask) {
         this.x = x*UNIT_SCALE;
         this.y = y*UNIT_SCALE;

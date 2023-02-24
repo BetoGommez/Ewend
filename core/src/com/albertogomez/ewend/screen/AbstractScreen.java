@@ -17,33 +17,49 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * Screen interface for all game screens
- * @see com.badlogic.gdx.Screen
+ * @author Alberto Gómez
  */
 public abstract class AbstractScreen<T extends Table> implements Screen, GameKeyInputListener {
     /**
-     * It's the main class launcher
+     * Main game class
      */
     protected final EwendLauncher context;
     /**
      * Viewport of the screen
      */
     protected final ExtendViewport viewport;
-
-
-
+    /**
+     * Game world
+     */
     protected final World world;
-
+    /**
+     * Renderer for collision areas
+     */
     protected final Box2DDebugRenderer box2DDebugRenderer;
 
+    /**
+     * Game stage
+     */
     protected final Stage stage;
+    /**
+     * Overlay on stage for the current screen
+     */
     protected final T screenUI;
+    /**
+     * Map lights handler
+     */
     protected final RayHandler rayHandler;
+    /**
+     * Game keys input handler
+     */
     protected final InputManager manager;
-
+    /**
+     * Audio manager for playing sounds and music
+     */
     protected final AudioManager audioManager;
 
     /**
-     * Constructor of the Abstract Screen
+     * Constructor of the Abstract Screen setting all values
      * @param context Main Launcher class
      */
     public AbstractScreen(EwendLauncher context) {
@@ -71,12 +87,18 @@ public abstract class AbstractScreen<T extends Table> implements Screen, GameKey
         rayHandler.useCustomViewport(viewport.getScreenX(),viewport.getScreenY(), viewport.getScreenWidth(),viewport.getScreenHeight());
     }
 
+    /**
+     * When the screen is shown adds ass listener to input manager and adds the overlay to the stage
+     */
     @Override
     public void show() {
         manager.addInputListener(this);
         stage.addActor(screenUI);
     }
 
+    /**
+     * Done when the screen hides, removes the input listener and the overlay from the stage
+     */
     @Override
     public void hide() {
         manager.removeInputListener(this);

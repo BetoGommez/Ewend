@@ -1,10 +1,14 @@
 package com.albertogomez.ewend.audio;
 
+
+/**
+ * Enum of audio files types
+ */
 public enum AudioType {
 
     //menu
     MENU_BUTTON("audio/keys.mp3",false,0.5f),
-    MENU_MUSIC("audio/main_theme.mp3",true,0.8f),
+    MENU_MUSIC("audio/main_theme.mp3",true,1f),
     LEVEL("audio/level_music.wav",true,0.15f),
 
     //objects
@@ -29,11 +33,25 @@ public enum AudioType {
     SHEEP_DETECTION("audio/Sheep/Detection.wav",false,0.5f);
 
 
-
+    /**
+     *Internal audio file path
+     */
     private final String filePath;
+    /**
+     * When False is just a sound to play when time
+     */
     private final boolean isMusic;
+    /**
+     * Volume value
+     */
     private final float volume;
 
+    /**
+     * Creates a audio enum
+     * @param filePath Internal audio file path
+     * @param isMusic When False is just a sound to play when time
+     * @param volume Volume value
+     */
     AudioType(String filePath, boolean isMusic, float volume) {
         this.filePath = filePath;
         this.isMusic = isMusic;

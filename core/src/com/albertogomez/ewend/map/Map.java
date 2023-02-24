@@ -29,25 +29,69 @@ import com.badlogic.gdx.utils.IntMap;
 
 import static com.albertogomez.ewend.constants.Constants.*;
 
-
+/**
+ *
+ * @author Alberto Gómez
+ */
 public class Map {
+    /**
+     * Class name
+     */
     private static final String TAG = Map.class.getSimpleName();
+    /**
+     * Tiled map selected
+     */
     private final TiledMap tiledMap;
+    /**
+     * Player starting location
+     */
     private final Vector2 startLocation;
 
+    /**
+     * Map width
+     */
     public static float MAP_WIDTH ;
+    /**
+     * Map height
+     */
     public static float MAP_HEIGHT ;
 
+    /**
+     * All game Objects existing on map
+     */
     private final Array<GameObject> gameObjects;
+    /**
+     * Map animations
+     */
     private final IntMap<Animation<Sprite>> mapAnimations;
+    /**
+     * Fireflys already taken by the player
+     */
     private final Array<Integer> fireflyTakenIndexes;
+    /**
+     * All collision areas
+     */
     private final Array<CollisionArea> collisionAreas;
 
+    /**
+     * Enemies on the map
+     */
     private final Array<EnemyObject> enemyObjects;
+    /**
+     * Map background images for parallax
+     */
     private final Array<Texture> backgroundImages;
+    /**
+     * Game Assets Manager
+     */
     private final AssetManager assetManager;
 
 
+    /**
+     * Map info setting
+     * @param tiledMap Tiled Map selected
+     * @param assetManager Game Assets Manager
+     */
     public Map(TiledMap tiledMap, AssetManager assetManager) {
         this.tiledMap = tiledMap;
         collisionAreas = new Array<CollisionArea>();
@@ -72,7 +116,9 @@ public class Map {
     }
 
 
-
+    /**
+     * Load all firefly taken indexes
+     */
     private void parseFireflyIndexes(){
         String indexString = Gdx.app.getPreferences("ewendLauncher").getString("TAKEN_FIREFLYS");
         String[] indexes = indexString.split(",");
@@ -83,8 +129,9 @@ public class Map {
         }
     }
 
-
-
+    /**
+     * Load background images
+     */
     private void createBackgroundImages(){
         for (int i = 1; i < 5; i++) {
             backgroundImages.add(assetManager.<Texture>get(BACKGROUND_PATH+i+".png"));
@@ -92,6 +139,9 @@ public class Map {
         }
     }
 
+    /**
+     * Takes the player starting location on map
+     */
     private void parsePlayerStartLocation(){
         final MapLayer startLocationLayer = tiledMap.getLayers().get("PlayerLocation");
         if(startLocationLayer==null){
@@ -108,8 +158,9 @@ public class Map {
         }
     }
 
-
-
+    /**
+     * Creates all enemy objects existing on map
+     */
     private void parseEnemiesInfo(){
         final MapLayer gameEnemiesLayer = tiledMap.getLayers().get("Enemies");
         String name;
@@ -143,7 +194,10 @@ public class Map {
     }
 
 
-
+    /**
+     * Gets all collision of the map
+     * @param layer Map layer name to be parsed
+     */
     private void parseCollisionLayer(String layer){
         //TODO CUANDO CAMBIES DE MAPA COJES DE AQUÍ LAS CAPAS DE COLISIONES
         final MapLayer objetos = tiledMap.getLayers().get(layer);
@@ -212,6 +266,9 @@ public class Map {
         }
     }
 
+    /**
+     * Loads all the game objects on the map
+     */
     private void parseMapObjectLayer(){
         final MapLayer gameObjectsLayer = tiledMap.getLayers().get("Objects");
         String indexProperty = -1+"";
@@ -265,6 +322,12 @@ public class Map {
 
     }
 
+    /**
+     * Creates map animation depending on the index and map tile
+     * @param animationIndex Animation index definer
+     * @param tile Map tile
+     * @return
+     */
     private boolean createAnimation(final int animationIndex, final TiledMapTile tile){
         Animation<Sprite> animation = mapAnimations.get(animationIndex);
         if(animation==null){

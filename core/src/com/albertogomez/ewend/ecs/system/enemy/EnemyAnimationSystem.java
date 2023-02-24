@@ -14,12 +14,24 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import static com.albertogomez.ewend.view.AnimationType.*;
 
+/**
+ *  Class that handles all enemies animations depending on the state they are
+ * @author Alberto Gómez
+ */
 public class EnemyAnimationSystem extends IteratingSystem {
+    /**
+     * Constructor that indicates which entities to process
+     * @param context
+     */
     public EnemyAnimationSystem(final EwendLauncher context) {
-
         super(Family.all(AnimationComponent.class, EnemyComponent.class, B2DComponent.class, AIComponent.class,AttackComponent.class).get());
     }
 
+    /**
+     * Process the current entity switching on his state to set the corresponding animation
+     * @param entity The current Entity being processed
+     * @param deltaTime The delta time between the last and current frame
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
@@ -44,8 +56,8 @@ public class EnemyAnimationSystem extends IteratingSystem {
                 break;
             case ATTACKING:
                 final AttackComponent attackComponent = ECSEngine.attCmpMapper.get(entity);
-                if (attackComponent.delay / 2 > attackComponent.delayAccum && !aiComponent.attacked) {
-                    animationComponent.aniTime = attackComponent.delayAccum;
+                if (attackComponent.attackDelay / 2 > attackComponent.attackDelayAccum && !aiComponent.attacked) {
+                    animationComponent.aniTime = attackComponent.attackDelayAccum;
                     animationComponent.aniType = SHEEP_ATTACK;
                 }
                 break;

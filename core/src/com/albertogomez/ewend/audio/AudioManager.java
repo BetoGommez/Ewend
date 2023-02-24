@@ -5,19 +5,33 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ *
+ * @author
+ */
 public class AudioManager {
+    /**
+     *
+     */
     private AudioType currentMusicType;
     private Music currentMusic;
     private final AssetManager assetManager;
 
-    private AudioType currentSound;
 
-    public AudioManager(EwendLauncher context){
-        this.assetManager = context.getAssetManager();
+    /**
+     * Creates the AudioManager
+     * @param assetManager
+     */
+    public AudioManager(AssetManager assetManager){
+        this.assetManager =assetManager;
         currentMusic = null;
         currentMusicType=null;
     }
 
+    /**
+     * Plays an audio or music
+     * @param type Enum with the audio path
+     */
     public void playAudio(final AudioType type){
         if(type.isMusic()){
             //play music
@@ -35,14 +49,13 @@ public class AudioManager {
             currentMusic.play();
         }else{
             //play sound
-            if(currentSound!=type){
-                assetManager.get(type.getFilePath(), Sound.class).play(type.getVolume());
-
-            }
-            currentSound = type;
+            assetManager.get(type.getFilePath(), Sound.class).play(type.getVolume());
         }
     }
 
+    /**
+     * Stops the current playing music
+     */
     public void stopCurrentMusic(){
         if(currentMusic!=null){
             currentMusic.stop();

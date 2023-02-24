@@ -17,14 +17,19 @@ import static com.albertogomez.ewend.constants.Constants.PLAYER_SPRITE_PATH;
 
 /**
  * Represent the screen when the game is loading
+ * @author Alberto Gómez
  */
 public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
+    /**
+     * Game asset manager
+     */
     private final AssetManager assetManager;
 
-    private boolean isMusicLoaded;
-
-
+    /**
+     * Creates the loading screen and loads all assets
+     * @param context Game Main class
+     */
     public LoadingScreen(final EwendLauncher context) {
         super(context);
 
@@ -53,6 +58,9 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     }
 
+    /**
+     * Done when the screen is shown
+     */
     @Override
     public void show() {
         super.show();
@@ -60,25 +68,27 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
 
     }
 
+    /**
+     * Done when hidding screen, also stops the menu music
+     */
     @Override
     public void hide() {
         super.hide();
         audioManager.stopCurrentMusic();
     }
 
+    /**
+     * Updates the assetManager progress and tells the overlay how much it has
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
-        /*Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);*/
-
         assetManager.update();
         screenUI.setProgress(assetManager.getProgress(),delta);
-
     }
 
     @Override
     protected LoadingUI getScreenUI(EwendLauncher context) {
-
         return new LoadingUI(context);
     }
 

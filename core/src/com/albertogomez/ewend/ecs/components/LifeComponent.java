@@ -1,37 +1,51 @@
 package com.albertogomez.ewend.ecs.components;
 
-import com.albertogomez.ewend.events.PlayerHealthChange;
-import com.albertogomez.ewend.events.PlayerManaAdded;
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Pool;
 
+/**
+ * Component for identifying the entity health
+ * @author Alberto Gómez
+ */
 public class LifeComponent implements Component, Pool.Poolable {
 
+    /**
+     * Actual entity health
+     */
     public float health;
 
+    /**
+     * True if the component comes from an enemy entity
+     */
     public boolean isEnemy;
-    private final Stage stage;
-    public float mana;
+    /**
+     * Value of fury that the entity has inside
+     */
+    public float fury;
 
-    public LifeComponent(Stage stage) {
-        this.stage = stage;
-    }
-
+    /**
+     * Sets values to default
+     */
     @Override
     public void reset() {
         health=100f;
-        mana=0f;
+        fury =0f;
     }
 
-    public void removeHealth(AttackComponent attackComponent){
-        health -= attackComponent.damage;//TODO AQUI PILLA EL DE ENEMIGOS Y TUYO BOBOLON
-
+    /**
+     * Apply the value incoming into the entity health that it already have
+     * @param healthChange Value of health to add or remove
+     */
+    public void applyHealth(float healthChange){
+        health +=healthChange;
     }
 
-    public void addMana(float manaAdd){
-        this.mana+=manaAdd;
-        stage.getRoot().fire(new PlayerManaAdded(this.mana));
+    /**
+     * Apply the value incoming into the entity fury that it already have
+     * @param furyChange Value of fury to add or remove
+     */
+    public void applyFury(float furyChange){
+        this.fury +=furyChange;
     }
 }

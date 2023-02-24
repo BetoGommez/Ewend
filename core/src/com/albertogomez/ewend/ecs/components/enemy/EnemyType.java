@@ -4,17 +4,26 @@ import com.albertogomez.ewend.view.AnimationType;
 
 import static com.albertogomez.ewend.view.AnimationType.SHEEP_IDLE;
 
+/**
+ * Different enemies that exist
+ * @author Alberto Gómez
+ */
 public enum EnemyType {
-    SHEEP(SHEEP_IDLE,0,0);
+    SHEEP(SHEEP_IDLE);
 
+    /**
+     * The entity default animation
+     */
     public AnimationType defaultAnimation;
-    public float fixedSizeX;
-    public float fixedSizeY;
 
-    EnemyType(AnimationType defaultAnimation, float fixedSizeX, float fixedSizeY) {
+
+    /**
+     * Creates the type
+     * @param defaultAnimation The entity default animation
+     */
+    EnemyType(AnimationType defaultAnimation) {
         this.defaultAnimation = defaultAnimation;
-        this.fixedSizeX = fixedSizeX;
-        this.fixedSizeY = fixedSizeY;
+
     }
 
 

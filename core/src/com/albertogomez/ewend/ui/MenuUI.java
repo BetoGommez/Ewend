@@ -2,61 +2,92 @@ package com.albertogomez.ewend.ui;
 
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioType;
-import com.albertogomez.ewend.input.GameKeys;
+import com.albertogomez.ewend.events.ReturnToMenu;
 import com.albertogomez.ewend.screen.ScreenType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 
-import static com.albertogomez.ewend.EwendLauncher.HEIGHT;
-import static com.albertogomez.ewend.EwendLauncher.WIDTH;
+import static com.albertogomez.ewend.EwendLauncher.SCREEN_HEIGHT;
+import static com.albertogomez.ewend.EwendLauncher.SCREEN_WIDTH;
 
-public class MenuUI extends Table {
+/**
+ *
+ * @author Alberto Gómez
+ */
+public class MenuUI extends Table implements EventListener  {
 
+    /**
+     * Game stage
+     */
     private final Stage stage;
+    /**
+     * Main game class
+     */
     private final EwendLauncher context;
+    /**
+     * Game skin
+     */
     private final Skin skin;
+    /**
+     * basic font
+     */
     private final BitmapFont font;
+    /**
+     * String bundle formatter
+     */
     private final I18NBundle i18NBundle;
+    /**
+     * Button template
+     */
     private TextButton buttonTemplate;
+    /**
+     * Background image
+     */
     private TextButton background;
+    /**
+     * All basic menu buttons
+     */
     private Array<TextButton> buttonsBaseMenu;
+    /**
+     * All options menu buttons
+     */
     private Array<TextButton> buttonsOptions;
+    /**
+     * Style for the buttons
+     */
     private TextButton.TextButtonStyle style;
+    /**
+     * This class
+     */
     private final MenuUI menuUI = this;
 
+    /**
+     * Creates the MenuUI and executes the create buttons and background
+     * @param context Game main class
+     */
     public MenuUI(final EwendLauncher context) {
         super(context.getSkin());
         this.context = context;
         i18NBundle = context.getI18NBundle();
         stage = context.getStage();
+        stage.getRoot().addListener(this);
         skin = context.getSkin();
         font = new BitmapFont();
         setFillParent(true);
         buttonsBaseMenu = new Array<TextButton>();
         buttonsOptions = new Array<TextButton>();
 
-
-        style = new TextButton.TextButtonStyle();
-        style.font = font;
-        style.up = new TextureRegionDrawable(new TextureRegion(context.getAssetManager().<Texture>get("ui/background.jpg")));
-        background = new TextButton("", style);
-        background.setSize(1000f * WIDTH / 900f, 700f * WIDTH / 900f);
-        stage.addActor(background);
-
+        createBackground();
+        addBackground();
         showBaseMenu();
         this.addListener(new InputListener() {
             @Override
@@ -67,8 +98,12 @@ public class MenuUI extends Table {
         });
     }
 
+    /**
+     * Shows the basic menu
+     */
     private void showBaseMenu() {
         buttonsBaseMenu.clear();
+        addBackground();
         style = new TextButton.TextButtonStyle();
         style.font = font;
         style.up = skin.getDrawable("title");
@@ -78,8 +113,8 @@ public class MenuUI extends Table {
         buttonsBaseMenu.get(1).addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
                 context.setScreen(ScreenType.LOADING);
-                stage.getRoot().removeActor(background);
                 return true;
             }
         });
@@ -109,11 +144,14 @@ public class MenuUI extends Table {
 
 
         background.setColor(1, 1, 1, 1);
-
     }
 
+    /**
+     * Shows the option menu
+     */
     private void showOptions() {
         buttonsOptions.clear();
+        addBackground();
         buttonsOptions.add(createBasicButton("menu", "sound"));
         buttonsOptions.add(createBasicButton("menu", "records"));
         buttonsOptions.add(createBasicButton("menu", "mapping"));
@@ -135,10 +173,49 @@ public class MenuUI extends Table {
     }
 
 
+    /**
+     * Creates a basic button
+     * @param fontStyle Style used
+     * @param key Key of the string in bundle
+     * @return Button created
+     */
     private TextButton createBasicButton(String fontStyle, String key) {
         buttonTemplate = new TextButton(i18NBundle.format(key), getSkin(), fontStyle);
         return buttonTemplate;
     }
 
+    /**
+     * Creates the background image
+     */
+    private void createBackground(){
+        TextButton.TextButtonStyle styleBackground = new TextButton.TextButtonStyle();
+        styleBackground.font = font;
+        styleBackground.up = new TextureRegionDrawable(new TextureRegion(context.getAssetManager().<Texture>get("ui/background.jpg")));
+        background = new TextButton("", styleBackground);
+        if(SCREEN_HEIGHT > SCREEN_WIDTH){
+            background.setSize(1000f * SCREEN_HEIGHT / 900f, 700f * SCREEN_HEIGHT / 900f);
+        }else{
+            background.setSize(1000f * SCREEN_WIDTH / 900f, 700f * SCREEN_WIDTH / 900f);
+        }
+    }
 
+    /**
+     * Adds the background to the screen
+     */
+    private void addBackground(){
+        this.addActor(background);
+    }
+
+    /**
+     * Handle event input
+     * @param event Event executed
+     * @return Always false
+     */
+    @Override
+    public boolean handle(Event event) {
+        if(event instanceof ReturnToMenu){
+            addBackground();
+        }
+        return false;
+    }
 }

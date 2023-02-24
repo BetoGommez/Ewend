@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 
 /**
  * Has the different type of screens with enum making reference to each class (Ex: GAME=GameScreen.class).
+ * @author Alberto Gómez
  */
 public enum ScreenType {
     MENU(MenuScreen.class),
@@ -16,6 +17,10 @@ public enum ScreenType {
      */
     private final Class<? extends AbstractScreen> screenClass;
 
+    /**
+     * Creates the screen
+     * @param screenClass Screen extending from AbstractScreen
+     */
     ScreenType(Class<? extends AbstractScreen> screenClass) {
         this.screenClass = screenClass;
     }

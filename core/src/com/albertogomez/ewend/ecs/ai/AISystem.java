@@ -20,17 +20,37 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import static javax.swing.UIManager.get;
 
+/**
+ * System that procces the entities that has the AIComponent
+ * @author Alberto Gómez
+ */
 public class AISystem extends IteratingSystem implements EventListener {
 
+
+    /**
+     *If its true indicates that the player is dead
+     */
     private boolean playerIsDead = false;
+    /**
+     * Audio Manager for playing sounds
+     */
     private final AudioManager audioManager;
 
+    /**
+     * Creates the system
+     * @param context Game principal class
+     */
     public AISystem(EwendLauncher context) {
         super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class, AttackComponent.class).get());
         context.getStage().getRoot().addListener(this);
         audioManager = context.getAudioManager();
     }
 
+    /**
+     * Process the entity state
+     * @param entity The current Entity being processed
+     * @param deltaTime The delta time between the last and current frame
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         B2DComponent enemyB2D = ECSEngine.b2dCmpMapper.get(entity);
@@ -47,7 +67,7 @@ public class AISystem extends IteratingSystem implements EventListener {
         switch (aiComp.state) {
             case IDLE:
                 movementTrackerIdle(enemyBody, enemyComp, aiComp);
-                if(aiComp.milisecAccum>1&&checkPlayerPos(aiComp, enemyB2D,6)){
+                if(!playerIsDead&&aiComp.milisecAccum>1&&checkPlayerPos(aiComp, enemyB2D,6)){
                     aiComp.state = AIState.TRANSFORM;
                     aiComp.milisecAccum=0;
                     enemyBody.setGravityScale(1f);
@@ -80,12 +100,12 @@ public class AISystem extends IteratingSystem implements EventListener {
 
                 break;
             case ATTACKING:
-                if (attackComponent.delayAccum > attackComponent.delay * 1.3 && aiComp.attacked == true) {
+                if (attackComponent.attackDelayAccum > attackComponent.attackDelay * 1.3 && aiComp.attacked == true) {
                     aiComp.state = AIState.RUNNING;
                     aiComp.attacked = false;
                 } else {
                     enemyBody.setLinearVelocity(0, 0);
-                    if (attackComponent.delay < attackComponent.delayAccum && aiComp.attacked == false) {
+                    if (attackComponent.attackDelay < attackComponent.attackDelayAccum && aiComp.attacked == false) {
                         attackComponent.attacking = true;
                         aiComp.attacked = true;
                     }
@@ -100,6 +120,12 @@ public class AISystem extends IteratingSystem implements EventListener {
         }
     }
 
+    /**
+     * Process how the entity should move when it's idle
+     * @param enemyBody Body of the entity
+     * @param enemyComp Component of the entity
+     * @param aiComp AI Component of the entity
+     */
     private void movementTrackerIdle(Body enemyBody, EnemyComponent enemyComp, AIComponent aiComp) {
         float maxPositionX = aiComp.maxDistanceFactor + aiComp.initialPosition.x;
         float minPositionX = aiComp.initialPosition.x - aiComp.maxDistanceFactor;
@@ -140,6 +166,14 @@ public class AISystem extends IteratingSystem implements EventListener {
 
     }
 
+
+    /**
+     * Process the player entity distance from the player and if its close enough.
+     * @param aiComponent AI Component of the entity
+     * @param enemy B2DComponent of the entity
+     * @param distance Distance vision multiplier
+     * @return If is close enough returns true else false
+     */
     private boolean checkPlayerPos(AIComponent aiComponent, B2DComponent enemy,float distance) {
         Vector2 posPlayer = getPlayerPos();
         float distanceVision = aiComponent.maxDistanceFactor * distance;

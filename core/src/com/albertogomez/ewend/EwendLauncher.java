@@ -25,7 +25,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -39,55 +38,107 @@ import static com.albertogomez.ewend.constants.Constants.*;
 
 /**
  * The Game Principal Launcher
- *
  * @author Alberto Gómez
- * @version 1.0.0
  */
 public class EwendLauncher extends Game {
     /**
      * Class Name
      */
     private static final String TAG = EwendLauncher.class.getSimpleName();
-
+    /**
+     * Fixture def assistant variable
+     */
     public static final FixtureDef FIXTURE_DEF = new FixtureDef();
+    /**
+     * Body def assistant variable
+     */
     public static final BodyDef BODY_DEF = new BodyDef();
 
     /**
      * Contains the mapping of the screens and its type
      */
     private EnumMap<ScreenType, Screen> screenCache;
+
     /**
-     * Viewport for all the game
+     * Game World
      */
-
     private World world;
+    /**
+     * Collsion map handler
+     */
     private WorldContactListener wcLstnr;
-    private ECSEngine ecsEngine;
-
+    /**
+     * Entity Component System Engine
+     */
+    public ECSEngine ecsEngine;
+    /**
+     * Game Camera
+     */
     private OrthographicCamera gameCamera;
+    /**
+     * Game Viewport
+     */
     private ExtendViewport viewport;
+    /**
+     * Main spritebatch
+     */
     private SpriteBatch spriteBatch;
+    /**
+     * Time accumulator
+     */
     private float accumulator;
-
-
-    private MapManager mapManager;
+    /**
+     * Main map manager
+     */
+    public MapManager mapManager;
+    /**
+     * Main assets manager
+     */
     private AssetManager assetManager;
+    /**
+     * String bundle formatter
+     */
     private I18NBundle i18NBundle;
+    /**
+     * Game stage for ui
+     */
     private Stage stage;
+    /**
+     * Stage skin
+     */
     private Skin skin;
+    /**
+     * Game buttons inputs handler
+     */
     private InputManager inputManager;
+    /**
+     * Audio manager for playing sounds and musics
+     */
     private AudioManager audioManager;
+    /**
+     * All game lights handler
+     */
     private RayHandler rayHandler;
+    /**
+     * Render for the levels
+     */
     public GameRenderer gameRenderer;
-
+    /**
+     * Storaged info manager
+     */
     private PreferenceManager preferenceManager;
+    /**
+     * Screen HEIGHT
+     */
+    public static float SCREEN_HEIGHT;
+    /**
+     * Screen width
+     */
+    public static float SCREEN_WIDTH;
 
-
-
-
-    public static float HEIGHT;
-    public static float WIDTH;
-
+    /**
+     * Creates the central game class
+     */
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -104,8 +155,8 @@ public class EwendLauncher extends Game {
         Light.setGlobalContactFilter(BIT_PLAYER, (short) 1, BIT_GROUND);
         ////
 
-        WIDTH = Gdx.graphics.getWidth();
-        HEIGHT = Gdx.graphics.getHeight();
+        SCREEN_WIDTH = Gdx.graphics.getWidth();
+        SCREEN_HEIGHT = Gdx.graphics.getHeight();
 
 
         //Initialize AssetManager
@@ -113,10 +164,10 @@ public class EwendLauncher extends Game {
         assetManager.setLoader(TiledMap.class, new TmxMapLoader(assetManager.getFileHandleResolver()));
 
         initializeSkin();
-        stage = new Stage(new ExtendViewport(WIDTH,HEIGHT), spriteBatch);
+        stage = new Stage(new ExtendViewport(SCREEN_WIDTH, SCREEN_HEIGHT), spriteBatch);
         ////////
         //audio
-        audioManager = new AudioManager(this);
+        audioManager = new AudioManager(assetManager);
         ////////
 
         //WorldContactListener
@@ -126,7 +177,7 @@ public class EwendLauncher extends Game {
 
         //Setup game viewport
         gameCamera = new OrthographicCamera();
-        viewport = new ExtendViewport(WIDTH * UNIT_SCALE*0.15f, HEIGHT * UNIT_SCALE*0.15f, gameCamera);
+        viewport = new ExtendViewport(SCREEN_WIDTH * UNIT_SCALE*0.15f, SCREEN_HEIGHT * UNIT_SCALE*0.15f, gameCamera);
         //
 
 
@@ -135,25 +186,9 @@ public class EwendLauncher extends Game {
         Gdx.input.setInputProcessor(new InputMultiplexer(inputManager, stage));
         /////
 
-
-
-        //Ashley
-        ecsEngine = new ECSEngine(this);
-        //
-
         //preference manager
         preferenceManager = new PreferenceManager();
         //
-
-        //MapManager
-        mapManager = new MapManager(this);
-        /////
-
-        //Game Renderer
-        if (assetManager.getProgress() >= 1) {
-            gameRenderer = new GameRenderer(this);
-
-        }
 
         screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
         this.setScreen(ScreenType.MENU);
@@ -161,10 +196,14 @@ public class EwendLauncher extends Game {
     }
 
 
+    /**
+     * Tell the world to update, the stage to draw, the ECS to update and the gameRenderer to render
+     */
     @Override
     public void render() {
         super.render();
-
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         final float deltaTime = Math.min(0.25f, Gdx.graphics.getRawDeltaTime());
 
             accumulator += deltaTime;
@@ -173,19 +212,22 @@ public class EwendLauncher extends Game {
                 world.step(FIXED_TIME_STEP, 8, 8);
                 accumulator -= FIXED_TIME_STEP;
             }
-
-            ecsEngine.update(deltaTime);
-            if(gameRenderer!=null){
-
-            gameRenderer.render(accumulator / FIXED_TIME_STEP);
+            if(ecsEngine!=null){
+                ecsEngine.update(deltaTime);
             }
-
+            if(gameRenderer!=null){
+                gameRenderer.render(accumulator / FIXED_TIME_STEP);
+            }
             stage.act(deltaTime);
             stage.draw();
 
         //TODO calculate renderPosition from previous position and real body position
     }
 
+    /**
+     * Sets a new screen
+     * @param screenType Screen to be displayed
+     */
     public void setScreen(final ScreenType screenType) {
         final Screen screen = screenCache.get(screenType);
         if (screen == null) {
@@ -204,12 +246,13 @@ public class EwendLauncher extends Game {
         }
     }
 
-
+    /**
+     * Initialices all the assets for the ui
+     */
     private void initializeSkin() {
         //Setup markup colors
         Colors.put("Red", Color.RED);
         Colors.put("Azul", Color.BLUE);
-
 
         //ttf bitmap
         final ObjectMap<String, Object> resources = new ObjectMap<String, Object>();
@@ -240,7 +283,9 @@ public class EwendLauncher extends Game {
     }
 
 
-
+    /**
+     * Disposes all game
+     */
     @Override
     public void dispose() {
         super.dispose();
@@ -311,7 +356,17 @@ public class EwendLauncher extends Game {
         return preferenceManager;
     }
 
+    public void setEcsEngine(ECSEngine ecsEngine) {
+        this.ecsEngine = ecsEngine;
+    }
 
+    public void setMapManager(MapManager mapManager) {
+        this.mapManager = mapManager;
+    }
+
+    public void setGameRenderer(GameRenderer gameRenderer) {
+        this.gameRenderer = gameRenderer;
+    }
 
     public static void resetBodyAndFixtureDefinition() {
 

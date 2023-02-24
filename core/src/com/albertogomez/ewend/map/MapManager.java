@@ -16,21 +16,57 @@ import java.util.EnumMap;
 
 import static com.albertogomez.ewend.constants.Constants.*;
 
+/**
+ * Map info handler
+ * @author Alberto Gómez
+ */
 public class MapManager {
+    /**
+     * Game World
+     */
     private final World world;
+    /**
+     * Bodies to be created on map
+     */
     private final Array<Body> bodies;
-
+    /**
+     * Game Asset Manager
+     */
     private final AssetManager assetManager;
-
+    /**
+     * Entity Component System handler
+     */
     private final ECSEngine ecsEngine;
+    /**
+     * Objects that can be removed on map dispose
+     */
     private final Array<Entity> gameObjectsToRemove;
 
+    /**
+     * Actual Map Type
+     */
     private MapType currentMapType;
+    /**
+     * Current map info
+     */
     private Map currentMap;
+    /**
+     * Different maps storage
+     */
     private EnumMap<MapType, Map> mapCache;
+    /**
+     * All map listeners
+     */
     private final Array<MapListener> listeners;
+    /**
+     * Main game class
+     */
     private final EwendLauncher context;
 
+    /**
+     * Constructor tha sets all values
+     * @param context Game main class
+     */
     public MapManager(EwendLauncher context) {
         currentMapType = null;
         currentMap = null;
@@ -45,17 +81,23 @@ public class MapManager {
     }
 
 
-
+    /**
+     * Adds a map listener to the array
+     * @param listener Listener
+     */
     public void addMapListener(final MapListener listener){
         listeners.add(listener);
     }
 
+    /**
+     * Sets the map to be rendered, if it already exists does all the removes and creates all the entities, collisions and objects
+     * @param type
+     */
     public void setMap(final MapType type){
 
         if(currentMap!=null){
             world.getBodies(bodies);
-            destroyCollisionAreas();
-            destroyGameObjects();
+            mapDispose();
         }
 
         //set new map
@@ -79,16 +121,35 @@ public class MapManager {
         currentMapType = type;
 
     }
+
+    /**
+     * Destroys the objects and collision from the world
+     */
+    public void mapDispose(){
+        destroyCollisionAreas();
+        destroyGameObjects();
+    }
+
+    /**
+     * Creates the player
+     */
     private void spawnPlayer(){
         context.getEcsEngine().createPlayer(currentMap.getStartLocation(), AnimationType.PLAYER_IDLE.getHeight()*UNIT_SCALE/4.5f,AnimationType.PLAYER_IDLE.getWidth()*UNIT_SCALE/4.5f);
     }
 
+    /**
+     * Spawn all enemies on map
+     */
     private void spawnEnemies(){
         for(final EnemyObject enemyObject : currentMap.getEnemyObjects()){
             ecsEngine.createEnemy(enemyObject.position, EnemyType.valueOf(enemyObject.name), enemyObject.height, enemyObject.width);
         }
     }
 
+    /**
+     * Spawn all game objects , excepting the already taken firefly
+     * @param fireflyIndexes Firefly that has been already taken
+     */
     private void spawnGameObjects(Array<Integer> fireflyIndexes){
         for(final GameObject gameObject : currentMap.getGameObjects()){
             if(gameObject.getType()==GameObjectType.FIREFLY){
@@ -101,6 +162,9 @@ public class MapManager {
         }
     }
 
+    /**
+     * Destroy all game object from the world
+     */
     private void destroyGameObjects(){
         for(final Entity entity : ecsEngine.getEntities()){
             if(ECSEngine.gameObjCmpMapper.get(entity)!=null){
@@ -113,6 +177,9 @@ public class MapManager {
         gameObjectsToRemove.clear();
     }
 
+    /**
+     * Destroy all collision areas from world
+     */
     private void destroyCollisionAreas(){
         for(final Body body : bodies){
             if("Destroyable".equals(body.getUserData())){
@@ -122,6 +189,9 @@ public class MapManager {
         }
     }
 
+    /**
+     * Spawn all collision areas
+     */
     private void spawnCollisionAreas(){
         EwendLauncher.resetBodyAndFixtureDefinition();
         for(final CollisionArea collisionArea : currentMap.getCollisionAreas()) {

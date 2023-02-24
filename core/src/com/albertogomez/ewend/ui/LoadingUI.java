@@ -14,17 +14,41 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 
+/**
+ * Loding overlay from Loading Screen
+ * @author Alberto Gómez
+ */
 public class LoadingUI extends Table {
 
-
+    /**
+     * Button of press to start
+     */
     private final TextButton pressAnyKeyButton;
+    /**
+     * Animation accumulator
+     */
     private float aniAccum;
+    /**
+     * Style for the button
+     */
     private TextButton.TextButtonStyle style;
+    /**
+     * Loading button
+     */
     private final TextButton loading;
+    /**
+     * Lamp
+     */
     private TextButton lamp;
+    /**
+     * Regions of the animation
+     */
     private final Array<TextureRegion> animation;
 
-    private String loadingString ;
+    /**
+     * Creates the Loading UI and all his elements
+     * @param context Game main class
+     */
     public LoadingUI(final EwendLauncher context) {
         super(context.getSkin());
         setFillParent(true);
@@ -61,6 +85,12 @@ public class LoadingUI extends Table {
         add(loading).pad(60).bottom().left();
         add(lamp).right().size(48*5,64*5).padRight(50f);
     }
+
+    /**
+     * Gets the progress from the assetManager and if it's done shows the press the screen to start
+     * @param progress Progress done 0-1
+     * @param deltaTime Time elapsed
+     */
     public void setProgress(final float progress,float deltaTime){
         aniAccum+=deltaTime;
         if(aniAccum/0.3f>4){

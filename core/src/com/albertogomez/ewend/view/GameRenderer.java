@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
@@ -43,37 +44,94 @@ import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 import static com.albertogomez.ewend.map.Map.MAP_HEIGHT;
 import static com.albertogomez.ewend.map.Map.MAP_WIDTH;
 
+/**
+ * Level all assets rendered
+ * @author Alberto Gómez
+ */
 public class GameRenderer implements Disposable, MapListener {
 
+    /**
+     * Main game asset manager
+     */
     private final AssetManager assetManager;
+    /**
+     * Game viewport
+     */
     private final ExtendViewport viewport;
+    /**
+     * Game camera
+     */
     private final OrthographicCamera gameCamera;
+    /**
+     * Principal spritebatch
+     */
     private final SpriteBatch spriteBatch;
+    /**
+     * Stores all animations
+     */
     private final EnumMap<AnimationType, Animation<Sprite>> animationCache;
-
+    /**
+     * Map renderer
+     */
     private final OrthogonalTiledMapRenderer mapRenderer;
+    /**
+     * Profiler for seeing the draw calls
+     */
     private final GLProfiler profiler;
+    /**
+     * Game World
+     */
     private final World world;
-
+    /**
+     * Player b2dComponent
+     */
     private B2DComponent playerB2dComp;
+    /**
+     * Collisions renderer
+     */
     private final Box2DDebugRenderer box2DDebugRenderer;
+    /**
+     * Stores animated entities
+     */
     private final ImmutableArray<Entity> animatedEntities;
+    /**
+     * Stores game Objects
+     */
     private final ImmutableArray<Entity> gameObjectEntities;
 
+    /**
+     * All map layers
+     */
     private final Array<TiledMapTileLayer> tiledMapLayers;
+    /**
+     * Map animations
+     */
     private IntMap<Animation<Sprite>> mapAnimations;
-
+    /**
+     * Background images for parallax
+     */
     private Array<Texture> backgroundImages;
+    /**
+     * Background images bounds
+     */
     private int[] backgroundOffsets = {0,0,0,0};
+    /**
+     * Lights map handler
+     */
     private final RayHandler rayHandler;
+    /**
+     * Layers that goes above others
+     */
     private final Array<TiledMapTileLayer> overlappingLayers;
 
+    /**
+     * Creates the game renderer and instances all variables
+     * @param context Game main class
+     */
     public GameRenderer(final EwendLauncher context) {
         assetManager = context.getAssetManager();
         viewport = context.getScreenViewport();
         gameCamera = context.getGameCamera();
-
-
 
         spriteBatch = context.getSpriteBatch();
 
@@ -95,19 +153,21 @@ public class GameRenderer implements Disposable, MapListener {
         box2DDebugRenderer = new Box2DDebugRenderer();
 
         //profiler.enable();
-
         if (profiler.isEnabled()) {
         } else {
             //box2DDebugRenderer = null;
             //world = null;
         }
-        context.getMapManager().addMapListener(this);
         //profiler.reset();
+        context.getMapManager().addMapListener(this);
     }
 
+    /**
+     * Calls the draw for all the existing elements on map
+     * @param alpha Game Alpha
+     */
     public void render(final float alpha) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
 
         viewport.apply(false);
         spriteBatch.begin();
@@ -161,15 +221,19 @@ public class GameRenderer implements Disposable, MapListener {
             Gdx.app.debug("RenderInfo", "Drawcalls: " + profiler.getDrawCalls());
             profiler.reset();
         }
-     //box2DDebugRenderer.render(world, viewport.getCamera().combined);
+        //box2DDebugRenderer.render(world, viewport.getCamera().combined);
 
 
     }
 
+
+    /**
+     * Renders the parallax
+     */
     private void renderBackground(){
 
         if(playerB2dComp!=null){
-            float conversor = backgroundImages.get(0).getWidth()*1.5f;
+            float conversor = backgroundImages.get(0).getWidth()*1.75f;
             backgroundOffsets[0]= (int) ((playerB2dComp.renderPosition.x)%conversor);
             backgroundOffsets[1]= (int) ((playerB2dComp.renderPosition.x*3)%conversor);
             backgroundOffsets[2]= (int) ((playerB2dComp.renderPosition.x*4)%conversor);
@@ -177,15 +241,20 @@ public class GameRenderer implements Disposable, MapListener {
         }
 
         for (int i = 0; i < backgroundOffsets.length; i++) {
-            if(backgroundOffsets[i]>backgroundImages.get(i).getWidth()*1.5f){
+            if(backgroundOffsets[i]>backgroundImages.get(i).getWidth()*1.75f){
                 backgroundOffsets[i]= -backgroundOffsets[i];
             }
-           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i],0,backgroundImages.get(i).getWidth()*1.5f,backgroundImages.get(i).getHeight()*2);
-           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+backgroundImages.get(i).getWidth()*1.5f,0,backgroundImages.get(i).getWidth()*1.5f,backgroundImages.get(i).getHeight()*2);
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i],0,backgroundImages.get(i).getWidth()*1.75f,backgroundImages.get(i).getHeight()*2);
+           spriteBatch.draw(backgroundImages.get(i),-backgroundOffsets[i]+backgroundImages.get(i).getWidth()*1.75f,0,backgroundImages.get(i).getWidth()*1.75f,backgroundImages.get(i).getHeight()*2);
         }
 
     }
 
+    /**
+     * Render a entity and its animations
+     * @param entity Entity to render
+     * @param alpha Alpha
+     */
     private void renderEntity(Entity entity, float alpha) {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
@@ -205,6 +274,11 @@ public class GameRenderer implements Disposable, MapListener {
         }
     }
 
+    /**
+     * Renders a gameObject and its animations
+     * @param entity
+     * @param alpha
+     */
     private void renderGameObject(final Entity entity,final float alpha){
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
         final AnimationComponent aniComponent = ECSEngine.aniCmpMapper.get(entity);
@@ -223,6 +297,11 @@ public class GameRenderer implements Disposable, MapListener {
         }
     }
 
+    /**
+     * Creates an animation from the Atlas
+     * @param aniType Animation to create
+     * @return Animation done
+     */
     private Animation<Sprite> getAnimation(final AnimationType aniType) {
         Animation<Sprite> animation = animationCache.get(aniType);
         if (animation == null) {
@@ -237,6 +316,13 @@ public class GameRenderer implements Disposable, MapListener {
     }
 
 
+    /**
+     * Gets the correct keyFrame from an animation
+     * @param atlasRegion AtlasRegion to take
+     * @param frameWidth Frame width
+     * @param frameHeight Frame height
+     * @return Array of sprites
+     */
     private Array<? extends Sprite> getKeyFrame(Array<TextureAtlas.AtlasRegion> atlasRegion,float frameWidth,float frameHeight) {
         final Array<Sprite> keyFrames = new Array<Sprite>();
         TextureRegion[][] textureRegion = atlasRegion.get(0).split((int)frameWidth, (int)frameHeight);
@@ -257,6 +343,9 @@ public class GameRenderer implements Disposable, MapListener {
         return keyFrames;
     }
 
+    /**
+     * Ends the gameRenderer assets
+     */
     @Override
     public void dispose() {
         if (box2DDebugRenderer != null) {
@@ -264,6 +353,10 @@ public class GameRenderer implements Disposable, MapListener {
         }
     }
 
+    /**
+     * Executed when the map has changed
+     * @param map Which is the new map
+     */
     @Override
     public void mapChange(Map map) {
         mapRenderer.setMap(map.getTiledMap());
@@ -271,5 +364,8 @@ public class GameRenderer implements Disposable, MapListener {
         map.getTiledMap().getLayers().getByType(TiledMapTileLayer.class, tiledMapLayers);
         mapAnimations = map.getMapAnimations();
     }
+
+
+
 
 }

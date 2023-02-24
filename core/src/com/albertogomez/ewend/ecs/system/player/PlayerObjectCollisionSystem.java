@@ -6,25 +6,48 @@ import com.albertogomez.ewend.audio.AudioType;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.*;
 import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
+import com.albertogomez.ewend.events.LevelWon;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class PlayerCollisionSystem extends IteratingSystem implements WorldContactListener.PlayerCollisionListener {
+/**
+ *
+ * @author Alberto Gómez
+ */
+public class PlayerObjectCollisionSystem extends IteratingSystem implements WorldContactListener.PlayerObjectCollisionListener {
 
+    /**
+     * Main game class
+     */
     private final EwendLauncher context;
-    public PlayerCollisionSystem(EwendLauncher context) {
+
+    /**
+     * Constructor that indicates which entities to process
+     * @param context
+     */
+    public PlayerObjectCollisionSystem(EwendLauncher context) {
         super(Family.all(PlayerComponent.class).get());
         context.getWcLstnr().addPlayerCollisionListener(this);
         this.context= context;
     }
 
+    /**
+     * Process the entity
+     * @param entity The current Entity being processed
+     * @param deltaTime The delta time between the last and current frame
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        //getEngine().removeEntity(entity);
+
     }
 
+    /**
+     * Executed on player collision with objects
+     * @param player Player entity
+     * @param gameObject Game Object entity
+     */
     @Override
     public void playerCollision(Entity player, Entity gameObject) {
         final GameObjectComponent gameObjCmp = ECSEngine.gameObjCmpMapper.get(gameObject);
@@ -38,6 +61,7 @@ public class PlayerCollisionSystem extends IteratingSystem implements WorldConta
                 break;
             case LAMP:
                 context.getAudioManager().playAudio(AudioType.LAMP_TOUCH);
+                context.getStage().getRoot().fire(new LevelWon());
                 break;
         }
     }

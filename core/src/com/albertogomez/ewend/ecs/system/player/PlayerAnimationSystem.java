@@ -5,6 +5,7 @@ import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AnimationComponent;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
+import com.albertogomez.ewend.ecs.components.PurifyComponent;
 import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
 import com.albertogomez.ewend.ecs.components.player.PlayerState;
 import com.albertogomez.ewend.view.AnimationType;
@@ -14,14 +15,31 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import static com.albertogomez.ewend.constants.Constants.UNIT_SCALE;
 
+/**
+ *
+ * @author Alberto Gómez
+ */
 public class PlayerAnimationSystem extends IteratingSystem {
 
+    /**
+     * Player B2DComponent for handling position and body
+     */
     public static B2DComponent playerB2dComp;
-    public PlayerAnimationSystem(final EwendLauncher context) {
+
+    /**
+     * Constructor that indicates which entities to process
+     */
+    public PlayerAnimationSystem() {
 
         super(Family.all(AnimationComponent.class, PlayerComponent.class, B2DComponent.class, AttackComponent.class).get());
+
     }
 
+    /**
+     * Sets the player animation depending on his actual playerState
+     * @param entity The current Entity being processed
+     * @param deltaTime The delta time between the last and current frame
+     */
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         final B2DComponent b2DComponent = ECSEngine.b2dCmpMapper.get(entity);
@@ -40,6 +58,18 @@ public class PlayerAnimationSystem extends IteratingSystem {
             case RUNNING:
                 aniType = AnimationType.PLAYER_RUNNING;
                 break;
+            case PURIFYING:
+                final PurifyComponent purifyComponent = ECSEngine.purifyCmpMapper.get(entity);
+                if(purifyComponent.isPuryfing){
+                    animationComponent.aniTime = purifyComponent.purifyingTimeAccum;
+                    if(purifyComponent.purifyingTimeAccum> purifyComponent.purifyingTimeActivation){
+                        aniType = AnimationType.PLAYER_CHARGING;
+                    }else{
+                        aniType = AnimationType.PLAYER_START_CHARGING;
+
+                    }
+                }
+                break;
             case JUMPING:
             case DOUBLE_JUMP:
                 if (b2DComponent.body.getLinearVelocity().y > 0) {
@@ -55,7 +85,7 @@ public class PlayerAnimationSystem extends IteratingSystem {
                 }
                 break;
             case ATTACKING:
-                animationComponent.aniTime = attackComponent.delayAccum;
+                animationComponent.aniTime = attackComponent.attackDelayAccum;
                 aniType=AnimationType.PLAYER_ATTACK;
                 break;
             case DASHING:
@@ -63,6 +93,7 @@ public class PlayerAnimationSystem extends IteratingSystem {
                 break;
             case DEAD:
                 aniType = AnimationType.PLAYER_DEAD;
+                b2DComponent.body.setLinearVelocity(0,0);
                 break;
             case DAMAGED:
                 aniType = AnimationType.PLAYER_DAMAGED;
@@ -71,6 +102,11 @@ public class PlayerAnimationSystem extends IteratingSystem {
         animationSet(animationComponent,aniType);
     }
 
+    /**
+     * Sets the animation with right rescaling cause of the different animation frame sizes
+     * @param aniComp Player animation component
+     * @param animationType Animation to be setted on AnimationComponent
+     */
     private void animationSet(AnimationComponent aniComp, AnimationType animationType){
         aniComp.width = animationType.getWidth()*UNIT_SCALE/4.5f*2;
         aniComp.height = animationType.getHeight()*UNIT_SCALE/4.5f*2;

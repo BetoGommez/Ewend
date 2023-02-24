@@ -10,18 +10,30 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ *
+ * @author Alberto Gómez
+ */
 public class MenuScreen extends AbstractScreen<MenuUI> {
 
 
+    /**
+     * Game asset manager
+     */
     private final AssetManager assetManager;
+    /**
+     * Indicates if the music has been loaded
+     */
     private boolean isMusicLoaded;
-    private final EwendLauncher context;
 
+
+    /**
+     * Creates the menu skins and loads the menu music
+     * @param context Main game class
+     */
     public MenuScreen(EwendLauncher context) {
         super(context);
-
         this.assetManager = context.getAssetManager();
-        this.context = context;
 
         //load audio
         isMusicLoaded=false;
@@ -31,6 +43,7 @@ public class MenuScreen extends AbstractScreen<MenuUI> {
 
 
     }
+
 
     @Override
     public boolean keyUp(InputManager inputManager, GameKeys key) {
@@ -42,6 +55,19 @@ public class MenuScreen extends AbstractScreen<MenuUI> {
         return new MenuUI(context);
     }
 
+    /**
+     * Done when hiding screen, also reset musicLoaded state
+     */
+    @Override
+    public void hide() {
+        super.hide();
+        isMusicLoaded = false;
+    }
+
+    /**
+     * Updates the asset manager state and plays the menu music when loaded
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         assetManager.update();

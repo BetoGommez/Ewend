@@ -14,7 +14,7 @@ import com.albertogomez.ewend.ecs.system.enemy.EnemyAnimationSystem;
 import com.albertogomez.ewend.ecs.system.object.DespawnObjectSystem;
 import com.albertogomez.ewend.ecs.system.object.ObjectAnimationSystem;
 import com.albertogomez.ewend.ecs.system.player.PlayerAnimationSystem;
-import com.albertogomez.ewend.ecs.system.player.PlayerCollisionSystem;
+import com.albertogomez.ewend.ecs.system.player.PlayerObjectCollisionSystem;
 import com.albertogomez.ewend.ecs.system.player.PlayerMovementSystem;
 import com.albertogomez.ewend.events.EnemyDied;
 import com.albertogomez.ewend.events.PlayerDied;
@@ -36,28 +36,88 @@ import static com.albertogomez.ewend.EwendLauncher.BODY_DEF;
 import static com.albertogomez.ewend.EwendLauncher.FIXTURE_DEF;
 import static com.albertogomez.ewend.constants.Constants.*;
 
+/**
+ * Entity Component System handler for all game entities and objects
+ * @author Alberto Gómez
+ */
 public class ECSEngine extends PooledEngine implements EventListener {
 
+    /**
+     * Mapper for player component
+     */
     public static final ComponentMapper<PlayerComponent> playerCmpMapper = ComponentMapper.getFor(PlayerComponent.class);
+    /**
+     * Mapper for b2d component
+     */
     public static final ComponentMapper<B2DComponent> b2dCmpMapper = ComponentMapper.getFor(B2DComponent.class);
+    /**
+     * Mapper for animation component
+     */
     public static final ComponentMapper<AnimationComponent> aniCmpMapper = ComponentMapper.getFor(AnimationComponent.class);
+    /**
+     * Mapper for player component
+     */
     public static final ComponentMapper<GameObjectComponent> gameObjCmpMapper = ComponentMapper.getFor(GameObjectComponent.class);
+    /**
+     * Mapper for game object component
+     */
     public static final ComponentMapper<EnemyComponent> eneObjCmpMapper = ComponentMapper.getFor(EnemyComponent.class);
+    /**
+     * Mapper for enemy component
+     */
     public static final ComponentMapper<AIComponent> aiCmoMapper = ComponentMapper.getFor(AIComponent.class);
+    /**
+     * Mapper for AI component
+     */
     public static final ComponentMapper<AttackComponent> attCmpMapper = ComponentMapper.getFor(AttackComponent.class);
+    /**
+     * Mapper for attack component
+     */
     public static final ComponentMapper<LifeComponent> lifeCmpMapper = ComponentMapper.getFor(LifeComponent.class);
+    /**
+     * Mapper for life component
+     */
     public static final ComponentMapper<DeadComponent> deadCmpMapper = ComponentMapper.getFor(DeadComponent.class);
+    /**
+     * Mapper for purify component
+     */
+    public static final ComponentMapper<PurifyComponent> purifyCmpMapper = ComponentMapper.getFor(PurifyComponent.class);
 
 
-
+    /**
+     * Lights game handler
+     */
     private final RayHandler rayHandler;
+    /**
+     *Entity local position
+     */
     private final Vector2 localPosition;
+    /**
+     * Entity position before rotated
+     */
     private final Vector2 posBeforeRotation;
+    /**
+     * Entity position after rotated
+     */
     private final Vector2 posAfterRotation;
+    /**
+     * Game player component
+     */
+    private PlayerComponent player;
 
+    /**
+     * Main game class
+     */
     private final EwendLauncher context;
+    /**
+     * Game world
+     */
     private final World world;
 
+    /**
+     * Constructor that sets all values
+     * @param context Game main class
+     */
     public ECSEngine(final EwendLauncher context) {
         super();
         world = context.getWorld();
@@ -71,23 +131,34 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
     }
 
+    /**
+     * Adds all necessary systems to the engine
+     */
     public void addSystems(){
         this.addSystem(new AnimationSystem(context));
-        this.addSystem(new PlayerAnimationSystem(context));
+        this.addSystem(new PlayerAnimationSystem());
         this.addSystem(new LightSystem());
         this.addSystem(new EnemyAnimationSystem(context));
         this.addSystem(new AISystem(context));
         this.addSystem(new AttackSystem(context));
-        this.addSystem(new LifeSystem(context));
+        this.addSystem(new LifeSystem(context.getStage()));
         this.addSystem(new DeadSystem(context));
         this.addSystem(new PlayerMovementSystem(context));
-        this.addSystem(new PlayerCollisionSystem(context));
+        this.addSystem(new PlayerObjectCollisionSystem(context));
         this.addSystem(new ObjectAnimationSystem(context));
         this.addSystem(new DespawnObjectSystem());
+        this.addSystem(new PurifySystem(context.getStage()));
     }
 
 
-
+    /**
+     * Enemy creator
+     * @param spawnLocation Initial spawn location
+     * @param type Enemy type
+     * @param height Enemy height
+     * @param width Enemy width
+     * @return Enemy entity
+     */
     public Entity createEnemy(final Vector2 spawnLocation, EnemyType type,final float height,final float width){
         final Entity enemy = this.createEntity();
         //enemy component
@@ -107,7 +178,6 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
         b2DComponent.body = world.createBody(BODY_DEF);
         b2DComponent.body.setUserData(enemy);
-        b2DComponent.body.setGravityScale(0.1f);
         b2DComponent.width = width*0.5f;
         b2DComponent.height = height*0.5f;
         b2DComponent.renderPosition.set(b2DComponent.body.getPosition());
@@ -151,27 +221,33 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
         //life component
 
-        final LifeComponent lifeComponent = new LifeComponent(context.getStage());
+        final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
         lifeComponent.health=100f;
-        lifeComponent.mana=50f;
+        lifeComponent.fury =30f;
         lifeComponent.isEnemy=true;
         enemy.add(lifeComponent);
 
         //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
-        attackComponent.damage=50;
+        attackComponent.damage=-30;
         attackComponent.attacking=false;
         attackComponent.attackHitboxHeight= b2DComponent.height;
         attackComponent.attackHitboxWidth=b2DComponent.width*2f;
-        attackComponent.delay=0.5f;
-        attackComponent.delayAccum=0;
+        attackComponent.attackDelay =0.5f;
+        attackComponent.attackDelayAccum =0;
         enemy.add(attackComponent);
 
         this.addEntity(enemy);
         return enemy;
     }
 
-
+    /**
+     * Creates the player
+     * @param playerSpawnLocation Player spawn location
+     * @param height Player height
+     * @param width Player width
+     * @return Player Entity
+     */
     public Entity createPlayer(final Vector2 playerSpawnLocation,final float height,final float width){
         final Entity player = this.createEntity();
 
@@ -226,29 +302,38 @@ public class ECSEngine extends PooledEngine implements EventListener {
         animationComponent.height = b2DComponent.height*2;
         player.add(animationComponent);
         //life component
-        final LifeComponent lifeComponent = new LifeComponent(context.getStage());
+        final LifeComponent lifeComponent = this.createComponent(LifeComponent.class);
         lifeComponent.health=100f;
-        lifeComponent.mana=0f;
+        lifeComponent.fury =0f;
         lifeComponent.isEnemy=false;
         player.add(lifeComponent);
 
         //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
         attackComponent.attacking=false;
-        attackComponent.damage=30f;
-        attackComponent.delay=1.5f;
-        attackComponent.delayAccum=1f;
+        attackComponent.damage=-100f;
+        attackComponent.attackDelay =1.5f;
+        attackComponent.attackDelayAccum =1f;
 
         attackComponent.attackHitboxHeight= b2DComponent.height/2;
         attackComponent.attackHitboxWidth=b2DComponent.width*1.5f;
         player.add(attackComponent);
 
+        //purify component
+        final PurifyComponent purifyComponent = this.createComponent(PurifyComponent.class);
+        purifyComponent.purifyingTimeActivation= AnimationType.PLAYER_START_CHARGING.getFrameTime()*5;
+        player.add(purifyComponent);
 
 
         this.addEntity(player);
+        this.player = playerComponent;
         return player;
     }
 
+    /**
+     * Game object creator
+     * @param gameObject GameObject with all his values
+     */
     public void createGameObject(final GameObject gameObject){
         final Entity gameObjEntity = this.createEntity();
 
@@ -305,6 +390,16 @@ public class ECSEngine extends PooledEngine implements EventListener {
         gameObjEntity.add(b2DComponent);
 
         this.addEntity(gameObjEntity);
+    }
+
+    public PlayerComponent getPlayer() {
+        return player;
+    }
+
+    public void clear(){
+        this.removeAllEntities();
+        this.clearPools();
+        this.removeAllSystems();
     }
 
     @Override

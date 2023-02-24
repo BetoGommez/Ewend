@@ -1,17 +1,17 @@
 package com.albertogomez.ewend.events;
 
-
 import com.badlogic.gdx.scenes.scene2d.Event;
 
 /**
- * Even fired when game is being resseted
+ * Even fired player won
  * @author Alberto Gómez
  */
-public class ResetLevel extends Event {
+public class LevelWon extends Event {
 
     /**
      * Constructor
      */
-    public ResetLevel() {
+    public LevelWon() {
+
     }
 }
