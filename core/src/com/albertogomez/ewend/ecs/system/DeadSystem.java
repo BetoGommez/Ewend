@@ -55,12 +55,14 @@ public class DeadSystem extends IteratingSystem implements EventListener {
 
                 context.getStage().getRoot().fire(new PlayerDied());
                 playerComponent.playerState = PlayerState.DEAD;
+                entity.remove(DeadComponent.class);
             }
         } else {
             context.getAudioManager().playAudio(AudioType.SHEEP_DEAD);
             context.getStage().getRoot().fire(new EnemyDied(lifeComponent.fury));
             entity.remove(DeadComponent.class);
             entity.removeAll();
+            context.getPreferenceManager().updateKilledEnemies();
 
         }
     }

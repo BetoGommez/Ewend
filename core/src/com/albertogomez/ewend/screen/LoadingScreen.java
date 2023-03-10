@@ -87,6 +87,11 @@ public class LoadingScreen extends AbstractScreen<LoadingUI> {
         screenUI.setProgress(assetManager.getProgress(),delta);
     }
 
+    /**
+     * Returns the ui
+     * @param context Game main class
+     * @return UI
+     */
     @Override
     protected LoadingUI getScreenUI(EwendLauncher context) {
         return new LoadingUI(context);

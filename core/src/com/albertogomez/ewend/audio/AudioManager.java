@@ -6,15 +6,21 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 /**
- *
- * @author
+ *Plays the app sounds
+ * @author Alberto Gómez
  */
 public class AudioManager {
     /**
-     *
+     * Current music type
      */
     private AudioType currentMusicType;
+    /**
+     * Current music
+     */
     private Music currentMusic;
+    /**
+     * Asset game manager
+     */
     private final AssetManager assetManager;
 
 

@@ -73,7 +73,9 @@ public class MenuScreen extends AbstractScreen<MenuUI> {
         assetManager.update();
         if(!isMusicLoaded&& assetManager.isLoaded(AudioType.MENU_MUSIC.getFilePath())) {
             isMusicLoaded = true;
-            audioManager.playAudio(AudioType.MENU_MUSIC);
+            if(context.getConfig().Music) {
+                audioManager.playAudio(AudioType.MENU_MUSIC);
+            }
         }
     }
 

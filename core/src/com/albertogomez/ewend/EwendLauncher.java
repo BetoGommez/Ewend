@@ -3,6 +3,7 @@ package com.albertogomez.ewend;
 import box2dLight.Light;
 import box2dLight.RayHandler;
 import com.albertogomez.ewend.audio.AudioManager;
+import com.albertogomez.ewend.constants.Configs;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.input.InputManager;
 import com.albertogomez.ewend.map.MapManager;
@@ -139,6 +140,7 @@ public class EwendLauncher extends Game {
     /**
      * Creates the central game class
      */
+    private Configs config;
     @Override
     public void create() {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -189,6 +191,10 @@ public class EwendLauncher extends Game {
         //preference manager
         preferenceManager = new PreferenceManager();
         //
+
+
+
+        config = preferenceManager.loadConfig();
 
         screenCache = new EnumMap<ScreenType, Screen>(ScreenType.class);
         this.setScreen(ScreenType.MENU);
@@ -366,6 +372,14 @@ public class EwendLauncher extends Game {
 
     public void setGameRenderer(GameRenderer gameRenderer) {
         this.gameRenderer = gameRenderer;
+    }
+
+    public Configs getConfig() {
+        return config;
+    }
+
+    public void setConfig(Configs config) {
+        this.config = config;
     }
 
     public static void resetBodyAndFixtureDefinition() {

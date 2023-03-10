@@ -83,12 +83,12 @@ public class LevelEnd extends Table implements EventListener {
         buttons.add(createButton("menu","restart"));
         buttons.get(0).addListener(buttonListener);
         buttons.get(0).setName("Restart");
-        add(buttons.get(0)).size(buttonSize, buttonSize).top().right().padRight(20f);
+        add(buttons.get(0)).size(buttonSize, buttonSize).top().right().padRight(30f);
         this.add();
         buttons.add(createButton("menu","menu"));
         buttons.get(1).setName("Menu");
         buttons.get(1).addListener(buttonListener);
-        add(buttons.get(1)).size(buttonSize, buttonSize).top().left().padLeft(20f);
+        add(buttons.get(1)).size(buttonSize, buttonSize).top().left().padLeft(30f);
 
 
     }

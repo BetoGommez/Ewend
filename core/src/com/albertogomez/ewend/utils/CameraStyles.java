@@ -23,9 +23,10 @@ public class CameraStyles {
         camera.update();
     }
 
+
     /**
      * Sets the camera position to the bounds, if they are exceded it doesn't move
-     * @param @Camera Game Camera
+     * @param camera Camera to fix
      * @param startX Minimum x position
      * @param startY Minimum y position
      * @param width Max width

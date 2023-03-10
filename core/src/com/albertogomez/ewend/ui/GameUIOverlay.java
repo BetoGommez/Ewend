@@ -63,9 +63,9 @@ public class GameUIOverlay extends Table implements EventListener {
     /**
      * Creates the GameUIOverlay
      * @param context Game Main class
-     * @param jumpButtonPos Jump button position on GameUI
+     * @param principalUI Principal Game UI
      */
-    public GameUIOverlay(EwendLauncher context, Vector2 jumpButtonPos) {
+    public GameUIOverlay(EwendLauncher context, GameUI principalUI) {
         super(context.getSkin());
         setFillParent(true);
         this.context = context;
@@ -88,7 +88,7 @@ public class GameUIOverlay extends Table implements EventListener {
         }
 
         this.add(furyBarLayout).width(145).height(600).expand().top().left().padLeft(20).padTop(55).row();
-        this.add(createAttackButton()).width(buttonSize).height(buttonSize).padBottom(jumpButtonPos.y).padRight(jumpButtonPos.x).bottom().right();
+        this.add(principalUI.getButtons().get(5)).width(buttonSize).height(buttonSize).padBottom(principalUI.getJumpButtonPos().y).padRight(principalUI.getJumpButtonPos().x).bottom().right();
     }
 
     /**
@@ -107,17 +107,7 @@ public class GameUIOverlay extends Table implements EventListener {
      * Creates the attack button
      * @return Button created
      */
-    private TextButton createAttackButton(){
-        //attack button
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-        style.font = font;
-        style.up = context.getSkin().getDrawable("Attack");
-        TextButton button= new TextButton("",style);
 
-        button.setName("ATTACK");
-        button.addListener(buttonListener);
-        return button;
-    }
 
     /**
      * Handle event inputs
@@ -134,6 +124,8 @@ public class GameUIOverlay extends Table implements EventListener {
             }
             furyBarLayout.setStyle(furyBarLayoutStyle);
         }
+
+
         return false;
     }
 }

@@ -1,15 +1,9 @@
 package com.albertogomez.ewend;
 
-import com.albertogomez.ewend.ecs.ECSEngine;
-import com.albertogomez.ewend.ecs.components.B2DComponent;
-import com.badlogic.ashley.core.Entity;
+import com.albertogomez.ewend.constants.Configs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 
 /**
  * Storaged prefrences manager
@@ -60,4 +54,75 @@ public class PreferenceManager{
         }
         preferences.flush();
     }
+
+    /**
+     * Load the config preferences
+     * @return Configuration object
+     */
+    public Configs loadConfig(){
+        boolean music=true;
+        boolean accelerometer=true;
+        boolean vibration=true;
+        if(preferences.contains("music")){
+            music = preferences.getBoolean("music");
+            accelerometer = preferences.getBoolean("accelerometer");
+            vibration = preferences.getBoolean("vibration");
+        }
+
+        return new Configs(vibration,accelerometer,music);
+    }
+
+    /**
+     * Saves the config internally
+     * @param configs Config object
+     */
+    public void saveConfigs(Configs configs){
+
+        preferences.putBoolean("music",configs.Music);
+        preferences.putBoolean("accelerometer",configs.Acceloremeter);
+        preferences.putBoolean("vibration",configs.Vibration);
+        preferences.flush();
+    }
+
+    /**
+     * Gets the number of taken fireflys
+     * @return Taken fireflys
+     */
+    public int getNumberTakenFireflys(){
+        return preferences.getString("TAKEN_FIREFLYS").split(",").length;
+    }
+
+    /**
+     * Adds 1 to killed enemies
+     */
+    public void updateKilledEnemies(){
+        preferences.putInteger("killedEnemies",preferences.getInteger("killedEnemies")+1);
+        preferences.flush();
+    }
+
+    /**
+     * Gets if the tutorial has been done before
+     * @return True if the tutorial its done
+     */
+    public boolean getTutorialDone(){
+        return preferences.getBoolean("tutorialDone");
+    }
+
+    /**
+     * Sets the tutorial into state done saved
+     */
+    public void setTutorialDone(){
+        preferences.putBoolean("tutorialDone",true);
+        preferences.flush();
+    }
+
+    /**
+     * Get the number of killed enemies
+     * @return Killed enemies
+     */
+    public int getKilledEnemies(){
+        return preferences.getInteger("killedEnemies");
+    }
+
+
 }

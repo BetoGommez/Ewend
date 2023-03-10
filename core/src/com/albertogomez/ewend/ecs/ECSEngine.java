@@ -103,7 +103,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
     /**
      * Game player component
      */
-    private PlayerComponent player;
+    private Entity player;
 
     /**
      * Main game class
@@ -147,7 +147,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
         this.addSystem(new PlayerObjectCollisionSystem(context));
         this.addSystem(new ObjectAnimationSystem(context));
         this.addSystem(new DespawnObjectSystem());
-        this.addSystem(new PurifySystem(context.getStage()));
+        this.addSystem(new PurifySystem(context));
     }
 
 
@@ -311,7 +311,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
         //attack component
         final AttackComponent attackComponent = this.createComponent(AttackComponent.class);
         attackComponent.attacking=false;
-        attackComponent.damage=-100f;
+        attackComponent.damage=-30f;
         attackComponent.attackDelay =1.5f;
         attackComponent.attackDelayAccum =1f;
 
@@ -326,7 +326,7 @@ public class ECSEngine extends PooledEngine implements EventListener {
 
 
         this.addEntity(player);
-        this.player = playerComponent;
+        this.player = player;
         return player;
     }
 
@@ -392,16 +392,28 @@ public class ECSEngine extends PooledEngine implements EventListener {
         this.addEntity(gameObjEntity);
     }
 
-    public PlayerComponent getPlayer() {
+    /**
+     * Returns the player entity
+     * @return Player entity
+     */
+    public Entity getPlayer() {
         return player;
     }
 
+    /**
+     * Removes all objects
+     */
     public void clear(){
         this.removeAllEntities();
         this.clearPools();
         this.removeAllSystems();
     }
 
+    /**
+     * Handles event
+     * @param event Event
+     * @return Always false
+     */
     @Override
     public boolean handle(Event event) {
         if(event instanceof PlayerDied){

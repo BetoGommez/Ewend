@@ -1,5 +1,6 @@
 package com.albertogomez.ewend.ecs.system;
 
+import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.PurifyComponent;
 import com.albertogomez.ewend.ecs.components.player.PlayerComponent;
@@ -18,17 +19,17 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 public class PurifySystem extends IteratingSystem {
 
     /**
-     * Game stage
+     * Game main class
      */
-    private final Stage stage;
+    private final EwendLauncher context;
 
     /**
      * Constructor that indicates which entities to process
-     * @param stage Game stage
+     * @param context Game main class
      */
-    public PurifySystem(Stage stage) {
+    public PurifySystem(EwendLauncher context) {
         super(Family.all(PurifyComponent.class, PlayerComponent.class).get());
-        this.stage = stage;
+        this.context = context;
     }
 
     /**
@@ -42,19 +43,34 @@ public class PurifySystem extends IteratingSystem {
         final PurifyComponent purifyComponent = ECSEngine.purifyCmpMapper.get(entity);
 
         if(purifyComponent.isPuryfing){
-            if(Gdx.input.getAccelerometerZ()<7||Gdx.input.getAccelerometerZ()>13){
-                playerComponent.milisecAccum=0;
-                purifyComponent.purifyingTimeAccum += deltaTime;
-                playerComponent.playerState = PlayerState.PURIFYING;
-                if(purifyComponent.purifyingTimeAccum>purifyComponent.purifyingTimeActivation){
-                    stage.getRoot().fire(new PurifyEvent(-0.5f,0.25f));
+            if(context.getConfig().Acceloremeter){
+                if(Gdx.input.getAccelerometerZ()<7||Gdx.input.getAccelerometerZ()>13){
+                    purifyAction(playerComponent,deltaTime,purifyComponent);
+                }else {
+                    if (playerComponent.milisecAccum > 0.5f) {
+                        purifyComponent.purifyingTimeAccum = 0;
+                        playerComponent.playerState = PlayerState.IDLE;
+                    }
                 }
             }else{
-                if(playerComponent.milisecAccum>0.5f){
-                    purifyComponent.purifyingTimeAccum=0;
-                    playerComponent.playerState = PlayerState.IDLE;
-                }
+                purifyAction(playerComponent,deltaTime,purifyComponent);
             }
+
+        }
+    }
+
+    /**
+     * Sets the player pruify state and fires the purify event
+     * @param playerComponent Player Component
+     * @param deltaTime Time elapsed
+     * @param purifyComponent Purify Component
+     */
+    public void purifyAction(PlayerComponent playerComponent, float deltaTime, PurifyComponent purifyComponent){
+        playerComponent.milisecAccum=0;
+        purifyComponent.purifyingTimeAccum += deltaTime;
+        playerComponent.playerState = PlayerState.PURIFYING;
+        if(purifyComponent.purifyingTimeAccum>purifyComponent.purifyingTimeActivation){
+            context.getStage().getRoot().fire(new PurifyEvent(-0.5f,0.25f));
         }
     }
 }

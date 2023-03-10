@@ -58,6 +58,7 @@ public class PlayerObjectCollisionSystem extends IteratingSystem implements Worl
                 playerComponent.takenFireflys.add(ECSEngine.gameObjCmpMapper.get(gameObject).index);
                 gameObject.add(new DespawnObjectComponent());
                 context.getAudioManager().playAudio(AudioType.FIREFLY_TOUCH);
+                context.getPreferenceManager().saveTakenFireflys(playerComponent.takenFireflys);
                 break;
             case LAMP:
                 context.getAudioManager().playAudio(AudioType.LAMP_TOUCH);

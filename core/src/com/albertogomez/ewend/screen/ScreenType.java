@@ -25,6 +25,10 @@ public enum ScreenType {
         this.screenClass = screenClass;
     }
 
+    /**
+     * Gets screen class
+     * @return Screen class
+     */
     public Class<? extends Screen> getScreenClass() {
         return screenClass;
     }

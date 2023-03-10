@@ -7,8 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.Event;
  * @author Alberto Gómez
  */
 public class PlayerHealthChanged extends Event {
+    /**
+     * Player health
+     */
     public float health;
 
+    /**
+     * Constructor
+     * @param health Player health
+     */
     public PlayerHealthChanged(float health) {
         this.health = health;
     }

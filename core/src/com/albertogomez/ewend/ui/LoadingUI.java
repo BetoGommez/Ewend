@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -20,6 +21,8 @@ import com.badlogic.gdx.utils.I18NBundle;
  */
 public class LoadingUI extends Table {
 
+
+    EwendLauncher context;
     /**
      * Button of press to start
      */
@@ -49,6 +52,7 @@ public class LoadingUI extends Table {
      * Creates the Loading UI and all his elements
      * @param context Game main class
      */
+
     public LoadingUI(final EwendLauncher context) {
         super(context.getSkin());
         setFillParent(true);
@@ -56,16 +60,10 @@ public class LoadingUI extends Table {
         animation = new Array<TextureRegion>();
         lamp = null;
         style=null;
-
+        this.context = context;
+        this.setTouchable(Touchable.enabled);
         pressAnyKeyButton = new TextButton(i18NBundle.format("pressTheScreen"),getSkin(),"huge");
         pressAnyKeyButton.setVisible(false);
-        pressAnyKeyButton.addListener(new InputListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                context.getInputManager().notifyKeyDown(GameKeys.INTERACT);
-                return true;
-            }
-        } );
 
         loading = new TextButton(i18NBundle.format("loading"),getSkin(),"mid_huge");
 
@@ -99,6 +97,14 @@ public class LoadingUI extends Table {
         style.up = new TextureRegionDrawable(animation.get((int)(aniAccum/0.3f)));
         lamp.setStyle(style);
         if(progress>=1&& !pressAnyKeyButton.isVisible()){
+
+            this.addListener(new InputListener(){
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    context.getInputManager().notifyKeyDown(GameKeys.INTERACT);
+                    return true;
+                }
+            } );
             pressAnyKeyButton.setVisible(true);
             pressAnyKeyButton.setColor(1,1,1,0);
             pressAnyKeyButton.addAction(Actions.forever(Actions.sequence(Actions.alpha(1,1),Actions.alpha(0,1))));

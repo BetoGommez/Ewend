@@ -83,10 +83,10 @@ public class LifeSystem extends IteratingSystem implements EventListener {
      */
     private float valueFix(float initialValue, float valueToApply) {
         float fixedValue=0;
-        if (initialValue + healthChange <= 100) {
+        if (initialValue + valueToApply <= 100) {
             fixedValue = valueToApply;
         } else {
-            if (initialValue + healthChange <= 0)
+            if (initialValue + valueToApply <= 0)
                 fixedValue = -initialValue;
             else {
                 fixedValue = 100 - initialValue;

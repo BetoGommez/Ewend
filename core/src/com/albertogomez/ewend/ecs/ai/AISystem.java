@@ -3,6 +3,7 @@ package com.albertogomez.ewend.ecs.ai;
 import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.audio.AudioManager;
 import com.albertogomez.ewend.audio.AudioType;
+import com.albertogomez.ewend.constants.Configs;
 import com.albertogomez.ewend.ecs.ECSEngine;
 import com.albertogomez.ewend.ecs.components.AttackComponent;
 import com.albertogomez.ewend.ecs.components.B2DComponent;
@@ -36,6 +37,9 @@ public class AISystem extends IteratingSystem implements EventListener {
      */
     private final AudioManager audioManager;
 
+    private final EwendLauncher context;
+
+
     /**
      * Creates the system
      * @param context Game principal class
@@ -44,6 +48,7 @@ public class AISystem extends IteratingSystem implements EventListener {
         super(Family.all(AIComponent.class, B2DComponent.class, EnemyComponent.class, AttackComponent.class).get());
         context.getStage().getRoot().addListener(this);
         audioManager = context.getAudioManager();
+        this.context = context;
     }
 
     /**
@@ -72,7 +77,9 @@ public class AISystem extends IteratingSystem implements EventListener {
                     aiComp.milisecAccum=0;
                     enemyBody.setGravityScale(1f);
                     audioManager.playAudio(AudioType.SHEEP_DETECTION);
-                    Gdx.input.vibrate(800);
+                    if(context.getConfig().Vibration) {
+                        Gdx.input.vibrate(500);
+                    }
                 }
 
                 break;

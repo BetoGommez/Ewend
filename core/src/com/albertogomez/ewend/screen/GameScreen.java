@@ -48,8 +48,7 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener, E
 
         prefMgr = context.getPreferenceManager();
         stage = context.getStage();
-        gameUIOverlay = new GameUIOverlay(context,screenUI.getJumpButtonPos());
-
+        gameUIOverlay = new GameUIOverlay(context,screenUI);
     }
 
     /**
@@ -70,8 +69,14 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener, E
     public void show() {
         super.show();
         context.getStage().addListener(this);
-        context.getAudioManager().playAudio(AudioType.LEVEL);
-        stage.addActor(gameUIOverlay);
+        context.getStage().addListener(screenUI);
+        screenUI.resetBars();
+
+        context.getStage().addActor(gameUIOverlay);
+        if(context.getConfig().Music){
+            context.getAudioManager().playAudio(AudioType.LEVEL);
+        }
+
         createLevel();
     }
 
@@ -82,7 +87,7 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener, E
         context.setEcsEngine(new ECSEngine(context));
         context.setMapManager(new MapManager(context));
         context.setGameRenderer(new GameRenderer(context));
-        context.getMapManager().setMap(MapType.MAP_1);
+        context.mapManager.setMap(MapType.MAP_1);
     }
 
     /**
@@ -124,7 +129,6 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener, E
     @Override
     public boolean handle(Event event) {
         if(event instanceof ResetLevel){
-            context.getPreferenceManager().saveTakenFireflys(context.getEcsEngine().getPlayer().takenFireflys);
             stage.getRoot().addActor(screenUI);
             stage.getRoot().addActor(gameUIOverlay);
             resetLevel();
@@ -135,7 +139,6 @@ public class GameScreen extends AbstractScreen<GameUI> implements MapListener, E
         }else if(event instanceof ReturnToMenu){
             stage.clear();
             context.getAudioManager().stopCurrentMusic();
-            context.getPreferenceManager().saveTakenFireflys(context.getEcsEngine().getPlayer().takenFireflys);
             removeLevel();
             context.setScreen(ScreenType.MENU);
         }else if(event instanceof LevelWon){

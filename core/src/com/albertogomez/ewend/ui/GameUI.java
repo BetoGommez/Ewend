@@ -4,6 +4,7 @@ import com.albertogomez.ewend.EwendLauncher;
 import com.albertogomez.ewend.events.*;
 import com.albertogomez.ewend.input.ButtonListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -90,6 +91,8 @@ public class GameUI extends Table implements EventListener{
      */
     private final Array<TextureRegionDrawable> animation;
 
+    private TutorialLoader tutorial ;
+
 
     /**
      * Creates the gameUI and instances all values
@@ -100,8 +103,9 @@ public class GameUI extends Table implements EventListener{
         setFillParent(true);
         this.context=context;
         stage= context.getStage();
-        stage.addListener(this);
-
+        if(!context.getPreferenceManager().getTutorialDone()){
+            tutorial = new TutorialLoader(this);
+        }
         skin= context.getSkin();
         assetManager = context.getAssetManager();
         animation = new Array<TextureRegionDrawable>();
@@ -134,6 +138,8 @@ public class GameUI extends Table implements EventListener{
         healthBar = new ProgressBar(0,1,0.1f,false,healthBarStyle);
 
         createButtons();
+
+
     }
 
     /**
@@ -167,6 +173,9 @@ public class GameUI extends Table implements EventListener{
 
         buttons.add(createButton("Jump"));
         buttons.get(4).setName("JUMP");
+
+        buttons.add(createButton("Attack"));
+        buttons.get(5).setName("ATTACK");
         //
 
         add(furyBar).width(145).height(480).top().left().padLeft(20).padTop(175);
@@ -184,8 +193,13 @@ public class GameUI extends Table implements EventListener{
         add(buttons.get(1)).size(buttonSize*1.5f,buttonSize*1.5f).left().bottom().expandX();
 
         add(buttons.get(3)).size(buttonSize,buttonSize).bottom().right();
+
         buttons.get(4).setSize(buttonSize*1.5f,buttonSize*1.5f);
+        buttons.get(4).addListener(buttonListener);
         add(buttons.get(4)).pad(5f).size(buttonSize*1.5f,buttonSize*1.5f).bottom().right();
+        if(tutorial!=null){
+            tutorial.hideButtons();
+        }
     }
 
     /**
@@ -199,7 +213,12 @@ public class GameUI extends Table implements EventListener{
         }
         furyBarStyle.knobBefore = animation.get((int)(animationAccum/0.1f));
         furyBar.setStyle(furyBarStyle);
+        if(tutorial!=null&&tutorial.writeText){
+            tutorial.writeText(deltaTime);
+        }
     }
+
+
 
     /**
      * Geneneral button creator
@@ -229,9 +248,8 @@ public class GameUI extends Table implements EventListener{
     @Override
     public boolean handle(Event event) {
         if(event instanceof ResetLevel){
+            resetBars();
 
-            healthBar.setValue(1f);
-            furyBar.setValue(0f);
         }else if(event instanceof PlayerFuryChanged){
             furyBar.setValue(((PlayerFuryChanged)event).mana/100f);
         }else if(event instanceof PlayerHealthChanged){
@@ -240,4 +258,28 @@ public class GameUI extends Table implements EventListener{
         return false;
     }
 
+    /**
+     * Puts health and fury bar to its default
+     */
+    public void resetBars(){
+        healthBar.setValue(1f);
+        furyBar.setValue(0f);
+        context.getStage().getRoot().fire(new PlayerFuryChanged(0));
+    }
+
+    public ProgressBar getFuryBar() {
+        return furyBar;
+    }
+
+    public ProgressBar getHealthBar() {
+        return healthBar;
+    }
+
+    public Array<TextButton> getButtons() {
+        return buttons;
+    }
+
+    public EwendLauncher getContext() {
+        return context;
+    }
 }

@@ -113,9 +113,8 @@ public class PlayerMovementSystem extends IteratingSystem implements GameKeyInpu
         }
 
         if(doPurify &&lifeComponent.fury >0.25f&&lifeComponent.health<100){
-            if(hasAccelerometer){
                 purifyComponent.isPuryfing=true;
-            }
+                b2DComponent.body.setLinearVelocity(0,b2DComponent.body.getLinearVelocity().y);
         }else{
             if(playerComponent.playerState==PlayerState.DAMAGED) {
                 if(playerComponent.milisecAccum> playerComponent.knockedTime){

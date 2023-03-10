@@ -199,7 +199,6 @@ public class Map {
      * @param layer Map layer name to be parsed
      */
     private void parseCollisionLayer(String layer){
-        //TODO CUANDO CAMBIES DE MAPA COJES DE AQUÍ LAS CAPAS DE COLISIONES
         final MapLayer objetos = tiledMap.getLayers().get(layer);
         short MASK;
         if(layer.equals("Ground")){
