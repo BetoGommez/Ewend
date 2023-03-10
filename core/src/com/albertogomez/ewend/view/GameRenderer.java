@@ -219,7 +219,7 @@ public class GameRenderer implements Disposable, MapListener {
     private void renderBackground(){
 
         if(playerB2dComp!=null){
-            float conversor = backgroundImages.get(0).getWidth()*1.75f;
+            final float conversor = backgroundImages.get(0).getWidth()*1.75f;
             backgroundOffsets[0]= (int) ((playerB2dComp.renderPosition.x)%conversor);
             backgroundOffsets[1]= (int) ((playerB2dComp.renderPosition.x*3)%conversor);
             backgroundOffsets[2]= (int) ((playerB2dComp.renderPosition.x*4)%conversor);
