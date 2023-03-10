@@ -9,7 +9,7 @@ public enum AudioType {
     //menu
     MENU_BUTTON("audio/keys.mp3",false,0.5f),
     MENU_MUSIC("audio/main_theme.mp3",true,1f),
-    LEVEL("audio/level_music.wav",true,0.15f),
+    LEVEL("audio/level_music.wav",true,0.10f),
 
     //objects
     LAMP_TOUCH("audio/lamp_touch.ogg",false,0.5f),
@@ -18,19 +18,19 @@ public enum AudioType {
     //entities
 
     //ewend
-    EWEND_CHARGE("audio/Ewend/Charge.wav",false,0.5f),
-    EWEND_DAMAGED("audio/Ewend/Damaged.mp3",false,0.5f),
-    EWEND_DASH("audio/Ewend/Dash.mp3",false,0.5f),
+    EWEND_CHARGE("audio/Ewend/Charge.wav",false,0.4f),
+    EWEND_DAMAGED("audio/Ewend/Damaged.mp3",false,0.4f),
+    EWEND_DASH("audio/Ewend/Dash.mp3",false,0.4f),
     EWEND_DEAD("audio/Ewend/Dead.wav",false,0.3f),
-    EWEND_HIT("audio/Ewend/Hit.wav",false,0.5f),
-    EWEND_JUMP("audio/Ewend/Jump.mp3",false,0.9f),
+    EWEND_HIT("audio/Ewend/Hit.wav",false,0.4f),
+    EWEND_JUMP("audio/Ewend/Jump.mp3",false,0.8f),
     EWEND_RUN("audio/Ewend/Run.mp3",false,1f),
 
 
     //sheep
-    SHEEP_DAMAGED("audio/Sheep/Damaged.wav",false,0.5f),
-    SHEEP_DEAD("audio/Sheep/Dead.mp3",false,0.5f),
-    SHEEP_DETECTION("audio/Sheep/Detection.wav",false,0.5f);
+    SHEEP_DAMAGED("audio/Sheep/Damaged.wav",false,0.4f),
+    SHEEP_DEAD("audio/Sheep/Dead.mp3",false,0.4f),
+    SHEEP_DETECTION("audio/Sheep/Detection.wav",false,0.4f);
 
 
     /**

@@ -215,6 +215,9 @@ public class EwendLauncher extends Game {
             accumulator += deltaTime;
             while (accumulator >= FIXED_TIME_STEP) {
                 //TODO save the previous postion of body
+
+
+                
                 world.step(FIXED_TIME_STEP, 8, 8);
                 accumulator -= FIXED_TIME_STEP;
             }
@@ -227,7 +230,7 @@ public class EwendLauncher extends Game {
             stage.act(deltaTime);
             stage.draw();
 
-        //TODO calculate renderPosition from previous position and real body position
+
     }
 
     /**

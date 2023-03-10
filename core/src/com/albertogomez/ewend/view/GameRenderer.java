@@ -152,13 +152,7 @@ public class GameRenderer implements Disposable, MapListener {
         profiler = new GLProfiler(Gdx.graphics);
         box2DDebugRenderer = new Box2DDebugRenderer();
 
-        //profiler.enable();
-        if (profiler.isEnabled()) {
-        } else {
-            //box2DDebugRenderer = null;
-            //world = null;
-        }
-        //profiler.reset();
+
         context.getMapManager().addMapListener(this);
     }
 
@@ -169,12 +163,10 @@ public class GameRenderer implements Disposable, MapListener {
     public void render(final float alpha) {
 
 
-        viewport.apply(false);
         spriteBatch.begin();
 
         if (mapRenderer.getMap() != null) {
             renderBackground();
-            AnimatedTiledMapTile.updateAnimationBaseTime();
             mapRenderer.setView(gameCamera);
             for (final TiledMapTileLayer layer : tiledMapLayers) {
                 if(layer.getName().contains("Overlapping")||layer.getName().contains("Platform")){
@@ -197,32 +189,26 @@ public class GameRenderer implements Disposable, MapListener {
         rayHandler.updateAndRender();
         rayHandler.setCombinedMatrix(gameCamera);
 
-        spriteBatch.begin();
+
         if(mapRenderer.getMap()!=null){
+            spriteBatch.begin();
             for (TiledMapTileLayer overlapping : overlappingLayers){
                 mapRenderer.renderTileLayer(overlapping);
             }
             overlappingLayers.clear();
+            spriteBatch.end();
         }
-        spriteBatch.end();
+
 
 
         //camera center
-        float startX = MAP_WIDTH/15;
-        float startY = MAP_HEIGHT/6;
+        final float startX = MAP_WIDTH/15;
+        final float startY = MAP_HEIGHT/6;
         if(playerB2dComp!=null){
             CameraStyles.lerpToTarget(gameCamera,playerB2dComp.renderPosition);
             CameraStyles.boundary(gameCamera,startX,startY,MAP_WIDTH-startX*1.9f,MAP_HEIGHT);
         }
         gameCamera.update();
-
-        if (profiler.isEnabled()) {
-            Gdx.app.debug("RenderInfo", "Bindings: " + profiler.getTextureBindings());
-            Gdx.app.debug("RenderInfo", "Drawcalls: " + profiler.getDrawCalls());
-            profiler.reset();
-        }
-        //box2DDebugRenderer.render(world, viewport.getCamera().combined);
-
 
     }
 
@@ -265,7 +251,7 @@ public class GameRenderer implements Disposable, MapListener {
             b2DComponent.renderPosition.lerp(b2DComponent.body.getPosition(), alpha);
             if(ECSEngine.playerCmpMapper.get(entity)!=null)
             {
-                    playerB2dComp = b2DComponent;
+                playerB2dComp = b2DComponent;
                 frame.setBounds(b2DComponent.renderPosition.x - aniComponent.width/2 * b2DComponent.orientation, b2DComponent.renderPosition.y - aniComponent.height/2, aniComponent.width * b2DComponent.orientation, aniComponent.height);
             }else{
                 frame.setBounds(b2DComponent.renderPosition.x - b2DComponent.width * -b2DComponent.orientation, b2DComponent.renderPosition.y - b2DComponent.height, aniComponent.width * -b2DComponent.orientation, aniComponent.height);
